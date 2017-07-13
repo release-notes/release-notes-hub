@@ -5,11 +5,11 @@ const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
 
-const SRC_PATH = './src';
-const SASS_PATH = SRC_PATH + '/stylesheets';
-const IMAGES_PATH = SRC_PATH + '/images';
-const JS_PATH = SRC_PATH + '/javascripts';
-const ASSET_PATH = './public';
+const ASSET_PATH = './assets';
+const SASS_PATH = ASSET_PATH + '/stylesheets';
+const IMAGES_PATH = ASSET_PATH + '/images';
+const JS_PATH = ASSET_PATH + '/javascripts';
+const BUILD_PATH = './public';
 
 //*** SASS compiler task
 gulp.task('sass', function () {
@@ -17,7 +17,7 @@ gulp.task('sass', function () {
     .pipe(sourcemaps.init())
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(ASSET_PATH + '/css'));
+    .pipe(gulp.dest(BUILD_PATH + '/css'));
 });
 
 //*** SASS watch(realtime) compiler task
@@ -30,9 +30,13 @@ gulp.task('sass:watch', function () {
 
 gulp.task('copy:images', function() {
   gulp.src([
+    `${IMAGES_PATH}/favicon.ico`,
+  ]).pipe(gulp.dest(BUILD_PATH));
+
+  gulp.src([
     IMAGES_PATH + '/**/*.png',
     IMAGES_PATH + '/**/*.svg'
-  ]).pipe(gulp.dest(ASSET_PATH + '/img'))
+  ]).pipe(gulp.dest(BUILD_PATH + '/img'))
 });
 
 gulp.task('js', function() {
@@ -43,7 +47,7 @@ gulp.task('js', function() {
   .pipe(sourcemaps.init())
   .pipe(uglify())
   .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest(ASSET_PATH + '/js'))
+  .pipe(gulp.dest(BUILD_PATH + '/js'))
 });
 
 
