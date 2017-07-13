@@ -1,0 +1,13 @@
+title: Release Notes of the Hub
+description: >
+  Release-notes-hub is a hosting service for "Release Notes" -
+  an easy to use, human readable and machine processable schema for release notes.
+
+releases:
+- version: Unreleased
+  title: MVP - First Release
+  description: MVP implementation
+  added:
+  - Upload & rendering of release notes.
+  - Basic express/kermit setup.
+  - Introduce these release notes.

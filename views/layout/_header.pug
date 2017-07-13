@@ -1,0 +1,30 @@
+.container
+  nav.nav.has-shadow
+    .container
+      .nav-left
+        a.nav-item(href="/")
+          //img(src="../images/logo.png" alt="Release Notes")
+          | Release Notes
+
+      span.nav-toggle
+        span
+        span
+        span
+      .nav-right.nav-menu
+        a.nav-item.is-tab.is-active
+          | Home
+        span.nav-item
+          a.button(href="https://github.com/release-notes")
+            | Contribute on GitHub
+
+append scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+      var burger = document.querySelector('.nav-toggle');
+      var menu = document.querySelector('.nav-menu');
+
+      burger.addEventListener('click', function () {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
+    });

@@ -1,0 +1,16 @@
+extends ../layout/main
+
+block globalVars
+  - var pageCls = 'rn-error';
+
+block content
+  .container.has-text-centered
+    img(src='/img/error/404.png' height=264 alt='404 - Page not found')
+    h1.tile.is-1 Page not found
+
+    p The page you are looking for doesn't exist or has been moved.
+
+    if error.stack
+      h3 Stack Trace
+      pre
+        code #{error.stack}

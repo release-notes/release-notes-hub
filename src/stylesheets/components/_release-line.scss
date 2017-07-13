@@ -1,0 +1,12 @@
+.release-notes {
+  .release {
+    padding: 1.25rem;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #00d1b2;
+    }
+  }
+  .modification-list {
+    padding-bottom: 1.25rem;
+  }
+}
