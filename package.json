@@ -6,7 +6,7 @@
   "dependencies": {
     "@gfcc/mongo-tenant-repository": "^2.0.1",
     "@release-notes/node": "^0.1.0",
-    "async": "^2.1.4",
+    "async": "^2.5.0",
     "bunyan-format": "~0.2.1",
     "express": "^4.14.0",
     "kermit": "^2.2.0",
