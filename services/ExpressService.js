@@ -1,6 +1,9 @@
 'use strict';
 
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const express = require('express');
+const expressSession = require('express-session');
 const Service = require('kermit/Service');
 
 class ExpressService extends Service {
@@ -68,7 +71,20 @@ class ExpressService extends Service {
   }
 
   initializeMiddleware() {
+    const authService = this.serviceManager.get('authService');
+
     this.server.use(express.static('public'));
+    this.server.use(bodyParser.urlencoded({ extended: false }));
+    this.server.use(cookieParser(
+      this.serviceConfig.get('sessionSecret')
+    ));
+    this.server.use(expressSession({
+      resave: false,
+      saveUninitialized: false,
+      secret: this.serviceConfig.get('sessionSecret'),
+    }));
+
+    authService.registerMiddleware(this.server);
   }
 
   registerControllers() {

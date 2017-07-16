@@ -15,6 +15,7 @@ module.exports = {
 
       // server
       express: `${APP_PATH}/services/ExpressService`,
+      authService: `${APP_PATH}/services/AuthService`,
 
       // controllers
       errorController: `${APP_PATH}/controllers/ErrorController`,
@@ -63,6 +64,7 @@ module.exports = {
       'indexController',
       'errorController'
     ],
-    viewVariables: {}
+    viewVariables: {},
+    sessionSecret: process.env.SESSION_SECRET || 'change-me'
   },
 };
