@@ -19,10 +19,12 @@ class WebApp extends Application {
     sm
       .get('observer')
       .awaitAll([
-        'express'
+        'express',
+        'mongoose',
       ], 'ready', (err, observations) => this.onReady(err, observations))
       .awaitAny([
-        'express'
+        'express',
+        'mongoose',
       ], 'error', (err, observation) => this.onError(err, observation))
     ;
 
