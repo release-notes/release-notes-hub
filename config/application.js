@@ -11,6 +11,7 @@ module.exports = {
 
       // infrastructure
       logging: `kermit-bunyan/LoggingService`,
+      mongoose: `kermit-mongoose/ConnectionService`,
 
       // server
       express: `${APP_PATH}/services/ExpressService`,
@@ -31,6 +32,16 @@ module.exports = {
         outputMode: 'long',
         color: false
       })
+    }
+  },
+
+  mongoose: {
+    connection: {
+      host: process.env.MONGODB_HOST || 'release-notes-mongo',
+      port: process.env.MONGODB_PORT || '27017',
+      user: process.env.MONGODB_USER,
+      password: process.env.MONGODB_PASSWORD,
+      database: process.env.MONGODB_DATABASE || 'release-notes'
     }
   },
 
