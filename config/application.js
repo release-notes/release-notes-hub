@@ -20,6 +20,12 @@ module.exports = {
       errorController: `${APP_PATH}/controllers/ErrorController`,
       indexController: `${APP_PATH}/controllers/IndexController`,
       apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
+
+      // repositories
+      accountRepository: `${APP_PATH}/repositories/AccountRepository`,
+
+      // model services
+      accountService: `${APP_PATH}/services/AccountService`,
     }
   },
 
