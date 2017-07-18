@@ -16,6 +16,12 @@
         span.nav-item
           a.button(href="https://github.com/release-notes")
             | Contribute on GitHub
+        if !user
+          a.nav-item(href="/signin") Sign In
+          a.nav-item(href="/signup") Sign Up
+        else
+          a.nav-item(href="/signout") Sign Out
+
 
 append scripts
   script.

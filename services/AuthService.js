@@ -56,6 +56,10 @@ class AuthService extends AbstractService {
   registerMiddleware(server) {
     server.use(this.passport.initialize());
     server.use(this.passport.session());
+    server.use((req, res, next) => {
+      res.locals.user = req.user;
+      next();
+    });
   }
 }
 
