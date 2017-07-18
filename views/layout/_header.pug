@@ -16,7 +16,11 @@
           a.navbar-item(href="/signin") Sign In
           a.navbar-item(href="/signup") Sign Up
         else
-          a.navbar-item(href="/signout") Sign Out
+          .navbar-item.has-dropdown.is-hoverable
+            a.navbar-link #{user.username}
+            .navbar-dropdown.is-boxed
+              .navbar-divider
+              a.navbar-item(href="/signout") Sign Out
 
 
 append scripts
@@ -24,9 +28,14 @@ append scripts
     document.addEventListener('DOMContentLoaded', function () {
       var burger = document.querySelector('.navbar-burger');
       var menu = document.querySelector('.navbar-menu');
+      var submenuTrigger = document.querySelector('.navbar-item.has-dropdown > .navbar-link');
 
       burger.addEventListener('click', function () {
         burger.classList.toggle('is-active');
         menu.classList.toggle('is-active');
+      });
+
+      submenuTrigger.addEventListener('click', function() {
+        this.parentNode.classList.toggle('is-active');
       });
     });
