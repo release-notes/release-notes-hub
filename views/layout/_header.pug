@@ -1,33 +1,29 @@
 .container
-  nav.nav.has-shadow
-    .container
-      .nav-left
-        a.nav-item(href="/")
-          //img(src="../images/logo.png" alt="Release Notes")
-          | Release Notes
+  nav.navbar.is-transparent
+    .navbar-brand
+      a.navbar-item(href="/")
+        //img(src="../images/logo.png" alt="Release Notes")
+        | Release Notes
 
-      span.nav-toggle
+      .navbar-burger.burger
         span
         span
         span
-      .nav-right.nav-menu
-        a.nav-item.is-tab.is-active
-          | Home
-        span.nav-item
-          a.button(href="https://github.com/release-notes")
-            | Contribute on GitHub
+
+    .navbar-menu
+      .navbar-end
         if !user
-          a.nav-item(href="/signin") Sign In
-          a.nav-item(href="/signup") Sign Up
+          a.navbar-item(href="/signin") Sign In
+          a.navbar-item(href="/signup") Sign Up
         else
-          a.nav-item(href="/signout") Sign Out
+          a.navbar-item(href="/signout") Sign Out
 
 
 append scripts
   script.
     document.addEventListener('DOMContentLoaded', function () {
-      var burger = document.querySelector('.nav-toggle');
-      var menu = document.querySelector('.nav-menu');
+      var burger = document.querySelector('.navbar-burger');
+      var menu = document.querySelector('.navbar-menu');
 
       burger.addEventListener('click', function () {
         burger.classList.toggle('is-active');
