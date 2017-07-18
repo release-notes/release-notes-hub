@@ -16,8 +16,12 @@ class AccountRepository extends BaseRepository {
         unique: true,
         required: true
       },
+      username: {
+        type: String,
+        unique: true,
+        required: true
+      },
       passwordHash: String,
-      name: String,
     };
   }
 
@@ -29,6 +33,21 @@ class AccountRepository extends BaseRepository {
   findOneByEmail(email, callback) {
     this.findOne({
       email: email,
+    }, callback);
+
+    return this;
+  }
+
+  /**
+   * Find an account by its usernam.
+   *
+   * @param {string} username
+   * @param {function} callback
+   * @return {AccountRepository}
+   */
+  findOneByUsername(username, callback) {
+    this.findOne({
+      username: username,
     }, callback);
 
     return this;

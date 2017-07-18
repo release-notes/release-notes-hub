@@ -15,19 +15,32 @@ class AccountService extends BaseRepositoryService {
 
   createAccountWithCredentials(params, callback) {
     async.waterfall([
-      taskCallback => this.repository.findOneByEmail(params.email, taskCallback),
-      (account, taskCallback) => {
-        if (account) {
-          return void callback(new Error('User already exists.'));
-        }
-        taskCallback();
+      (taskCallback) => {
+        async.parallel({
+          byEmail: findByEmailCallback => this.repository.findOneByEmail(params.email, findByEmailCallback),
+          byUsername: findByUsernameCallback => this.repository.findOneByUsername(params.username, findByUsernameCallback),
+        }, (err, results) => {
+          if (err) {
+            return void callback(err);
+          }
+
+          if (results.byEmail) {
+            return void callback(new Error('Email is already in use.'));
+          }
+
+          if (results.byUsername) {
+            return void callback(new Error('Username is already in use.'));
+          }
+
+          taskCallback();
+        });
       },
       taskCallback => bcrypt.hash(params.password, 10, taskCallback),
       (passwordHash, taskCallback) => {
         const accountArgs = {
           email: params.email,
           passwordHash,
-          name: params.name || '',
+          username: params.username,
         };
 
         this.repository.create(accountArgs, taskCallback);
