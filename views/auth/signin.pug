@@ -6,18 +6,24 @@ block globalVars
 block content
   .container.has-text-centered
 
-    h1.title.is-1 Sign In
+    .card.is-inline-block
+      form(method='post' autocomplete='on' action='/signin')
+        .card-content
+          h1.title.is-3 Sign In to Your Account
 
-    form.is-inline-block(method='post' autocomplete='on' action='/signin')
-      .field
-        label.label Email
-        p.control
-          input.input(type='email' autocomplete='email' name='email')
-      .field
-        label.label Password
-        p.control
-          input.input(name='password' type='password' autocomplete='password')
+          .field.has-text-left
+            label.label Email
+            p.control
+              input.input(type='email' autocomplete='email' name='email')
+          .field.has-text-left
+            label.label Password
+            p.control
+              input.input(name='password' type='password' autocomplete='password')
 
-      .field
-        p.control
-          input.button.is-primary.is-fullwidth(type='submit' value='Sign In')
+        .card-footer
+          .card-footer-item
+            .field
+              p.control
+                input.button.is-primary.is-fullwidth(type='submit' value='Sign In')
+        .card-footer
+          a.card-footer-item(href='/signup') Or create a new account?

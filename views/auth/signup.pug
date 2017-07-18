@@ -6,22 +6,28 @@ block globalVars
 block content
   .container.has-text-centered
 
-    h1.title.is-1 Create An Account
+    .card.is-inline-block
+      form(method='post' autocomplete='on' action='/signup')
+        .card-content
+          h1.title.is-3 Sign Up for a New Account
+          .field.has-text-left
+            label.label Username
+            p.control
+              input.input(type='text' autocomplete='username' name='username' placeholder='Pick a username' required)
+          .field.has-text-left
+            label.label Email
+            p.control
+              input.input(type='email' autocomplete='email' name='email' placeholder='Your Email Address' required)
+          .field.has-text-left
+            label.label Password
+            p.control
+              input.input(name='password' type='password' autocomplete='password' minlength=8 required)
 
-    form.is-inline-block(method='post' autocomplete='on' action='/signup')
-      .field
-        label.label Username
-        p.control
-          input.input(type='text' autocomplete='username' name='username' placeholder='Pick a username' required)
-      .field
-        label.label Email
-        p.control
-          input.input(type='email' autocomplete='email' name='email' placeholder='Your Email Address' required)
-      .field
-        label.label Password
-        p.control
-          input.input(name='password' type='password' autocomplete='password' minlength=8 required)
 
-      .field
-        p.control
-          input.button.is-primary.is-fullwidth(type='submit' value='Sign Up')
+        .card-footer
+          .card-footer-item
+            .field
+              p.control
+                input.button.is-primary.is-fullwidth(type='submit' value='Sign Up')
+        .card-footer
+          a.card-footer-item(href='/signin') Already have an account?
