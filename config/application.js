@@ -21,6 +21,7 @@ module.exports = {
       errorController: `${APP_PATH}/controllers/ErrorController`,
       indexController: `${APP_PATH}/controllers/IndexController`,
       apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
+      authController: `${APP_PATH}/controllers/AuthController`,
 
       // repositories
       accountRepository: `${APP_PATH}/repositories/AccountRepository`,
@@ -61,8 +62,9 @@ module.exports = {
     port: process.env.PORT || '8080',
     controllers: [
       'apiPublishController',
+      'authController',
       'indexController',
-      'errorController'
+      'errorController',
     ],
     viewVariables: {},
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
