@@ -35,7 +35,9 @@ append scripts
         menu.classList.toggle('is-active');
       });
 
-      submenuTrigger.addEventListener('click', function() {
-        this.parentNode.classList.toggle('is-active');
-      });
+      if (submenuTrigger) {
+        submenuTrigger.addEventListener('click', function () {
+          this.parentNode.classList.toggle('is-active');
+        });
+      }
     });
