@@ -9,6 +9,13 @@ const releaseNotesLoader = new ReleaseNotesLoader();
 const uploadHandler = multer();
 
 class ReleaseNotesController extends AbstractController {
+  bootstrap() {
+    /* @var {ReleaseNotesRepository} */
+    this.releaseNotesRepository = this.serviceManager.get('releaseNotesRepository');
+
+    return this;
+  }
+
   renderPublishView(req, res, next) {
     res.render('release-notes/publish');
   }
@@ -31,8 +38,7 @@ class ReleaseNotesController extends AbstractController {
       releaseNotesData.scope = req.user.username;
       releaseNotesData.name = req.body.name;
 
-      const releaseNotesRepository = this.serviceManager.get('releaseNotesRepository');
-      releaseNotesRepository.create(releaseNotesData, (err, releaseNotesModel) => {
+      this.releaseNotesRepository.create(releaseNotesData, (err, releaseNotesModel) => {
         if (err) {
           return void next(err);
         }
@@ -43,7 +49,7 @@ class ReleaseNotesController extends AbstractController {
   }
 
   renderRealeaseNotesView(req, res, next) {
-    this.serviceManager.get('releaseNotesRepository').findOneByScopeAndName(
+    this.releaseNotesRepository.findOneByScopeAndName(
       req.params.scope,
       req.params.releaseNotesId,
       (err, releaseNotesModel) => {
@@ -58,6 +64,24 @@ class ReleaseNotesController extends AbstractController {
 
         res.render('release-notes/detail', {
           releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotesModel)
+        });
+      }
+    );
+  }
+
+  renderAccountRealeaseNotesListView(req, res, next) {
+    const scope = req.params.scope;
+
+    this.releaseNotesRepository.findAllByScope(
+      scope,
+      (err, releaseNotesList) => {
+        if (err) {
+          return void next(err);
+        }
+
+        res.render('release-notes/list', {
+          releaseNotesList,
+          scope,
         });
       }
     );
@@ -79,6 +103,9 @@ class ReleaseNotesController extends AbstractController {
           (req, res, next) => this.publishAction(req, res, next)
         ]
       }],
+      '/@:scope': {
+        handler: (req, res, next) => this.renderAccountRealeaseNotesListView(req, res, next),
+      },
       '/@:scope/:releaseNotesId': {
         handler: (req, res, next) => this.renderRealeaseNotesView(req, res, next),
       }

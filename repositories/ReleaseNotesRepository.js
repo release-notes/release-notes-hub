@@ -45,6 +45,14 @@ class ReleaseNotesRepository extends BaseRepository {
 
     return this;
   }
+
+  findAllByScope(scope, callback) {
+    this.find({
+      scope: scope
+    }, callback);
+
+    return this;
+  }
 }
 
 module.exports = ReleaseNotesRepository;
