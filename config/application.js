@@ -22,9 +22,11 @@ module.exports = {
       indexController: `${APP_PATH}/controllers/IndexController`,
       apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
       authController: `${APP_PATH}/controllers/AuthController`,
+      releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
 
       // repositories
       accountRepository: `${APP_PATH}/repositories/AccountRepository`,
+      releaseNotesRepository: `${APP_PATH}/repositories/ReleaseNotesRepository`,
 
       // model services
       accountService: `${APP_PATH}/services/AccountService`,
@@ -63,6 +65,7 @@ module.exports = {
     controllers: [
       'apiPublishController',
       'authController',
+      'releaseNotesController',
       'indexController',
       'errorController',
     ],

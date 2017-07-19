@@ -1,0 +1,34 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Publish'
+
+block content
+  .container.has-text-centered
+
+    if releaseNotes
+      .release-notes
+        h1.title.is-1 #{releaseNotes.title}
+          if releaseNotes.description
+            h2.subtitle #{releaseNotes.description}
+
+        each release in releaseNotes.releases
+          .columns.release
+            .column
+              .title.is-3 #{release.version}
+
+              if release.date
+                .subtitle.is-6 #{release.date}
+            .column.has-text-center
+              .content.has-text-left.is-inline-block-mobile
+                each modifications, modificationType in release.getModifications()
+                  if modifications && modifications.length
+                    div.modification-list
+                      span.tag.is-dark #{modificationType}
+                      ul
+                        each modification in modifications
+                          li
+                            if typeof modification === 'string'
+                              | #{modification}
+                            else
+                              | #{modification.title}
