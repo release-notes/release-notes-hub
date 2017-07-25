@@ -53,6 +53,27 @@ class ReleaseNotesRepository extends BaseRepository {
 
     return this;
   }
+
+  /**
+   * Retrieve a list of the nth newest release notes.
+   *
+   * @param {number} count
+   * @param {function} callback
+   */
+  findNewest(count, callback) {
+    this.findList({}, {
+      limit: count,
+      sort: {
+        createdAt: -1
+      }
+    }, (err, releaseNotesList) => {
+      if (err) {
+        return void callback(err);
+      }
+
+      return void callback(null, releaseNotesList.items);
+    });
+  }
 }
 
 module.exports = ReleaseNotesRepository;
