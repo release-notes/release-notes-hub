@@ -38,9 +38,9 @@ block content
           h3.title.is-3 Latest Release Notes
 
         .hero-body
-          .columns.is-grid
+          .columns.is-grid.is-mobile.is-multiline
             each releaseNotes in newest
-              .column.is-one-quarter
+              .column.is-one-quarter-tablet.is-half-mobile
                 a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
                   | @#{releaseNotes.scope}/#{releaseNotes.name}
                 div.is-small #{releaseNotes.title}
