@@ -1,0 +1,19 @@
+footer {
+  &.footer {
+    padding: $footer-padding;
+  }
+
+  .copyright {
+    color: $grey-light;
+  }
+
+  .menu-label {
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0;
+  }
+
+  .menu-list a {
+    padding-left: 0;
+  }
+}

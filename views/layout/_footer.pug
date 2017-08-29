@@ -1,4 +1,45 @@
 .container
-  .tabs.is-centered
-    ul
-      li Copyright © 2017 Alrik Zachert
+  nav.columns.is-mobile.is-multiline.has-text-centered
+    .column
+      .wrapper.is-inline-block.has-text-left
+        h4.menu-label Resources
+        ul.menu-list
+          li
+            a(href="/about") About
+          li
+            a(href="/how-it-works") How it Works
+          li
+            a(href="/faq") FAQ's
+          li
+            a(href="/contribute") Get involved
+          li
+            a(href="https://github.com/release-notes/release-notes/issues") Request a Feature
+    .column
+      .wrapper.is-inline-block.has-text-left
+        h4.menu-label Legal
+        ul.menu-list
+          li
+            a(href="/contact") Contact
+          li
+            a(href="/imprint") Imprint
+          li
+            a(href="/privacy-policies") Privacy Policies
+    .column
+      .wrapper.is-inline-block.has-text-left
+        h4.menu-label Open Source
+        ul.menu-list
+          li
+            a(href="https://github.com/release-notes" title="Release Notes Main Repository") Release Notes
+          li
+            a(href="https://github.com/release-notes/release-notes-hub" title="Release Notes Hub Repository") Hub
+          li
+            a(href="https://github.com/release-notes/release-notes-spec" title="Release Notes Specification Repository") Specification
+          li
+            a(href="https://github.com/release-notes/release-notes-schema" title="Release Notes JSON Schema Repository") JSON Schema
+          li
+            a(href="https://github.com/release-notes/release-notes-node" title="Release Notes Node Repository") NodeJS lib
+          li
+            a(href="https://github.com/release-notes/release-notes-cli" title="Release Notes Cli Repository") CLI Tool
+    .column.is-12
+      .copyright Copyright © 2017
+        a(href="https://github.com/alrik") &nbsp;Alrik Zachert
