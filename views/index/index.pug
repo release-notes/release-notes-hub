@@ -44,3 +44,7 @@ block content
                 a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
                   | @#{releaseNotes.scope}/#{releaseNotes.name}
                 div.is-small #{releaseNotes.title}
+    .hero
+      .hero-body.has-text-centered
+        .container
+          a.button.is-primary(href='/publish') Publish Release Notes
