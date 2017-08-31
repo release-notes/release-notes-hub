@@ -10,6 +10,8 @@ const uploadHandler = multer();
 
 class ReleaseNotesController extends AbstractController {
   bootstrap() {
+    super.bootstrap();
+
     /* @var {ReleaseNotesRepository} */
     this.releaseNotesRepository = this.serviceManager.get('releaseNotesRepository');
 
@@ -88,7 +90,7 @@ class ReleaseNotesController extends AbstractController {
   }
 
   getRoutes() {
-    const authService = this.serviceManager.get('authService');
+    const authService = this.authService;
 
     return {
       '/publish': [{

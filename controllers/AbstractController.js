@@ -6,13 +6,15 @@ class AbstractController extends Service {
   constructor(serviceManager) {
     super(serviceManager);
 
+    this.authService = null;
     this.logger = null;
   }
 
-  launch() {
+  bootstrap() {
     const sm = this.getServiceManager();
 
     this.logger = sm.get('logging', true).getLogger();
+    this.authService = sm.get('authService', true);
 
     return this;
   }

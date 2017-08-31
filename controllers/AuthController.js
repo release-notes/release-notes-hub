@@ -39,13 +39,15 @@ class AuthController extends AbstractController {
   }
 
   getRoutes() {
+    const authService = this.authService;
+
     return {
       '/signin': [{
         method: 'get',
         handler: (req, res, next) => this.renderSignInAction(req, res, next)
       }, {
         method: 'post',
-        handler: this.serviceManager.get('authService').authenticate('credentials', {
+        handler: authService.authenticate('credentials', {
           successRedirect: '/',
           failureRedirect: '/signin',
         })
@@ -60,7 +62,7 @@ class AuthController extends AbstractController {
       '/signout': {
         method: 'get',
         handler: [
-          this.serviceManager.get('authService').authenticate('session'),
+          authService.authenticate('session'),
           (req, res, next) => this.signOutAction(req, res, next),
         ]
       }
