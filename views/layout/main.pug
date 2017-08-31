@@ -14,15 +14,15 @@ html(lang="en")
         link(rel='stylesheet' href='/css/release-notes.css')
 
   body
-    section.hero.is-fullheight.is-default.is-bold
-      header.hero-head
+    section
+      header
         block header
           include ./_header
 
-      article.hero-body(class=pageCls?pageCls:'')
+      article(class=pageCls?pageCls:'')
         block content
 
-      footer.hero-foot.footer
+      footer.footer
         block footer
           include ./_footer
 
