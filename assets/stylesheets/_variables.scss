@@ -1,10 +1,13 @@
 @import "../../node_modules/bulma/sass/utilities/initial-variables";
 
+$primary: #ed6c63;
+
 $footer-background-color: $white;
 
 $menu-item-hover-background-color: transparent;
-$navbar-height: 8rem;
+$navbar-height: 4rem;
 $footer-padding: 6rem 3rem;
+$footer-padding-mobile: 3rem 1rem;
 
 /* import additional styles  */
 @import "../../node_modules/bulma/sass/utilities/_all";

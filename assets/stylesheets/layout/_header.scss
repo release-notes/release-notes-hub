@@ -1,0 +1,9 @@
+header {
+  border-bottom: 2px solid $white-ter;
+
+  @include desktop() {
+    .navbar {
+      height: 6rem;
+    }
+  }
+}
