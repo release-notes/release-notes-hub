@@ -4,7 +4,8 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
-- version: Unreleased
+- version: 0.1.0
+  date: 2017-09-01
   title: MVP - First Release
   description: MVP implementation
   added:
