@@ -5,16 +5,17 @@ block globalVars
 
 block content
   .container
-    center
-      h1 An error occured
-      p.
-        We are sorry, but we could not handle your request properly.
-        Our dev team is informed and we are going to solve the issue as soon as possible.
+    center.has-text-centered
+      .section
+        h1.title An error occured
+        p.
+          We are sorry, but we could not handle your request properly.
+          Our dev team is informed and we are going to solve the issue as soon as possible.
 
-      if error.message
-        p #{error.message}
+        if error.message
+          p #{error.message}
 
-      if error.stack
-        h3 Stack Trace
-        pre
-          code #{error.stack}
+        if error.stack
+          h3.subtitle Stack Trace
+          pre
+            code #{error.stack}

@@ -5,33 +5,30 @@ block globalVars
 
 block content
   .container.has-text-centered
+    .section
+      if err
+        article.message.is-dark
+          .message-header
+            p oops
+          .message-body
+            p #{err.message}
 
-    if err
-      article.message.is-dark
-        .message-header
-          p oops
-        .message-body
-          p #{err.message}
+      .card.is-inline-block
+        form(method='post' enctype='multipart/form-data' action='/publish')
+          .card-content
+            h1.title.is-3 Publish Release Notes
 
-
-
-    .card.is-inline-block
-      form(method='post' enctype='multipart/form-data' action='/publish')
-        .card-content
-          h1.title.is-3 Publish Release Notes
-
-          .field.has-text-left
-            label.label Release Notes Name
-            p.control
-              input.input(type='text' autocomplete='name' name='name' placeholder="Unique name of the release notes")
-          .field.has-text-left
-            label.label Release Notes File
-            p.control
-              input.input(name='release-notes' type='file' required)
+            .field.has-text-left
+              label.label Release Notes Name
+              p.control
+                input.input(type='text' autocomplete='name' name='name' placeholder="Unique name of the release notes")
+            .field.has-text-left
+              label.label Release Notes File
+              p.control
+                input.input(name='release-notes' type='file' required)
 
 
-        .card-footer
-          .card-footer-item
+          .card-content
             .field
               p.control
                 input.button.is-primary.is-fullwidth(type='submit' value='Publish')

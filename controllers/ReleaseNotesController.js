@@ -10,6 +10,8 @@ const uploadHandler = multer();
 
 class ReleaseNotesController extends AbstractController {
   bootstrap() {
+    super.bootstrap();
+
     /* @var {ReleaseNotesRepository} */
     this.releaseNotesRepository = this.serviceManager.get('releaseNotesRepository');
 
@@ -88,17 +90,21 @@ class ReleaseNotesController extends AbstractController {
   }
 
   getRoutes() {
+    const authService = this.authService;
+
     return {
       '/publish': [{
         method: 'get',
         handler: [
-          this.serviceManager.get('authService').authenticate('session', { failureRedirect: '/signin' }),
+          authService.authenticate('session'),
+          authService.requireUser(),
           (req, res, next) => this.renderPublishView(req, res, next)
         ]
       }, {
         method: 'post',
         handler: [
-          this.serviceManager.get('authService').authenticate('session', { failureRedirect: '/signin' }),
+          authService.authenticate('session'),
+          authService.requireUser(),
           uploadHandler.single('release-notes'),
           (req, res, next) => this.publishAction(req, res, next)
         ]

@@ -49,6 +49,16 @@ class AuthService extends AbstractService {
     ));
   }
 
+  requireUser() {
+    return (req, res, next) => {
+      if (req.user) {
+        return void next();
+      }
+
+      res.redirect('/signin');
+    };
+  }
+
   authenticate(strategy, options) {
     return this.passport.authenticate(strategy, options);
   }
