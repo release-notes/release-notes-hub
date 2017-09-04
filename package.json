@@ -2,6 +2,7 @@
   "name": "release-notes-hub",
   "description": "Hosted release notes.",
   "version": "0.1.0",
+  "license": "MIT",
   "main": "server.js",
   "dependencies": {
     "@gfcc/mongo-tenant-repository": "^2.0.1",
