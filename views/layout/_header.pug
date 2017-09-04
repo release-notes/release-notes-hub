@@ -1,0 +1,44 @@
+.container
+  nav.navbar.is-transparent
+    .navbar-brand
+      a.navbar-item(href="/")
+        span.logo
+        h1 Release Notes Hub
+
+      .navbar-burger.burger
+        span
+        span
+        span
+
+    .navbar-menu
+      .navbar-end
+        if !user
+          a.navbar-item(href="/signin") Sign In
+          a.navbar-item(href="/signup") Sign Up
+        else
+          .navbar-item.has-dropdown.is-hoverable
+            a.navbar-link #{user.username}
+            .navbar-dropdown.is-boxed
+              a.navbar-item(href="/publish") Publish Release Notes
+              .navbar-divider
+              a.navbar-item(href="/signout") Sign Out
+
+
+append scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+      var burger = document.querySelector('.navbar-burger');
+      var menu = document.querySelector('.navbar-menu');
+      var submenuTrigger = document.querySelector('.navbar-item.has-dropdown > .navbar-link');
+
+      burger.addEventListener('click', function () {
+        burger.classList.toggle('is-active');
+        menu.classList.toggle('is-active');
+      });
+
+      if (submenuTrigger) {
+        submenuTrigger.addEventListener('click', function () {
+          this.parentNode.classList.toggle('is-active');
+        });
+      }
+    });

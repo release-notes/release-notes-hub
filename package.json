@@ -1,0 +1,57 @@
+{
+  "name": "@release-notes/hub",
+  "description": "A hub for hosting release notes.",
+  "version": "0.1.0",
+  "author": "Alrik Zachert <alrik.zachert@gmail.com>",
+  "keywords": [
+    "release notes",
+    "release-notes",
+    "releasenotes",
+    "release",
+    "notes",
+    "changelog"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/release-notes/release-notes-hub/issues"
+  },
+  "repository": {
+    "url": "https://github.com/release-notes/release-notes-hub"
+  },
+  "contributors": [
+    "Alrik Zachert <alrik.zachert@gmail.com>"
+  ],
+  "main": "server.js",
+  "dependencies": {
+    "@gfcc/mongo-tenant-repository": "^2.0.1",
+    "@release-notes/node": "^0.2.0",
+    "async": "^2.5.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.17.2",
+    "bunyan-format": "~0.2.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "kermit": "^2.2.0",
+    "kermit-bunyan": "~0.1.0",
+    "kermit-mongoose": "^0.3.0",
+    "kermit-service-observer": "~0.1.1",
+    "moment": "^2.18.1",
+    "mongoose": "^4.11.9",
+    "multer": "^1.3.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.0-rc.3"
+  },
+  "devDependencies": {
+    "bulma": "^0.5.1",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "postinstall": "gulp build"
+  }
+}

@@ -1,0 +1,28 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Sign In'
+
+block content
+  .container.has-text-centered
+    .section
+      .card.is-inline-block
+        form(method='post' autocomplete='on' action='/signin')
+          .card-content
+            h1.title.is-3 Sign In to Your Account
+
+            .field.has-text-left
+              label.label Email
+              p.control
+                input.input(type='email' autocomplete='email' name='email')
+            .field.has-text-left
+              label.label Password
+              p.control
+                input.input(name='password' type='password' autocomplete='password')
+
+          .card-content
+            .field
+              p.control
+                input.button.is-primary.is-fullwidth(type='submit' value='Sign In')
+          .card-footer
+            a.card-footer-item(href='/signup') Or create a new account?

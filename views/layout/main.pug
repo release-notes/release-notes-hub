@@ -1,0 +1,30 @@
+block globalVars
+doctype html
+html(lang="en")
+  head
+    block head
+      title= metaTitle ? metaTitle : "Release Notes - For Everyone"
+      meta(name="viewport" content="width=device-width,initial-scale=1")
+      meta(charset="utf-8")
+      meta(http-equiv="X-UA-Compatible" content="IE=edge")
+      meta(name="description" content=metaDescription ? metaDescription : "Easy to use, human readable and machine processable release notes for everyone.")
+      block stylesheets
+        link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700')
+        link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
+        link(rel='stylesheet' href='/css/bulma.css?0.5.1')
+        link(rel='stylesheet' href='/css/release-notes.css')
+
+  body
+    section
+      header
+        block header
+          include ./_header
+
+      article(class=pageCls?pageCls:'')
+        block content
+
+      footer.footer
+        block footer
+          include ./_footer
+
+    block scripts

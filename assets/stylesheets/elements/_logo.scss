@@ -1,0 +1,21 @@
+.logo {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 100%;
+  background-color: $primary;
+  margin-right: .5rem;
+  position: relative;
+
+  &::after {
+    position: absolute;
+    display: block;
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 100%;
+    background: $white;
+    top: 0.25rem;
+    left: 0.25rem;
+  }
+}

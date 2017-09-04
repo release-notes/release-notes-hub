@@ -1,0 +1,18 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Listing'
+
+block content
+  .container.has-text-centered
+    .section
+      .card.is-inline-block
+        .card-content
+          h1.title.is-3 Release Notes of @#{scope}
+
+          ul.has-text-left
+            each releaseNotes in releaseNotesList
+              li
+                a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
+                  | @#{releaseNotes.scope}/#{releaseNotes.name}
+                div.is-small #{releaseNotes.title}

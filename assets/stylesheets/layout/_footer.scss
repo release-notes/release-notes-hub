@@ -1,0 +1,32 @@
+footer {
+  &.footer {
+    padding: $footer-padding;
+    border-top: 2px solid $white-ter;
+  }
+
+  .copyright {
+    color: $grey-light;
+  }
+
+  .menu-label {
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0;
+  }
+
+  .menu-list a {
+    padding-left: 0;
+  }
+
+  @include touch() {
+    font-size: .875rem;
+
+    &.footer {
+      padding: $footer-padding-mobile;
+    }
+
+    .menu-label {
+      font-size: .875rem;
+    }
+  }
+}
