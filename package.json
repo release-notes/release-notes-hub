@@ -1,7 +1,26 @@
 {
-  "name": "release-notes-hub",
-  "description": "Hosted release notes.",
-  "version": "0.0.1",
+  "name": "@release-notes/hub",
+  "description": "A hub for hosting release notes.",
+  "version": "0.1.0",
+  "author": "Alrik Zachert <alrik.zachert@gmail.com>",
+  "keywords": [
+    "release notes",
+    "release-notes",
+    "releasenotes",
+    "release",
+    "notes",
+    "changelog"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/release-notes/release-notes-hub/issues"
+  },
+  "repository": {
+    "url": "https://github.com/release-notes/release-notes-hub"
+  },
+  "contributors": [
+    "Alrik Zachert <alrik.zachert@gmail.com>"
+  ],
   "main": "server.js",
   "dependencies": {
     "@gfcc/mongo-tenant-repository": "^2.0.1",
