@@ -9,6 +9,7 @@ releases:
   title: MVP - First Release
   description: MVP implementation
   added:
+  - MIT license.
   - Display most recently updated release notes on home screen.
   - Introduce accounts & session based auth.
   - Upload & rendering of release notes.
