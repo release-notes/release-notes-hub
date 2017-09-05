@@ -55,6 +55,19 @@ class ReleaseNotesRepository extends BaseRepository {
   }
 
   /**
+   * Retrieves the list of release notes owned by the given account.
+   *
+   * @param {string} ownerAccountId
+   * @param callback
+   * @return {BaseRepository}
+   */
+  findAllByOwnerAccountId(ownerAccountId, callback) {
+    return this.find({
+      ownerAccountId,
+    }, callback);
+  }
+
+  /**
    * Retrieve a list of the nth newest release notes.
    *
    * @param {number} count
