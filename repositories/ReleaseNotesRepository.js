@@ -9,7 +9,7 @@ class ReleaseNotesRepository extends BaseRepository {
     return {
       scope: { type: String, 'default': 'global', required: true },
       name: { type: String, required: true },
-      ownerAccountId: String,
+      ownerAccountId: { type: String, required: true },
 
       title: String,
       description: String,
