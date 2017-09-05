@@ -50,6 +50,21 @@ class ReleaseNotesController extends AbstractController {
     });
   }
 
+  renderMyReleaseNotesView(req, res, next) {
+    this.releaseNotesRepository.findAllByOwnerAccountId(
+      req.user._id,
+      (err, releaseNotesList) => {
+        if (err) {
+          return void next(err);
+        }
+
+        res.render('release-notes/private-list', {
+          releaseNotesList,
+        });
+      }
+    );
+  }
+
   renderRealeaseNotesView(req, res, next) {
     this.releaseNotesRepository.findOneByScopeAndName(
       req.params.scope,
@@ -107,6 +122,14 @@ class ReleaseNotesController extends AbstractController {
           authService.requireUser(),
           uploadHandler.single('release-notes'),
           (req, res, next) => this.publishAction(req, res, next)
+        ]
+      }],
+      '/release-notes': [{
+        method: 'get',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.renderMyReleaseNotesView(req, res, next)
         ]
       }],
       '/@:scope': {

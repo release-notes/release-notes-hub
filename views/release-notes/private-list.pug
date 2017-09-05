@@ -1,0 +1,21 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - My Release Notes'
+
+block content
+  .container.has-text-centered
+    .section
+      h1.subtitle.is-3 My Release Notes
+
+      if releaseNotesList && releaseNotesList.length
+        table.table.is-inline-block
+          tr
+            th Name
+            th Title
+          each releaseNotes in releaseNotesList
+            tr
+              td
+                a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
+                  | @#{releaseNotes.scope}/#{releaseNotes.name}
+              td #{releaseNotes.title}
