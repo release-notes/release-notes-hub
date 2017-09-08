@@ -7,10 +7,9 @@ block content
   .container.has-text-centered
     .section
       if err
-        article.message.is-dark
-          .message-header
-            p oops
+        .message
           .message-body
+            .subtitle.is-5 Release Notes Validation failed.
             p #{err.message}
 
       .card.is-inline-block
