@@ -13,12 +13,6 @@ block content
             h1.title.is-3 Sign Up for a New Account
 
             .field.has-text-left
-              label.label Username
-              p.control
-                input.input(type='text' autocomplete='username' name='username' value=form.username placeholder='Pick a username' required)
-                if errors && errors.username
-                  .help.is-danger= errors.username.msg
-            .field.has-text-left
               label.label Email
               p.control
                 input.input(type='email' autocomplete='email' name='email' value=form.email placeholder='Your Email Address' required)
@@ -30,7 +24,17 @@ block content
                 input.input(name='password' type='password' autocomplete='password' value=form.password minlength=10 required)
                 if errors && errors.password
                   .help.is-danger= errors.password.msg
-
+                else
+                  .help Your login password (min. 10 characters)
+            hr
+            .field.has-text-left
+              label.label Username
+              p.control
+                input.input(type='text' autocomplete='username' name='username' value=form.username placeholder='Pick a username' required)
+                if errors && errors.username
+                  .help.is-danger= errors.username.msg
+                else
+                  .help Your unique username (only numbers, letters and dashes)
           .card-content
             .field
               p.control
