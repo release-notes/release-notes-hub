@@ -20,12 +20,19 @@ block content
             .field.has-text-left
               label.label Release Notes Name
               p.control
-                input.input(type='text' autocomplete='name' name='name' placeholder="Unique name of the release notes")
+                input.input(
+                  type='text' value=(form && form.name) autocomplete='name' name='name'
+                  placeholder="Unique name of the release notes"
+                  class=(errors && errors.name && 'is-danger')
+                )
+                if errors && errors.name
+                  span.help.is-danger= errors.name.msg
             .field.has-text-left
               label.label Release Notes File
               p.control
-                input.input(name='release-notes' type='file' required)
-
+                input.input(name='release-notes' type='file' required class=(errors && errors.file && 'is-danger'))
+                if errors && errors.file
+                  span.help.is-danger= errors.file.msg
 
           .card-content
             .field
