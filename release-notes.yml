@@ -5,6 +5,8 @@ description: >
 
 releases:
 - version: Upcoming
+  added:
+  - Add support for publishing a new revision of existing release-notes. (#5)
   improved:
   - Added help info on form fields.
   changed:
