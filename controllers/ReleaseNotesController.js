@@ -3,6 +3,7 @@
 const AbstractController = require('./AbstractController');
 const ReleaseNotesLoader = require('@release-notes/node/lib/ReleaseNotesLoader');
 const ReleaseNotesDataModel = require('@release-notes/node/lib/models/ReleaseNotes');
+const { check, validationResult } = require('express-validator/check');
 const multer = require('multer');
 
 const releaseNotesLoader = new ReleaseNotesLoader();
@@ -25,7 +26,21 @@ class ReleaseNotesController extends AbstractController {
   publishAction(req, res, next) {
     if (!req.file) {
       return void res.render('release-notes/publish', {
-        err: new Error('No release-notes.yml file was uploaded.')
+        errors: {
+          file: {
+            msg: 'No release-notes.yml file was uploaded.',
+          },
+        },
+        form: req.body
+      });
+    }
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return void res.render('release-notes/publish', {
+        errors: errors.mapped(),
+        form: req.body,
       });
     }
 
@@ -121,6 +136,8 @@ class ReleaseNotesController extends AbstractController {
           authService.authenticate('session'),
           authService.requireUser(),
           uploadHandler.single('release-notes'),
+          check('name', 'Name must be alphanumeric and may contain dashes.')
+            .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           (req, res, next) => this.publishAction(req, res, next)
         ]
       }],

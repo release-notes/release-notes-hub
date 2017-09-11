@@ -4,6 +4,11 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
+- version: Upcoming
+  improved:
+  - Added help info on form fields.
+  changed:
+  - Introduce backend form validation. Restrict user and release note names to numbers, letters and dashes.
 - version: 0.1.0
   date: 2017-09-01
   title: MVP - First Release
