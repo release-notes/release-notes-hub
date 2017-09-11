@@ -80,6 +80,16 @@ class ReleaseNotesController extends AbstractController {
     );
   }
 
+  editReleaseNotesAction(req, res, next) {
+    this.releaseNotesRepository.findById(req.params.releaseNotesId, (err, releaseNotes) => {
+      if (err) return void next(err);
+
+      res.render('release-notes/edit', {
+        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotes),
+      });
+    });
+  }
+
   renderRealeaseNotesView(req, res, next) {
     this.releaseNotesRepository.findOneByScopeAndName(
       req.params.scope,
@@ -147,6 +157,14 @@ class ReleaseNotesController extends AbstractController {
           authService.authenticate('session'),
           authService.requireUser(),
           (req, res, next) => this.renderMyReleaseNotesView(req, res, next)
+        ]
+      }],
+      '/release-notes/:releaseNotesId': [{
+        method: 'get',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.editReleaseNotesAction(req, res, next)
         ]
       }],
       '/@:scope': {

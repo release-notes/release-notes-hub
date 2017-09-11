@@ -13,12 +13,15 @@ block content
           tr
             th Name
             th Title
+            th
           each releaseNotes in releaseNotesList
             tr
               td
                 a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
                   | @#{releaseNotes.scope}/#{releaseNotes.name}
               td #{releaseNotes.title}
+              td
+                a.is-small.button(href=`/release-notes/${releaseNotes._id}`) Edit
 
       .hero
         .hero-body.has-text-centered
