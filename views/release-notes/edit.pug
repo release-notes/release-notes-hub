@@ -7,28 +7,66 @@ block content
   .container.has-text-centered
     .section
       if releaseNotes
-        .release-notes
-          h1.title.is-1 #{releaseNotes.title}
-            if releaseNotes.description
-              h2.subtitle #{releaseNotes.description}
+        .hero
+          .hero-body.has-text-centered
+            if errors && (errors.validation || errors.file)
+              .message
+                .message-body
+                  .subtitle.is-5 Release Notes Validation failed.
+                  if errors.validation
+                    p= errors.validation.msg
+                  if errors.file
+                    p= errors.file.msg
+            .is-inline-block
+              .subtitle.is-4 Publish New Revision
+              form(method='post' enctype='multipart/form-data' action=`/release-notes/${releaseNotesId}`)
+                .field.is-grouped
+                  .control
+                    .file.has-name
+                      label.file-label
+                        input#js-file-input.file-input(type="file" name="release-notes" accept=".yml, .yaml" required)
+                        span.file-cta
+                          span.file-icon
+                            i.material-icons file_upload
+                          span.file-label Choose
+                        span#js-file-name.file-name ...release-notes.yml
+                  .control
+                    button.button.is-primary(type="submit") Publish
 
-          each release in releaseNotes.releases
-            .columns.release
-              .column
-                .title.is-3 #{release.version}
-
-                if release.date
-                  .subtitle.is-6 #{release.date}
-              .column.has-text-center
-                .content.has-text-left.is-inline-block-mobile
+        .section
+          table.table
+            tr
+              th Title
+              td= releaseNotes.title
+            tr
+              th Description
+              td= releaseNotes.description
+            each release in releaseNotes.releases
+              tr
+                th= release.version
+                td.content
+                  if release.date
+                    .subtitle.is-6 #{release.date}
                   each modifications, modificationType in release.getModifications()
                     if modifications && modifications.length
-                      div.modification-list
-                        span.tag.is-dark #{modificationType}
-                        ul
-                          each modification in modifications
-                            li
-                              if typeof modification === 'string'
-                                | #{modification}
-                              else
-                                | #{modification.title}
+                      span.tag.is-dark #{modificationType}
+                      ul
+                        each modification in modifications
+                          li
+                            if typeof modification === 'string'
+                              | #{modification}
+                            else
+                              | #{modification.title}
+
+append scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+      var fileInputEl = document.getElementById('js-file-input');
+      var fileNameEl = document.getElementById('js-file-name');
+
+      fileInputEl.addEventListener('change', function() {
+        if (fileInputEl.files.length > 0) {
+          fileNameEl.innerHTML = fileInputEl.files[0].name;
+        }
+      });
+    });

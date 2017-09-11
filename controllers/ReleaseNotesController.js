@@ -84,9 +84,57 @@ class ReleaseNotesController extends AbstractController {
     this.releaseNotesRepository.findById(req.params.releaseNotesId, (err, releaseNotes) => {
       if (err) return void next(err);
 
+      if (releaseNotes.ownerAccountId !== req.user.id) {
+        return void next();
+      }
+
       res.render('release-notes/edit', {
         releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotes),
+        releaseNotesId: releaseNotes._id,
       });
+    });
+  }
+
+  updateReleaseNotesAction(req, res, next) {
+    this.releaseNotesRepository.findById(req.params.releaseNotesId, (err, releaseNotes) => {
+      if (err) return void next(err);
+
+      if (releaseNotes.ownerAccountId !== req.user.id) {
+        return void next();
+      }
+
+      const viewVariables = {
+        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotes),
+        releaseNotesId: releaseNotes._id,
+      };
+
+      if (!req.file) {
+        viewVariables.errors = { file: { msg: 'No release-notes.yml file was uploaded.' } };
+        return void res.render('release-notes/edit', viewVariables);
+      }
+
+      releaseNotesLoader.loadReleaseNotes(
+        req.file.buffer,
+        (releaseNotesValidationErr, releaseNotesUpdate) => {
+          if (releaseNotesValidationErr) {
+            viewVariables.errors = { validation: { msg: releaseNotesValidationErr.message } };
+            res.statusCode = 400;
+            res.render('release-notes/edit', viewVariables);
+          }
+
+          this.releaseNotesRepository.findByIdAndUpdate(
+            releaseNotes._id,
+            { $set: releaseNotesUpdate },
+            (releaseNotesUpdateErr, updatedReleaseNotes) => {
+              if (releaseNotesUpdateErr) return void next(releaseNotesUpdateErr);
+
+              viewVariables.releaseNotes = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
+
+              res.render('release-notes/edit', viewVariables);
+            }
+          );
+        }
+      );
     });
   }
 
@@ -165,6 +213,14 @@ class ReleaseNotesController extends AbstractController {
           authService.authenticate('session'),
           authService.requireUser(),
           (req, res, next) => this.editReleaseNotesAction(req, res, next)
+        ]
+      }, {
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          uploadHandler.single('release-notes'),
+          (req, res, next) => this.updateReleaseNotesAction(req, res, next)
         ]
       }],
       '/@:scope': {
