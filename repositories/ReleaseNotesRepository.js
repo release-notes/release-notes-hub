@@ -9,7 +9,7 @@ class ReleaseNotesRepository extends BaseRepository {
     return {
       scope: { type: String, 'default': 'global', required: true },
       name: { type: String, required: true },
-      ownerAccountId: String,
+      ownerAccountId: { type: String, required: true },
 
       title: String,
       description: String,
@@ -52,6 +52,19 @@ class ReleaseNotesRepository extends BaseRepository {
     }, callback);
 
     return this;
+  }
+
+  /**
+   * Retrieves the list of release notes owned by the given account.
+   *
+   * @param {string} ownerAccountId
+   * @param callback
+   * @return {BaseRepository}
+   */
+  findAllByOwnerAccountId(ownerAccountId, callback) {
+    return this.find({
+      ownerAccountId,
+    }, callback);
   }
 
   /**

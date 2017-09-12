@@ -26,6 +26,10 @@ class AuthService extends AbstractService {
 
     this.passport.deserializeUser((id, callback) => {
       this.accountService.findById(id, (err, user) => {
+        if (user) {
+          user.id = id;
+        }
+
         callback(err, user)
       });
     });

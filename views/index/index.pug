@@ -17,30 +17,30 @@ block content
           h3.subtitle.is-3 Features
 
           .columns.is-grid.is-multiline.features
-            .column.is-one-quarter-tablet
+            .column.is-one-third-tablet
               i.material-icons verified_user
               h4.subtitle.is-4 YAML Schema Spec
               p.
                 Build on top of the open <a href="https://github.com/release-notes/release-notes-spec">release notes specification</a>,
                 an easy to use, human readable and machine processable schema for release notes.
-            .column.is-one-quarter-tablet
+            .column.is-one-third-tablet
               i.material-icons autorenew
               h4.subtitle.is-4 Automation
               p Integrate release notes in your CI/CD pipeline
-            .column.is-one-quarter-tablet
+            .column.is-one-third-tablet
               i.material-icons copyright
               h4.subtitle.is-4 Open Source
               p Release Notes is build for the community, with the community:&nbsp;
                 a(href='https://github.com/release-notes/release-notes-spec/blob/master/LICENSE') MIT licensed
-            .column.is-one-quarter-tablet
+            .column.is-one-third-tablet
               i.material-icons phonelink_ring
               h4.subtitle.is-4 Realtime
               p Subscribe on release notes and receive fine grained notifications in realtime
-            .column.is-one-quarter-tablet
+            .column.is-one-third-tablet
               i.material-icons format_list_bulleted
               h4.subtitle.is-4 Transparency
               p Let your customers and/or dependents know what's in your release
-            .column.is-one-quarter-tablet
+            .column.is-one-third-tablet
               i.material-icons money_off
               h4.subtitle.is-4 Free of Charge
               p Free for open source projects
@@ -55,9 +55,9 @@ block content
           .hero-body
             h3.subtitle.is-3 Latest Release Notes
 
-            .columns.is-grid.is-mobile.is-multiline
+            .columns.is-grid.is-multiline
               each releaseNotes in newest
-                .column.is-one-quarter-tablet.is-half-mobile.has-text-left
+                .column.is-one-third-tablet.has-text-left
                   a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
                     | #{releaseNotes.name}
                   div.is-small #{releaseNotes.title}

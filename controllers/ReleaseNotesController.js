@@ -3,6 +3,7 @@
 const AbstractController = require('./AbstractController');
 const ReleaseNotesLoader = require('@release-notes/node/lib/ReleaseNotesLoader');
 const ReleaseNotesDataModel = require('@release-notes/node/lib/models/ReleaseNotes');
+const { check, validationResult } = require('express-validator/check');
 const multer = require('multer');
 
 const releaseNotesLoader = new ReleaseNotesLoader();
@@ -25,7 +26,21 @@ class ReleaseNotesController extends AbstractController {
   publishAction(req, res, next) {
     if (!req.file) {
       return void res.render('release-notes/publish', {
-        err: new Error('No release-notes.yml file was uploaded.')
+        errors: {
+          file: {
+            msg: 'No release-notes.yml file was uploaded.',
+          },
+        },
+        form: req.body
+      });
+    }
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return void res.render('release-notes/publish', {
+        errors: errors.mapped(),
+        form: req.body,
       });
     }
 
@@ -47,6 +62,79 @@ class ReleaseNotesController extends AbstractController {
 
         res.redirect(`/@${releaseNotesModel.scope}/${releaseNotesModel.name}`);
       });
+    });
+  }
+
+  renderMyReleaseNotesView(req, res, next) {
+    this.releaseNotesRepository.findAllByOwnerAccountId(
+      req.user._id,
+      (err, releaseNotesList) => {
+        if (err) {
+          return void next(err);
+        }
+
+        res.render('release-notes/private-list', {
+          releaseNotesList,
+        });
+      }
+    );
+  }
+
+  editReleaseNotesAction(req, res, next) {
+    this.releaseNotesRepository.findById(req.params.releaseNotesId, (err, releaseNotes) => {
+      if (err) return void next(err);
+
+      if (releaseNotes.ownerAccountId !== req.user.id) {
+        return void next();
+      }
+
+      res.render('release-notes/edit', {
+        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotes),
+        releaseNotesId: releaseNotes._id,
+      });
+    });
+  }
+
+  updateReleaseNotesAction(req, res, next) {
+    this.releaseNotesRepository.findById(req.params.releaseNotesId, (err, releaseNotes) => {
+      if (err) return void next(err);
+
+      if (releaseNotes.ownerAccountId !== req.user.id) {
+        return void next();
+      }
+
+      const viewVariables = {
+        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotes),
+        releaseNotesId: releaseNotes._id,
+      };
+
+      if (!req.file) {
+        viewVariables.errors = { file: { msg: 'No release-notes.yml file was uploaded.' } };
+        return void res.render('release-notes/edit', viewVariables);
+      }
+
+      releaseNotesLoader.loadReleaseNotes(
+        req.file.buffer,
+        (releaseNotesValidationErr, releaseNotesUpdate) => {
+          if (releaseNotesValidationErr) {
+            viewVariables.errors = { validation: { msg: releaseNotesValidationErr.message } };
+            res.statusCode = 400;
+            res.render('release-notes/edit', viewVariables);
+          }
+
+          this.releaseNotesRepository.findByIdAndUpdate(
+            releaseNotes._id,
+            { $set: releaseNotesUpdate },
+            (releaseNotesUpdateErr, updatedReleaseNotes) => {
+              if (releaseNotesUpdateErr) return void next(releaseNotesUpdateErr);
+
+              viewVariables.releaseNotes = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
+
+              res.render('release-notes/edit', viewVariables);
+            }
+          );
+        }
+      );
     });
   }
 
@@ -106,7 +194,33 @@ class ReleaseNotesController extends AbstractController {
           authService.authenticate('session'),
           authService.requireUser(),
           uploadHandler.single('release-notes'),
+          check('name', 'Name must be alphanumeric and may contain dashes.')
+            .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           (req, res, next) => this.publishAction(req, res, next)
+        ]
+      }],
+      '/release-notes': [{
+        method: 'get',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.renderMyReleaseNotesView(req, res, next)
+        ]
+      }],
+      '/release-notes/:releaseNotesId': [{
+        method: 'get',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.editReleaseNotesAction(req, res, next)
+        ]
+      }, {
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          uploadHandler.single('release-notes'),
+          (req, res, next) => this.updateReleaseNotesAction(req, res, next)
         ]
       }],
       '/@:scope': {
