@@ -4,7 +4,10 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
-- version: Upcoming
+- version: 0.2.0
+  date: 2017-09-12
+  title: MVP - Second Release
+  description: This release improves form validation and adds support for updating release notes.
   added:
   - Add support for publishing a new revision of existing release-notes. (#5)
   improved:
