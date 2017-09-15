@@ -19,9 +19,12 @@ class IndexController extends AbstractController {
 
   getRoutes() {
     return {
-      '/': [{
+      '/': {
         handler: (req, res, next) => this.indexAction(req, res, next)
-      }],
+      },
+      '/mit-license': {
+        handler: (req, res, next) => res.render('legal/mit-license')
+      }
     }
   };
 }
