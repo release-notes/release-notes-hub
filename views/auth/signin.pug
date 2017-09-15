@@ -8,6 +8,8 @@ block content
     .section
       .card.is-inline-block
         form(method='post' autocomplete='on' action='/signin')
+          input(type='hidden' name='targetUrl' value=targetUrl)
+
           .card-content
             h1.title.is-3 Sign In to Your Account
 
@@ -25,4 +27,8 @@ block content
               p.control
                 input.button.is-primary.is-fullwidth(type='submit' value='Sign In')
           .card-footer
-            a.card-footer-item(href='/signup') Or create a new account?
+            - var signUpUrl = '/signup'
+            if targetUrl
+              - signUpUrl += `?targetUrl=${targetUrl}`
+
+            a.card-footer-item(href=signUpUrl) Or create a new account?

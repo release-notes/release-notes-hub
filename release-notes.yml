@@ -7,6 +7,7 @@ releases:
 - version: Next
   added:
   - Add `/mit-license` page for displaying the applying oss license. (#14)
+  - Redirect the user to the previously requested url after successfull login. (#16)
 - version: 0.2.0
   date: 2017-09-12
   title: MVP - Second Release

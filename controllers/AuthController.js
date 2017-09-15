@@ -5,22 +5,27 @@ const AbstractController = require('./AbstractController');
 
 class AuthController extends AbstractController {
   renderSignInAction(req, res, next) {
-    res.render('auth/signin');
+    res.render('auth/signin', {
+      targetUrl: this.getTargetUrl(req),
+    });
   }
 
   renderSignUpAction(req, res, next) {
-    res.render('auth/signup');
+    res.render('auth/signup', {
+      targetUrl: this.getTargetUrl(req),
+    });
   }
 
   signUpAction(req, res, next) {
     const accountService = this.serviceManager.get('accountService');
-
+    const targetUrl = this.getTargetUrl(req);
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return void res.render('auth/signup', {
         errors: errors.mapped(),
         form: req.body,
+        targetUrl: targetUrl,
       });
     }
 
@@ -38,7 +43,7 @@ class AuthController extends AbstractController {
           return void next(loginErr);
         }
 
-        res.redirect('/');
+        res.redirect(targetUrl || '/');
       });
     });
   }
@@ -48,23 +53,39 @@ class AuthController extends AbstractController {
     res.redirect('/');
   }
 
+  getTargetUrl(req) {
+    const targetUrl = req.body.targetUrl || req.query.targetUrl;
+
+    if (targetUrl && targetUrl[0] === '/' && targetUrl[1] !== '/') {
+      return targetUrl;
+    }
+
+    return '';
+  }
+
+  redirectToTargetUrl(req, res) {
+    const targetUrl = this.getTargetUrl(req) || '/';
+
+    res.redirect(targetUrl);
+  }
+
   getRoutes() {
     const authService = this.authService;
 
     return {
       '/signin': [{
         method: 'get',
-        handler: (req, res, next) => this.renderSignInAction(req, res, next)
+        handler: (req, res, next) => this.renderSignInAction(req, res, next),
       }, {
         method: 'post',
-        handler: authService.authenticate('credentials', {
-          successRedirect: '/',
-          failureRedirect: '/signin',
-        })
+        handler: [
+          authService.authenticate('credentials', { failureRedirect: '/signin' }),
+          (req, res) => this.redirectToTargetUrl(req, res),
+        ]
       }],
       '/signup': [{
         method: 'get',
-        handler: (req, res, next) => this.renderSignUpAction(req, res, next)
+        handler: (req, res, next) => this.renderSignUpAction(req, res, next),
       }, {
         method: 'post',
         handler: [
