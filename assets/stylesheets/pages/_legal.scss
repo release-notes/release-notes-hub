@@ -1,11 +1,13 @@
+$license-container-width: 48rem !default;
+
 .mit-license {
   .license-text {
-    max-width: 48rem;
+    max-width: $license-container-width;
     text-align: left;
   }
 
   .covered-repositories {
-    max-width: 48rem;
+    max-width: $license-container-width;
 
     .tags {
       justify-content: center;
