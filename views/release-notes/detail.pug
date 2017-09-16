@@ -9,8 +9,9 @@ block content
       if releaseNotes
         .release-notes
           h1.title.is-1 #{releaseNotes.title}
-            if releaseNotes.description
-              h2.subtitle #{releaseNotes.description}
+
+          if releaseNotes.description
+            h2.subtitle #{releaseNotes.description}
 
           each release in releaseNotes.releases
             .columns.release
