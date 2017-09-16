@@ -34,6 +34,16 @@ block content
                               else
                                 | #{modification.title}
 
+block header
+  .container
+    nav.navbar.is-transparent.has-text-centered.has-content-centered
+      .navbar-item
+        a.button.is-primary
+          span.icon
+            i.material-icons track_changes
+          | &nbsp;&nbsp;&nbsp;
+          | Subscribe for updates
+
 block footer
   .has-text-centered
     span.has-text-grey powered by&nbsp;
