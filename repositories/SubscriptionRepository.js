@@ -17,6 +17,19 @@ class SubscriptionRepository extends BaseRepository {
       }
     };
   }
+
+  /**
+   * Lookup all subscriptions of the given subscriber.
+   *
+   * @param {string} subscriberId
+   * @param {function} callback
+   * @return {SubscriptionRepository}
+   */
+  findBySubscriberId(subscriberId, callback) {
+    return this.find({
+      subscriberId,
+    }, callback);
+  }
 }
 
 module.exports = SubscriptionRepository;
