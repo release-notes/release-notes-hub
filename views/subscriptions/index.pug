@@ -8,6 +8,19 @@ block content
     .section
       h1.subtitle.is-3 Subscriptions
 
-      .message
-        .message-body
-          p You have not subscriptions, yet.
+      if !subscriptions || !subscriptions.length
+        .message
+          .message-body
+            p You have not subscriptions, yet.
+      else
+        table.table.is-inline-block
+          tr
+            th ReleaseNotes
+            th Since
+            th
+          each subscription in subscriptions
+            tr
+              td #{subscription.releaseNotesId}
+              td #{subscription.createdAt}
+              td
+                a.is-small.button(href=`/subscriptions/${subscription._id}`) Edit
