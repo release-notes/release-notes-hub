@@ -153,7 +153,9 @@ class ReleaseNotesController extends AbstractController {
         }
 
         res.render('release-notes/detail', {
-          releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotesModel)
+          releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotesModel),
+          releaseNotesName: releaseNotesModel.name,
+          scope: releaseNotesModel.scope,
         });
       }
     );
