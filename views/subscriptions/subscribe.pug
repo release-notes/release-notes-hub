@@ -1,0 +1,14 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Subscriptions'
+
+block content
+  .container.has-text-centered
+    .section
+      h1.subtitle.is-3 Subscribe to @#{scope}/#{releaseNotesModel.name}
+
+      form(method='post' enctype='multipart/form-data' action=`/@${scope}/${releaseNotesModel.name}/subscribe`)
+        button.button.is-primary(type="submit")
+          | Subscribe for updates
+
