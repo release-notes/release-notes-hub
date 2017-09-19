@@ -28,6 +28,7 @@ module.exports = {
       // repositories
       accountRepository: `${APP_PATH}/repositories/AccountRepository`,
       releaseNotesRepository: `${APP_PATH}/repositories/ReleaseNotesRepository`,
+      subscriptionRepository: `${APP_PATH}/repositories/SubscriptionRepository`,
 
       // model services
       accountService: `${APP_PATH}/services/AccountService`,
