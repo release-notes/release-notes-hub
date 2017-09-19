@@ -93,6 +93,21 @@ class SubscriptionController extends AbstractController {
     return this;
   }
 
+  unsubscribe(req, res, next) {
+    const subscriptionId = req.params.subscriptionId;
+
+    this.subscriptionRepository.findById(subscriptionId, (lookUpErr, subscription) => {
+      if (lookUpErr) return void next(lookUpErr);
+      if (!subscription) return void next();
+
+      this.subscriptionRepository.findByIdAndRemove(subscription._id, (removalErr) => {
+        if (removalErr) return void next(removalErr);
+
+        res.redirect('/subscriptions');
+      })
+    });
+  }
+
   getRoutes() {
     const authService = this.authService;
 
@@ -103,6 +118,14 @@ class SubscriptionController extends AbstractController {
           authService.authenticate('session'),
           authService.requireUser(),
           (req, res, next) => this.renderSubscriptionsView(req, res, next)
+        ]
+      }],
+      '/subscriptions/:subscriptionId/unsubscribe': [{
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.unsubscribe(req, res, next)
         ]
       }],
       '/@:scope/:releaseNotesId/subscribe': [{

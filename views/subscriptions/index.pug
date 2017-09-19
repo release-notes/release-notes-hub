@@ -23,4 +23,8 @@ block content
               td #{subscription.releaseNotesId}
               td #{subscription.createdAt}
               td
-                a.is-small.button(href=`/subscriptions/${subscription._id}`) Edit
+                .tags
+                  a.is-small.button(href=`/subscriptions/${subscription._id}`) Edit
+
+                  form(method='post' enctype='multipart/form-data' action=`/subscriptions/${subscription._id}/unsubscribe`)
+                    button.is-small.button(type="submit") Unsubscribe
