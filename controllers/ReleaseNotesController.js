@@ -1,5 +1,6 @@
 'use strict';
 
+const async = require('async');
 const AbstractController = require('./AbstractController');
 const ReleaseNotesLoader = require('@release-notes/node/lib/ReleaseNotesLoader');
 const ReleaseNotesDataModel = require('@release-notes/node/lib/models/ReleaseNotes');
@@ -10,11 +11,18 @@ const releaseNotesLoader = new ReleaseNotesLoader();
 const uploadHandler = multer();
 
 class ReleaseNotesController extends AbstractController {
+  /**
+   * @property {SubscriptionRepository} subscriptionRepository
+   * @property {ReleaseNotesRepository} releaseNotesRepository
+   */
+
   bootstrap() {
     super.bootstrap();
 
-    /* @var {ReleaseNotesRepository} */
-    this.releaseNotesRepository = this.serviceManager.get('releaseNotesRepository');
+    const sm = this.getServiceManager();
+
+    this.releaseNotesRepository = sm.get('releaseNotesRepository');
+    this.subscriptionRepository = sm.get('subscriptionRepository');
 
     return this;
   }
@@ -139,26 +147,41 @@ class ReleaseNotesController extends AbstractController {
   }
 
   renderRealeaseNotesView(req, res, next) {
-    this.releaseNotesRepository.findOneByScopeAndName(
-      req.params.scope,
-      req.params.releaseNotesId,
-      (err, releaseNotesModel) => {
-        if (err) {
-          return void next(err);
-        }
+    const params = req.params;
+    const releaseNotesName = params.releaseNotesId;
+    const releaseNotesScope = params.scope;
 
-        // not found
-        if (!releaseNotesModel) {
-          return void next();
-        }
+    async.parallel({
+      releaseNotesModel: (taskCallback) => this.releaseNotesRepository.findOneByScopeAndName(
+        releaseNotesScope, releaseNotesName, taskCallback
+      ),
+      isSubscribed: (taskCallback) => {
+        if (!req.user) return void taskCallback(null, false);
 
-        res.render('release-notes/detail', {
-          releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotesModel),
-          releaseNotesName: releaseNotesModel.name,
-          scope: releaseNotesModel.scope,
-        });
-      }
-    );
+        this.subscriptionRepository.findBySubscriberAndReleaseNotes({
+
+          releaseNotesName,
+          releaseNotesScope,
+          subscriberId: req.user._id
+        }, taskCallback);
+      },
+    }, (err, results) => {
+      if (err) return void next(err);
+
+      const releaseNotesModel = results.releaseNotesModel;
+      const isSubscribed = results.isSubscribed;
+
+      // not found
+      if (!releaseNotesModel) return void next();
+
+      res.render('release-notes/detail', {
+        releaseNotesModel,
+        isSubscribed,
+        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotesModel),
+        releaseNotesName: releaseNotesModel.name,
+        scope: releaseNotesModel.scope,
+      });
+    });
   }
 
   renderAccountRealeaseNotesListView(req, res, next) {
