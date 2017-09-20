@@ -159,11 +159,12 @@ class ReleaseNotesController extends AbstractController {
         if (!req.user) return void taskCallback(null, false);
 
         this.subscriptionRepository.findBySubscriberAndReleaseNotes({
-
           releaseNotesName,
           releaseNotesScope,
           subscriberId: req.user._id
-        }, taskCallback);
+        }, (lookupError, subscriptions) => taskCallback(
+          lookupError, subscriptions && subscriptions.length
+        ));
       },
     }, (err, results) => {
       if (err) return void next(err);
