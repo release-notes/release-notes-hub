@@ -62,7 +62,7 @@ class SubscriptionController extends AbstractController {
     });
   }
 
-  subscripeToRealeaseNotes(req, res, next) {
+  subscribeToRealeaseNotes(req, res, next) {
     const scope = req.params.scope;
     const releaseNotesId = req.params.releaseNotesId;
 
@@ -148,7 +148,7 @@ class SubscriptionController extends AbstractController {
         handler: [
           authService.authenticate('session'),
           authService.requireUser(),
-          (req, res, next) => this.subscripeToRealeaseNotes(req, res, next),
+          (req, res, next) => this.subscribeToRealeaseNotes(req, res, next),
         ]
       }]
     };
