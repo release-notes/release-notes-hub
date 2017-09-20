@@ -14,6 +14,15 @@ class SubscriptionRepository extends BaseRepository {
         type: String,
         required: true,
         index: true,
+      },
+      releaseNotesScope: {
+        type: String,
+        required: true,
+        index: true,
+      },
+      releaseNotesName: {
+        type: String,
+        required: true,
       }
     };
   }

@@ -74,8 +74,10 @@ class SubscriptionController extends AbstractController {
         this.subscriptionRepository.create({
           subscriberId: req.user._id,
           releaseNotesId: releaseNotesModel._id,
-        }, (persistencyErr/*, subscription*/) => {
-          if (persistencyErr) return void next(persistencyErr);
+          releaseNotesScope: scope,
+          releaseNotesName: releaseNotesModel.name,
+        }, (persistenceErr/*, subscription*/) => {
+          if (persistenceErr) return void next(persistenceErr);
 
           res.redirect('/subscriptions');
         });

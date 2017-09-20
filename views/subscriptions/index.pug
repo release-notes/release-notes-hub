@@ -20,7 +20,9 @@ block content
             th
           each subscription in subscriptions
             tr
-              td #{subscription.releaseNotesId}
+              td
+                a(href=`/@${subscription.releaseNotesScope}/${subscription.releaseNotesName}`)
+                  | @#{subscription.releaseNotesScope}/#{subscription.releaseNotesName}
               td #{subscription.createdAt}
               td
                 .tags
