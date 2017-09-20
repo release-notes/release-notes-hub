@@ -1,0 +1,23 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Unsubscribe'
+
+block content
+  .container.has-text-centered
+    .section
+      h1.subtitle.is-3 Unsubscribe from @#{scope}/#{releaseNotesModel.name}
+
+      if !subscriptions || subscriptions.length < 1
+        .message
+          .message-body
+            p
+              | You are currently not subscribed to @#{scope}/#{releaseNotesModel.name}.
+              | &nbsp;
+              a(href=`/@${scope}/${releaseNotesModel.name}/subscribe`) Subscribe now
+      else
+        form(method='post' enctype='multipart/form-data' action=`/@${scope}/${releaseNotesModel.name}/unsubscribe`)
+          .field.is-grouped-centered
+              button.button.is-primary(type="submit")
+                | Unsubscribe from updates
+

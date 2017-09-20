@@ -91,6 +91,50 @@ class SubscriptionController extends AbstractController {
     );
   }
 
+  renderUnsubscribeFromRealeaseNotesView(req, res, next) {
+    const scope = req.params.scope;
+    const releaseNotesName = req.params.releaseNotesName;
+
+    async.parallel({
+      releaseNotesModel: (taskCallback) => this.loadReleaseNotes(
+        scope,
+        releaseNotesName,
+        taskCallback
+      ),
+      subscriptions: (taskCallback) => this.subscriptionRepository.findBySubscriberAndReleaseNotes({
+        subscriberId: req.user._id,
+        releaseNotesScope: scope,
+        releaseNotesName,
+      }, taskCallback),
+    }, (err, results) => {
+      if (err) return void next(err);
+
+      // not found
+      if (!results.releaseNotesModel) return void next();
+
+      res.render('subscriptions/unsubscribe', {
+        releaseNotesModel: results.releaseNotesModel,
+        subscriptions: results.subscriptions,
+        scope,
+      });
+    });
+  }
+
+  unsubscribeFromRealeaseNotes(req, res, next) {
+    const releaseNotesScope = req.params.scope;
+    const releaseNotesName = req.params.releaseNotesName;
+
+    this.subscriptionRepository.remove({
+      subscriberId: req.user._id,
+      releaseNotesScope,
+      releaseNotesName,
+    }, (err) => {
+      if (err) return void next(err);
+
+      res.redirect('/subscriptions');
+    });
+  }
+
   loadReleaseNotes(scope, name, callback) {
     this.releaseNotesRepository.findOneByScopeAndName(
       scope,
@@ -150,7 +194,22 @@ class SubscriptionController extends AbstractController {
           authService.requireUser(),
           (req, res, next) => this.subscribeToRealeaseNotes(req, res, next),
         ]
-      }]
+      }],
+      '/@:scope/:releaseNotesName/unsubscribe': [{
+        method: 'get',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.renderUnsubscribeFromRealeaseNotesView(req, res, next),
+        ]
+      }, {
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.unsubscribeFromRealeaseNotes(req, res, next),
+        ]
+      }],
     };
   }
 }
