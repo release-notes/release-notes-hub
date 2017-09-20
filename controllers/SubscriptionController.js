@@ -1,5 +1,6 @@
 'use strict';
 
+const async = require('async');
 const AbstractController = require('./AbstractController');
 
 class SubscriptionController extends AbstractController {
@@ -34,26 +35,31 @@ class SubscriptionController extends AbstractController {
 
   renderSubscribeToRealeaseNotesView(req, res, next) {
     const scope = req.params.scope;
+    const releaseNotesName = req.params.releaseNotesId;
 
-    this.loadReleaseNotes(
-      scope,
-      req.params.releaseNotesId,
-      (err, releaseNotesModel) => {
-        if (err) {
-          return void next(err);
-        }
+    async.parallel({
+      releaseNotesModel: (taskCallback) => this.loadReleaseNotes(
+        scope,
+        releaseNotesName,
+        taskCallback
+      ),
+      subscriptions: (taskCallback) => this.subscriptionRepository.findBySubscriberAndReleaseNotes({
+        subscriberId: req.user._id,
+        releaseNotesScope: scope,
+        releaseNotesName,
+      }, taskCallback),
+    }, (err, results) => {
+      if (err) return void next(err);
 
-        // not found
-        if (!releaseNotesModel) {
-          return void next();
-        }
+      // not found
+      if (!results.releaseNotesModel) return void next();
 
-        res.render('subscriptions/subscribe', {
-          releaseNotesModel,
-          scope,
-        });
-      }
-    );
+      res.render('subscriptions/subscribe', {
+        releaseNotesModel: results.releaseNotesModel,
+        subscriptions: results.subscriptions,
+        scope,
+      });
+    });
   }
 
   subscripeToRealeaseNotes(req, res, next) {
