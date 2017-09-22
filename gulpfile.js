@@ -30,7 +30,7 @@ gulp.task('sass:watch', function () {
 
 gulp.task('copy:images', function() {
   gulp.src([
-    `${IMAGES_PATH}/favicon.ico`,
+    `${ASSET_PATH}/favicon/*`,
   ]).pipe(gulp.dest(BUILD_PATH));
 
   gulp.src([
