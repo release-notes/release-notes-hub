@@ -6,4 +6,20 @@ header {
       height: 6rem;
     }
   }
+
+  .navbar-brand {
+    h1 {
+      padding-left: 2.5rem;
+    }
+
+    @include mobile() {
+      .logo {
+        position: relative;
+      }
+
+      h1 {
+        display: none;
+      }
+    }
+  }
 }
