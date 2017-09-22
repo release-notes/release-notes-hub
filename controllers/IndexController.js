@@ -22,6 +22,9 @@ class IndexController extends AbstractController {
       '/': {
         handler: (req, res, next) => this.indexAction(req, res, next)
       },
+      '/credits': {
+        handler: (req, res, next) => res.render('legal/credits')
+      },
       '/mit-license': {
         handler: (req, res, next) => res.render('legal/mit-license')
       }
