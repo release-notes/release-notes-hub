@@ -32,6 +32,9 @@ module.exports = {
 
       // model services
       accountService: `${APP_PATH}/services/AccountService`,
+
+      // business logic services
+      releaseNotesUpdateService: `${APP_PATH}/services/releaseNotes/UpdateService`,
     }
   },
 
