@@ -79,6 +79,7 @@ class SubscriptionController extends AbstractController {
 
         this.subscriptionRepository.create({
           subscriberId: req.user._id,
+          email: req.user.email,
           releaseNotesId: releaseNotesModel._id,
           releaseNotesScope: scope,
           releaseNotesName: releaseNotesModel.name,
