@@ -36,6 +36,9 @@ module.exports = {
       // business logic services
       releaseNotesUpdateService: `${APP_PATH}/services/releaseNotes/UpdateService`,
       emailService: `${APP_PATH}/services/EmailService`,
+
+      // 3rd party
+      sparkPost: `${APP_PATH}/services/SparkPostService`,
     }
   },
 
@@ -78,5 +81,19 @@ module.exports = {
     ],
     viewVariables: {},
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
+  },
+
+  sparkPost: {
+    apiKey: process.env.SPARK_POST_API_KEY || 'tb-set',
+    defaults: {
+      content: {
+        reply_to: process.env.EMAIL_DEFAULT_REPLY_TO || 'Release Notes <hello@release-notes.com>',
+      },
+      options: {
+        inline_css: true,
+        open_tracking: false,
+        click_tracking: false,
+      },
+    },
   },
 };
