@@ -23,7 +23,10 @@ class SubscriptionRepository extends BaseRepository {
       releaseNotesName: {
         type: String,
         required: true,
-      }
+      },
+      email: {
+        type: String,
+      },
     };
   }
 
