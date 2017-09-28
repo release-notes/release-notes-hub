@@ -35,6 +35,7 @@ module.exports = {
 
       // business logic services
       releaseNotesUpdateService: `${APP_PATH}/services/releaseNotes/UpdateService`,
+      releaseNotesNotificationService: `${APP_PATH}/services/releaseNotes/NotificationService`,
       emailService: `${APP_PATH}/services/EmailService`,
 
       // 3rd party
