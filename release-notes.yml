@@ -11,6 +11,7 @@ releases:
   - Setup status page (https://status.release-notes.com)
   - Add support for subscriptions (subscribe/unsubscribe). (#4)
   - New origami pigeon logo and introduction of `/credits` page.
+  - Add support for broadcasting release notes update notifications to email subscribers. (#9)
 - version: 0.2.0
   date: 2017-09-12
   title: MVP - Second Release
