@@ -59,6 +59,19 @@ class SubscriptionRepository extends BaseRepository {
       releaseNotesName,
     }, callback);
   }
+
+  /**
+   * Lookup all subscriptions on the given release notes.
+   *
+   * @param releaseNotesId
+   * @param callback
+   * @return {BaseRepository}
+   */
+  findByReleaseNotesId(releaseNotesId, callback) {
+    return this.find({
+      releaseNotesId,
+    }, callback);
+  }
 }
 
 module.exports = SubscriptionRepository;
