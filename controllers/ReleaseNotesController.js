@@ -124,23 +124,30 @@ class ReleaseNotesController extends AbstractController {
       releaseNotesLoader.loadReleaseNotes(
         req.file.buffer,
         (releaseNotesValidationErr, releaseNotesUpdate) => {
-          if (releaseNotesValidationErr) {
-            viewVariables.errors = { validation: { msg: releaseNotesValidationErr.message } };
-            res.statusCode = 400;
-            res.render('release-notes/edit', viewVariables);
-          }
-
-          this.releaseNotesRepository.findByIdAndUpdate(
-            releaseNotes._id,
-            { $set: releaseNotesUpdate },
-            (releaseNotesUpdateErr, updatedReleaseNotes) => {
-              if (releaseNotesUpdateErr) return void next(releaseNotesUpdateErr);
-
-              viewVariables.releaseNotes = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
-
+          try {
+            if (releaseNotesValidationErr) {
+              viewVariables.errors = {validation: {msg: releaseNotesValidationErr.message}};
+              res.statusCode = 400;
               res.render('release-notes/edit', viewVariables);
             }
-          );
+
+            this.serviceManager.get('releaseNotesNotificationService')
+              .sendReleaseNotesUpdateNotification(releaseNotes, releaseNotesUpdate);
+
+            updateService.applyUpdate(
+              releaseNotes,
+              releaseNotesUpdate,
+              (updateError, updatedReleaseNotes) => {
+                if (updateError) return void next(updateError);
+
+                viewVariables.releaseNotes = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
+
+                res.render('release-notes/edit', viewVariables);
+              }
+            );
+          } catch (e) {
+            return void next(e);
+          }
         }
       );
     });
