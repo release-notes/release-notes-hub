@@ -11,6 +11,9 @@ class ReleaseNotesRepository extends BaseRepository {
       name: { type: String, required: true },
       ownerAccountId: { type: String, required: true },
 
+      latestVersion: String,
+      latestReleaseDate: Date,
+
       title: String,
       description: String,
       releases: [{
