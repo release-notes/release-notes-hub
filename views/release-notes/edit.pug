@@ -36,12 +36,20 @@ block content
         .section
           table.table
             tr
+              th Badge
+              td
+                a#js-badge-integration
+                  img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
+                div.control
+                  textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text(rows=1 readonly).
+                    [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
+            tr
               th Title
-              td= releaseNotes.title
+              td= releaseNotesDataModel.title
             tr
               th Description
-              td= releaseNotes.description
-            each release in releaseNotes.releases
+              td= releaseNotesDataModel.description
+            each release in releaseNotesDataModel.releases
               tr
                 th= release.version
                 td.content
@@ -68,5 +76,14 @@ append scripts
         if (fileInputEl.files.length > 0) {
           fileNameEl.innerHTML = fileInputEl.files[0].name;
         }
+      });
+
+      var badgeIntegrationTrigger = document.getElementById('js-badge-integration');
+      var badgeIntegrationTextElement = document.getElementById('js-badge-integration-text');
+
+      badgeIntegrationTrigger.addEventListener('click', function() {
+        badgeIntegrationTextElement.classList.toggle('is-hidden');
+        badgeIntegrationTextElement.focus();
+        badgeIntegrationTextElement.select();
       });
     });

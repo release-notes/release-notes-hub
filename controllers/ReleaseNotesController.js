@@ -101,7 +101,8 @@ class ReleaseNotesController extends AbstractController {
       }
 
       res.render('release-notes/edit', {
-        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotes),
+        releaseNotes,
+        releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
         releaseNotesId: releaseNotes._id,
       });
     });
@@ -116,7 +117,8 @@ class ReleaseNotesController extends AbstractController {
       }
 
       const viewVariables = {
-        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotes),
+        releaseNotes,
+        releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
         releaseNotesId: releaseNotes._id,
       };
 
@@ -143,7 +145,7 @@ class ReleaseNotesController extends AbstractController {
               (updateError, updatedReleaseNotes) => {
                 if (updateError) return void next(updateError);
 
-                viewVariables.releaseNotes = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
+                viewVariables.releaseNotesDataModel = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
 
                 res.render('release-notes/edit', viewVariables);
               }
