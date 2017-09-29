@@ -31,8 +31,11 @@ gulp.task('sass:watch', function () {
 gulp.task('copy:images', function() {
   gulp.src([
     `${ASSET_PATH}/favicon/*`,
-    `${ASSET_PATH}/badges/*`,
   ]).pipe(gulp.dest(BUILD_PATH));
+
+  gulp.src([
+    `${ASSET_PATH}/badges/*`,
+  ]).pipe(gulp.dest(`${BUILD_PATH}/badges`));
 
   gulp.src([
     IMAGES_PATH + '/**/*.png',
