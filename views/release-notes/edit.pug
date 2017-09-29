@@ -40,6 +40,9 @@ block content
               td
                 a#js-badge-integration
                   img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
+                  | &nbsp;&nbsp;&nbsp;
+                  span.icon.is-small(title='Copy markdown')
+                    i.material-icons.md-18 content_paste
                 div.control
                   textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text(rows=1 readonly).
                     [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
