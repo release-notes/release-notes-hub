@@ -34,7 +34,7 @@ body(style='margin: 0; padding: 0; text-align: center; width: 100%; height: 100%
           tr
             th(style=tableHeadStyle) Project
             td(style=tableCellStyle)
-              a(style='text-decoration: none; color: #ed6c63;' href='https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name}') @#{releaseNotes.scope}/#{releaseNotes.name}
+              a(style='text-decoration: none; color: #ed6c63;' href=`https://release-notes.com/@${releaseNotes.scope}/${releaseNotes.name}`) @#{releaseNotes.scope}/#{releaseNotes.name}
           each release in releases
             tr
               th(style=tableHeadStyle) Version
