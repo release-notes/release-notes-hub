@@ -1,5 +1,7 @@
 # Release Notes Hub
 
+[![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@release-notes/release-notes-hub)
+
 ## Installation
 
 The recommended way of hacking the release notes hub is by using the
