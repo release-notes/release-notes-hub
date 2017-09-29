@@ -14,6 +14,8 @@ class ReleaseNotesController extends AbstractController {
   /**
    * @property {SubscriptionRepository} subscriptionRepository
    * @property {ReleaseNotesRepository} releaseNotesRepository
+   * @property {UpdateService} updateService
+   * @property {NotificationService} notificationService
    */
 
   bootstrap() {
@@ -23,6 +25,8 @@ class ReleaseNotesController extends AbstractController {
 
     this.releaseNotesRepository = sm.get('releaseNotesRepository');
     this.subscriptionRepository = sm.get('subscriptionRepository');
+    this.notificationService = sm.get('releaseNotesNotificationService');
+    this.updateService = sm.get('releaseNotesUpdateService');
 
     return this;
   }
@@ -131,10 +135,9 @@ class ReleaseNotesController extends AbstractController {
               res.render('release-notes/edit', viewVariables);
             }
 
-            this.serviceManager.get('releaseNotesNotificationService')
-              .sendReleaseNotesUpdateNotification(releaseNotes, releaseNotesUpdate);
+            this.notificationService.sendReleaseNotesUpdateNotification(releaseNotes, releaseNotesUpdate);
 
-            updateService.applyUpdate(
+            this.updateService.applyUpdate(
               releaseNotes,
               releaseNotesUpdate,
               (updateError, updatedReleaseNotes) => {
