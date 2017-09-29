@@ -4,6 +4,9 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
+- version: Next
+  added:
+  - Introduce badge and markdown for embedding. (#22)
 - version: 0.3.0
   date: 2017-09-29
   title: MVP - Third Release
