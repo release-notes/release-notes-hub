@@ -4,7 +4,10 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
-- version: Next
+- version: 0.3.0
+  date: 2017-09-29
+  title: MVP - Third Release
+  description: This release introduces a new logo and adds support for broadcasting notifications.
   added:
   - Add `/mit-license` page for displaying the applying oss license. (#14)
   - Redirect the user to the previously requested url after successfull login. (#16)
