@@ -78,7 +78,7 @@ class NotificationService extends Service {
       }
 
       this.logger.info(
-        `Update notification transmitted to ${emailRecipients.length} subscribers for @${releaseNotes.scope}/${releaseNotes.name}`,
+        `Update notification transmitted to ${recipients.length} subscribers for @${releaseNotes.scope}/${releaseNotes.name}`,
         emailTransmissionResponse
       );
 
