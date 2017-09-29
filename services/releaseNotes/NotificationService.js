@@ -23,37 +23,43 @@ class NotificationService extends Service {
           return void callback(subscriptionLookupErr);
         }
 
-        if (subscriptions && subscriptions.length) {
-          const emailRecipients = subscriptions.map(subscription => subscription.email);
-          const newReleases = this.releaseNotesUpdateService.calculateUpdates(
-            releaseNotes, releaseNotesUpdate
-          );
+        if (!subscriptions || !subscriptions.length) {
+          this.logger.info(`No subscriptions, no update notifications sent for @${releaseNotes.scope}/${releaseNotes.name}`);
 
-          this.emailService.compose(
-            'release-notes-update', {
-              releaseNotes,
-              releases: newReleases,
-            }, (emailComposeErr, content) => {
-              if (emailComposeErr) {
-                this.logger.error(
-                  `Update notification composition error for @${releaseNotes.scope}/${releaseNotes.name}`,
-                  emailComposeErr
-                );
-
-                return void callback(emailComposeErr);
-              }
-
-              this.sendEmailNotification(
-                { recipients: emailRecipients, content, releaseNotes },
-                callback
-              );
-            }
-          );
-        } else {
-          this.logger.info(`No update notifications sent for @${releaseNotes.scope}/${releaseNotes.name}`);
-
-          callback();
+          return void callback();
         }
+
+        const emailRecipients = subscriptions.map(subscription => subscription.email);
+        const newReleases = this.releaseNotesUpdateService.calculateUpdates(
+          releaseNotes, releaseNotesUpdate
+        );
+
+        if (!newReleases || !newReleases.length) {
+          this.logger.info(`No new releases, no update notifications sent for @${releaseNotes.scope}/${releaseNotes.name}`);
+
+          return void callback();
+        }
+
+        this.emailService.compose(
+          'release-notes-update', {
+            releaseNotes,
+            releases: newReleases,
+          }, (emailComposeErr, content) => {
+            if (emailComposeErr) {
+              this.logger.error(
+                `Update notification composition error for @${releaseNotes.scope}/${releaseNotes.name}`,
+                emailComposeErr
+              );
+
+              return void callback(emailComposeErr);
+            }
+
+            this.sendEmailNotification(
+              { recipients: emailRecipients, content, releaseNotes },
+              callback
+            );
+          }
+        );
       }
     )
   }
