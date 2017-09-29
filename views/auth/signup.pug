@@ -9,6 +9,8 @@ block content
     .section
       .card.is-inline-block
         form(method='post' autocomplete='on' action='/signup')
+          input(type='hidden' name='targetUrl' value=targetUrl)
+
           .card-content
             h1.title.is-3 Sign Up for a New Account
 
@@ -40,4 +42,8 @@ block content
               p.control
                 input.button.is-primary.is-fullwidth(type='submit' value='Sign Up')
           .card-footer
-            a.card-footer-item(href='/signin') Already have an account?
+            - var signInUrl = '/signin'
+            if targetUrl
+              - signInUrl += `?targetUrl=${targetUrl}`
+
+            a.card-footer-item(href=signInUrl) Already have an account?

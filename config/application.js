@@ -23,13 +23,23 @@ module.exports = {
       apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
       authController: `${APP_PATH}/controllers/AuthController`,
       releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
+      subscriptionController: `${APP_PATH}/controllers/SubscriptionController`,
 
       // repositories
       accountRepository: `${APP_PATH}/repositories/AccountRepository`,
       releaseNotesRepository: `${APP_PATH}/repositories/ReleaseNotesRepository`,
+      subscriptionRepository: `${APP_PATH}/repositories/SubscriptionRepository`,
 
       // model services
       accountService: `${APP_PATH}/services/AccountService`,
+
+      // business logic services
+      releaseNotesUpdateService: `${APP_PATH}/services/releaseNotes/UpdateService`,
+      releaseNotesNotificationService: `${APP_PATH}/services/releaseNotes/NotificationService`,
+      emailService: `${APP_PATH}/services/EmailService`,
+
+      // 3rd party
+      sparkPost: `${APP_PATH}/services/SparkPostService`,
     }
   },
 
@@ -66,10 +76,25 @@ module.exports = {
       'apiPublishController',
       'authController',
       'releaseNotesController',
+      'subscriptionController',
       'indexController',
       'errorController',
     ],
     viewVariables: {},
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
+  },
+
+  sparkPost: {
+    apiKey: process.env.SPARK_POST_API_KEY || 'tb-set',
+    defaults: {
+      content: {
+        reply_to: process.env.EMAIL_DEFAULT_REPLY_TO || 'Release Notes <hello@release-notes.com>',
+      },
+      options: {
+        inline_css: true,
+        open_tracking: false,
+        click_tracking: false,
+      },
+    },
   },
 };

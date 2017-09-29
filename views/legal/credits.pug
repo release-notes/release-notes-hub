@@ -1,0 +1,38 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Attribution'
+  - var pageCls = 'legal attribution'
+
+block content
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.title Credits & Attribution
+        h3.subtitle Release Notes is build with open source components.
+        p Thanks for your awesome work!
+
+  .container.has-text-centered
+    .section.is-inline-block.has-text-left
+      h4.subtitle Theme
+      .content
+        ul
+          li bulma css framework by Jeremy Thomas
+          li gulp build system by Fractal
+
+      h4.subtitle Icons & Fonts
+      .content
+        ul
+          li Bird by Hea Poh Lin from the Noun Project
+          li 404 Error Note by Eynav Raphael from the Noun Project
+          li Material Design icons by Google
+          li Roboto Webfont by Google
+
+      h4.subtitle Backend
+      .content
+        ul
+          li async by Caolan McMahon
+          li express by TJ Holowaychuk
+          li mongoose by Guillermo Rauch
+          li passport by Jared Hanson
+          li pug by TJ Holowaychuk

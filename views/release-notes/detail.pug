@@ -9,8 +9,9 @@ block content
       if releaseNotes
         .release-notes
           h1.title.is-1 #{releaseNotes.title}
-            if releaseNotes.description
-              h2.subtitle #{releaseNotes.description}
+
+          if releaseNotes.description
+            h2.subtitle #{releaseNotes.description}
 
           each release in releaseNotes.releases
             .columns.release
@@ -32,3 +33,26 @@ block content
                                 | #{modification}
                               else
                                 | #{modification.title}
+
+block header
+  .container
+    nav.navbar.is-transparent.has-text-centered.has-content-centered
+      .navbar-item
+        if isSubscribed
+          a.button.is-primary(href=`/@${scope}/${releaseNotesName}/unsubscribe`)
+            span.icon
+              i.material-icons portable_wifi_off
+            | &nbsp;&nbsp;&nbsp;
+            | Unsubscribe from updates
+        else
+          a.button.is-primary(href=`/@${scope}/${releaseNotesName}/subscribe`)
+            span.icon
+              i.material-icons track_changes
+            | &nbsp;&nbsp;&nbsp;
+            | Subscribe for updates
+
+block footer
+  .has-text-centered
+    span.has-text-grey powered by&nbsp;
+      a.has-text-grey(href='/')
+        strong Release Notes

@@ -1,0 +1,23 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Subscriptions'
+
+block content
+  .container.has-text-centered
+    .section
+      h1.subtitle.is-3 Subscribe to @#{scope}/#{releaseNotesModel.name}
+
+      if subscriptions && subscriptions.length
+        .message
+          .message-body
+            p
+              | You are already subscribed to @#{scope}/#{releaseNotesModel.name}.
+              | &nbsp;
+              a(href="/subscriptions") Manage subscriptions
+
+      form(method='post' enctype='multipart/form-data' action=`/@${scope}/${releaseNotesModel.name}/subscribe`)
+        .field.is-grouped-centered
+            button.button.is-primary(type="submit")
+              | Subscribe for updates
+

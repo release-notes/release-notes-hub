@@ -59,7 +59,13 @@ class AuthService extends AbstractService {
         return void next();
       }
 
-      res.redirect('/signin');
+      let redirectUrl = '/signin';
+
+      if (req.url !== '/signin') {
+        redirectUrl += `?targetUrl=${req.url}`;
+      }
+
+      res.redirect(redirectUrl);
     };
   }
 

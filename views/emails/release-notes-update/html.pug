@@ -1,0 +1,70 @@
+block vars
+  - tableCellStyle = 'padding: 16px 0; border-bottom: 1px solid #f5f5f5;'
+  - tableHeadStyle = `${tableCellStyle} vertical-align: top; padding-right: 32px;`
+  - tagStyle = ''
+doctype html
+html(lang="en")
+  head
+    block head
+      title= metaTitle ? metaTitle : "Release Notes"
+      meta(name="viewport" content="width=device-width,initial-scale=1")
+      meta(charset="utf-8")
+      meta(http-equiv="X-UA-Compatible" content="IE=edge")
+      meta(name="description" content=metaDescription ? metaDescription : "Easy to use, human readable and machine processable release notes for everyone.")
+      block stylesheets
+        style.
+          .tag {
+            padding: 4px 8px;
+            background-color: #ed6c63;
+            color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 12px;
+          }
+
+body(style='margin: 0; padding: 0; text-align: center; width: 100%; height: 100%;' +
+    'background: #fafafa; color: #4a4a4a; font-family: Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;'
+  )
+    section(style='border-top: 4px solid #ed6c63; padding: 48px; background: #fff;')
+      div
+        img(style='border-none;margin-bottom: 32px;' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABYklEQVR42mNgGAWDFbzNSVYCYtOBdMAqIP4GxFIDYXkcEP+H4utEqGckFeMzzADJchhuwKM+CYj3A/FuIvF2IDbBZRgfEJ/E4oDfQKyDppYFiJdhUUsIFwIxEy4HVOPR+BqmEUjzA/FRMiyvxhf0TlBFP4H4BxT/QzNgLRB7AvETEi3+A8R5hBISDxCLAbEoFMsA8S00g/5CHUaqz4vIyQnsQHyNDMvQcQW5WZFSB4CiL4eSsoBSB5RRWhiR6wBQOimmRmlIrgNyqFUcgxxwmUTLK6ldJ1gA8RIg/kREPk+F1qC81HYEExArA/EsPA4AWe4FxI+AWIiWtaQ0EO8A4s/I+RyIjYH4OxC/BGIBelTXlkA8A4hjgNgKiN9DHUMfByA5xB1aU/4fKAeA6o4vA+YAqCO8B9oBzEC8csAcAHWEPrSsGBgHQB3RBsQfB8wBUEecBmLhgXSALBALjnbrhhQAALNcEPMYKGsyAAAAAElFTkSuQmCC')
+      div.box(style='max-width: 560px; padding: 16px; border: 1px solid #dbdbdb; border-radius: 4px; margin: 0 auto; display: inline-block; overflow: hidden;')
+        h2(style='background: #ed6c63; color: #fff; margin: -16px -16px 16px; padding: 16px;') New Version released
+
+        table(style='text-align: left; border-spacing: 0;')
+          tr
+            th(style=tableHeadStyle) Project
+            td(style=tableCellStyle)
+              a(style='text-decoration: none; color: #ed6c63;' href=`https://release-notes.com/@${releaseNotes.scope}/${releaseNotes.name}`) @#{releaseNotes.scope}/#{releaseNotes.name}
+          each release in releases
+            tr
+              th(style=tableHeadStyle) Version
+              td(style=tableCellStyle) #{release.version}
+
+            - modifications=release.getModifications()
+
+            if Object.keys(modifications).length
+              tr
+                th(style=`${tableHeadStyle}`) Changes
+                td(style=`${tableCellStyle}`)
+                  each modifications, modificationType in release.getModifications()
+                    if modifications && modifications.length
+                      div
+                        span.tag #{modificationType}
+                        ul
+                          each modification in modifications
+                            li
+                              if typeof modification === 'string'
+                                | #{modification}
+                              else
+                                | #{modification.title}
+
+        div(style='font-size: 12px; margin-top: 12px;')
+          | You are receiving this notification because of your account on&nbsp;
+          a(href='https://release-notes.com' style='text-decoration: none; color: #7a7a7a')
+            span release-notes.com
+          div
+            a(href='https://release-notes.com/subscriptions' style='text-decoration: none; color: #7a7a7a')
+              span Manage Notification Settings
+
+
+include ../_signature-html

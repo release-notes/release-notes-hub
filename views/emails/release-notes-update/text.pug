@@ -1,0 +1,36 @@
+| A new version has been released.
+|
+| Project: @#{releaseNotes.scope}/#{releaseNotes.name}
+| Release Notes: https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name}
+|
+|
+
+each release in releases
+  | Version: #{release.version}
+  | #{'='.repeat(release.version.length + 9)}
+  |
+
+  - modifications=release.getModifications()
+
+  if Object.keys(modifications).length
+    each modifications, modificationType in release.getModifications()
+      if modifications && modifications.length
+        | [#{modificationType}]
+        |
+        each modification in modifications
+          if typeof modification === 'string'
+            | - #{modification}
+            |
+          else
+            | - #{modification.title}
+            |
+        |
+        |
+
+|
+| You are receiving this notification because of your account on release-notes.com
+| Manage Notification Settings: https://release-notes.com/subscriptions
+|
+
+
+include ../_signature-text

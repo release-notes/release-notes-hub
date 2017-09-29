@@ -1,0 +1,30 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Subscriptions'
+
+block content
+  .container.has-text-centered
+    .section
+      h1.subtitle.is-3 Subscriptions
+
+      if !subscriptions || !subscriptions.length
+        .message
+          .message-body
+            p You have not subscriptions, yet.
+      else
+        table.table.is-inline-block
+          tr
+            th ReleaseNotes
+            th Since
+            th
+          each subscription in subscriptions
+            tr
+              td
+                a(href=`/@${subscription.releaseNotesScope}/${subscription.releaseNotesName}`)
+                  | @#{subscription.releaseNotesScope}/#{subscription.releaseNotesName}
+              td #{subscription.createdAt}
+              td
+                .tags
+                  form(method='post' enctype='multipart/form-data' action=`/subscriptions/${subscription._id}/unsubscribe`)
+                    button.is-small.button(type="submit") Unsubscribe
