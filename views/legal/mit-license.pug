@@ -5,46 +5,47 @@ block globalVars
   - var pageCls = 'legal mit-license'
 
 block content
-  .container.has-text-centered
-    .section
-      .is-inline-block
-        h2.title The MIT License
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 The MIT License
 
-        h4.subtitle Copyright (c) 2017 Alrik Zachert
+  .container
+    .columns
+      .column.is-one-quarter.has-text-centered
+        .section
+          - var aciveLegalNote = 'mit-license'
+          include _legal-notes-nav
+      .column.is-half
+        .section
+          h4.subtitle.is-5 The license applies to the following repositories
 
-        .section.covered-repositories
-          h6.subtitle.is-6 The license applies to the following repositories
-          .tags
-            span.tag
-              a(href='https://github.com/release-notes/release-notes-hub') release-notes-hub
-            span.tag
-              a(href='https://github.com/release-notes/release-notes-hub-dev-env') release-notes-hub-dev-env
-            span.tag
-              a(href='https://github.com/release-notes/release-notes-spec') release-notes-spec
-            span.tag
-              a(href='https://github.com/release-notes/release-notes-schema') release-notes-schema
-            span.tag
-              a(href='https://github.com/release-notes/release-notes-node') release-notes-node
-            span.tag
-              a(href='https://github.com/release-notes/release-notes-cli') release-notes-cli
+          .covered-repositories.tags
+            a.tag.is-primary(href='https://github.com/release-notes/release-notes-hub') release-notes-hub
+            a.tag.is-primary(href='https://github.com/release-notes/release-notes-hub-dev-env') release-notes-hub-dev-env
+            a.tag.is-primary(href='https://github.com/release-notes/release-notes-spec') release-notes-spec
+            a.tag.is-primary(href='https://github.com/release-notes/release-notes-schema') release-notes-schema
+            a.tag.is-primary(href='https://github.com/release-notes/release-notes-node') release-notes-node
+            a.tag.is-primary(href='https://github.com/release-notes/release-notes-cli') release-notes-cli
 
 
-        p.license-text.
-          Permission is hereby granted, free of charge, to any person obtaining a copy
-          of this software and associated documentation files (the "Software"), to deal
-          in the Software without restriction, including without limitation the rights
-          to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-          copies of the Software, and to permit persons to whom the Software is
-          furnished to do so, subject to the following conditions:
-          <br><br>
-          The above copyright notice and this permission notice shall be included in
-          all copies or substantial portions of the Software.
-          <br><br>
-          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-          IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-          FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-          AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-          LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-          OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-          THE SOFTWARE.
+          h4.subtitle.is-6 Copyright (c) 2017 Alrik Zachert
+          p.license-text.
+            Permission is hereby granted, free of charge, to any person obtaining a copy
+            of this software and associated documentation files (the "Software"), to deal
+            in the Software without restriction, including without limitation the rights
+            to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+            copies of the Software, and to permit persons to whom the Software is
+            furnished to do so, subject to the following conditions:
+            <br><br>
+            The above copyright notice and this permission notice shall be included in
+            all copies or substantial portions of the Software.
+            <br><br>
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+            IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+            FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+            AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+            LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+            OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+            THE SOFTWARE.
 
