@@ -1,0 +1,15 @@
+block legalNotesNav
+  h3.subtitle Legal Notes
+
+  .menu
+    ul.menu-list
+      li.menu-label
+        a(href='/mit-license' class=(aciveLegalNote === 'mit-license' ? 'is-active' : '')) Mit License
+      li.menu-label
+        a(href='/terms-of-service' class=(aciveLegalNote === 'terms-of-service' ? 'is-active' : '')) Terms of Service
+      li.menu-label
+        a(href='/imprint' class=(aciveLegalNote === 'imprint' ? 'is-active' : '')) Imprint
+      li.menu-label
+        a(href='/privacy-policies' class=(aciveLegalNote === 'privacy-policies' ? 'is-active' : '')) Privacy Policies
+      li.menu-label
+        a(href='/credits' class=(aciveLegalNote === 'credits' ? 'is-active' : '')) Credits
