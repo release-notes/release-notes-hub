@@ -30,6 +30,12 @@ class IndexController extends AbstractController {
       },
       '/mit-license': {
         handler: (req, res, next) => res.render('legal/mit-license')
+      },
+      '/privacy-policies': {
+        handler: (req, res, next) => res.render('legal/privacy-policies')
+      },
+      '/terms-of-service': {
+        handler: (req, res, next) => res.render('legal/terms-of-service')
       }
     }
   };

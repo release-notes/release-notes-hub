@@ -1,0 +1,24 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Terms of Service'
+  - var pageCls = 'legal terms-of-service'
+
+block content
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Terms of Service
+
+
+  .container
+    .columns
+      .column.is-one-quarter.has-text-centered
+        .section
+          - var aciveLegalNote = 'terms-of-service'
+          include _legal-notes-nav
+      .column.is-half
+        .section.is-inline-block
+          .content
+            h3.subtitle.is-5 TBD
+
