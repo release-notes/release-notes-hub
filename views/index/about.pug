@@ -1,0 +1,19 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - About'
+  - var pageCls = 'about'
+
+block content
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 About Release Notes
+
+
+  .container
+    .section
+      .content
+        h3.subtitle.is-5 TBD
+        p
+          a(href="https://github.com/release-notes/release-notes-hub/blob/master/views/index/about.pug") Improve this page on GitHub.
