@@ -27,16 +27,15 @@ html(lang="en")
         link(rel='stylesheet' href='/css/release-notes.css')
 
   body
-    section
-      header
-        block header
-          include ./_header
+    header
+      block header
+        include ./_header
 
-      article(class=pageCls?pageCls:'')
-        block content
+    article(class=pageCls?pageCls:'')
+      block content
 
-      footer.footer
-        block footer
-          include ./_footer
+    footer.footer
+      block footer
+        include ./_footer
 
     block scripts

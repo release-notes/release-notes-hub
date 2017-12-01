@@ -5,14 +5,19 @@ block globalVars
   - form = form || {}
 
 block content
-  .container.has-text-centered
-    .section
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Sign Up for a New Account
+
+  .section
+    .container.has-text-centered
       .card.is-inline-block
         form(method='post' autocomplete='on' action='/signup')
           input(type='hidden' name='targetUrl' value=targetUrl)
 
           .card-content
-            h1.title.is-3 Sign Up for a New Account
+            //h1.title.is-3 Sign Up for a New Account
 
             .field.has-text-left
               label.label Email

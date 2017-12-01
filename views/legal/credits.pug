@@ -10,14 +10,13 @@ block content
       .container.has-text-centered
         h2.subtitle.is-3 Credits & Attribution
 
-  .container
-    .columns
-      .column.is-one-quarter.has-text-centered
-        .section
+  .section
+    .container
+      .columns
+        .column.is-one-quarter
           - var aciveLegalNote = 'credits'
           include _legal-notes-nav
-      .column.is-half
-        .section.is-inline-block.has-text-left
+        .column.is-half-desktop
           h3.subtitle.is-5 Release Notes is build with open source components.
           .content
             span.tag.is-primary Thanks for your awesome work!

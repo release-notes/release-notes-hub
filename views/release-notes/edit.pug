@@ -1,11 +1,16 @@
 extends ../layout/main
 
 block globalVars
-  - var metaTitle = 'Release Notes - Edit'
+  - var metaTitle = `Release Notes - Update @${releaseNotes.scope}/${releaseNotes.name}`
 
 block content
-  .container.has-text-centered
-    .section
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Update @#{releaseNotes.scope}/#{releaseNotes.name}
+
+  .section
+    .container.has-text-centered
       if releaseNotes
         .hero
           .hero-body.has-text-centered

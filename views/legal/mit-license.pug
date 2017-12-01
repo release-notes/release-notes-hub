@@ -10,14 +10,13 @@ block content
       .container.has-text-centered
         h2.subtitle.is-3 The MIT License
 
-  .container
-    .columns
-      .column.is-one-quarter.has-text-centered
-        .section
+  .section
+    .container
+      .columns
+        .column.is-one-quarter
           - var aciveLegalNote = 'mit-license'
           include _legal-notes-nav
-      .column.is-half
-        .section
+        .column.is-half-desktop
           h4.subtitle.is-5 The license applies to the following repositories
 
           .covered-repositories.tags

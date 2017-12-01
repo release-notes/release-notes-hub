@@ -4,10 +4,13 @@ block globalVars
   - var metaTitle = 'Release Notes - My Release Notes'
 
 block content
-  .container.has-text-centered
-    .section
-      h1.subtitle.is-3 My Release Notes
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 My Release Notes
 
+  .section
+    .container.has-text-centered
       if releaseNotesList && releaseNotesList.length
         table.table.is-inline-block
           tr
