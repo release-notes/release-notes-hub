@@ -9,6 +9,7 @@ const ASSET_PATH = './assets';
 const SASS_PATH = ASSET_PATH + '/stylesheets';
 const IMAGES_PATH = ASSET_PATH + '/images';
 const JS_PATH = ASSET_PATH + '/javascripts';
+const FONTS_PATH = `${ASSET_PATH}/fonts`;
 const BUILD_PATH = './public';
 
 //*** SASS compiler task
@@ -43,6 +44,12 @@ gulp.task('copy:images', function() {
   ]).pipe(gulp.dest(BUILD_PATH + '/img'))
 });
 
+gulp.task('copy:fonts', function () {
+  gulp.src([
+    `${FONTS_PATH}/*`
+  ]).pipe(gulp.dest(BUILD_PATH + '/fonts'));
+});
+
 gulp.task('js', function() {
   gulp.src([
     JS_PATH + '/*.js',
@@ -56,7 +63,7 @@ gulp.task('js', function() {
 
 
 gulp.task('build', function() {
-  gulp.start(['sass', 'copy:images', 'js']);
+  gulp.start(['sass', 'copy:images', 'copy:fonts', 'js']);
 });
 
 
