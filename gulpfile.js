@@ -4,6 +4,9 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
+const del = require('del');
+const rev = require('gulp-rev');
+const revReplace = require('gulp-rev-css-url');
 
 const ASSET_PATH = './assets';
 const SASS_PATH = ASSET_PATH + '/stylesheets';
@@ -61,9 +64,25 @@ gulp.task('js', function() {
   .pipe(gulp.dest(BUILD_PATH + '/js'))
 });
 
+gulp.task('clean', function() {
+  return del([
+    `${BUILD_PATH}/**/*.*`,
+    `!${BUILD_PATH}/.gitignore`
+  ]);
+});
 
 gulp.task('build', function() {
-  gulp.start(['sass', 'copy:images', 'copy:fonts', 'js']);
+  gulp.start(['sass', 'copy:images', 'copy:fonts', 'js'], function() {
+    gulp.src([
+      BUILD_PATH  + '/**/*.*',
+      `!${BUILD_PATH}/**/*-${'[0-9a-f]'.repeat(10)}.*`,
+    ])
+    .pipe(rev())
+    .pipe(revReplace())
+    .pipe(gulp.dest(BUILD_PATH))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest(BUILD_PATH))
+  });
 });
 
 

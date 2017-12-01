@@ -1,7 +1,8 @@
 'use strict';
 
-const
-  APP_PATH = `${__dirname}/..`;
+const assetRev = require('../lib/asset-rev');
+
+const APP_PATH = `${__dirname}/..`;
 
 module.exports = {
   app: {
@@ -80,7 +81,11 @@ module.exports = {
       'indexController',
       'errorController',
     ],
-    viewVariables: {},
+    viewVariables: {
+      asset: assetRev({
+        enabled: process.env.ENABLE_ASSET_REV !== 'false'
+      }),
+    },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
   },
 

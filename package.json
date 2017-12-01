@@ -47,7 +47,10 @@
   },
   "devDependencies": {
     "bulma": "^0.6.1",
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
+    "gulp-rev": "^8.1.0",
+    "gulp-rev-css-url": "^0.1.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^3.0.0"
