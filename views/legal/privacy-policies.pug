@@ -1,0 +1,22 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Privacy Policies'
+  - var pageCls = 'legal privacy-policies'
+
+block content
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Privacy Policies
+
+  .section
+    .container
+      .columns
+        .column.is-one-quarter
+          - var aciveLegalNote = 'privacy-policies'
+          include _legal-notes-nav
+        .column.is-half-desktop
+          .content
+            h3.subtitle.is-5 TBD
+
