@@ -53,6 +53,7 @@
     "gulp-uglify": "^3.0.0"
   },
   "scripts": {
+    "build": "gulp build",
     "start": "node server.js",
     "postinstall": "gulp build"
   }
