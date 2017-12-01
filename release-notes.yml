@@ -7,8 +7,11 @@ releases:
 - version: Next
   added:
   - Introduce badge and markdown for embedding. (#22)
-  - Rework overall page layout.
   - Add imprint.
+  - Introduce static asset revisioning by appending content hash to filename.
+  - Serve roboto webfont to remove external deps and to optimize performance.
+  changed:
+  - Rework overall page layout.
 - version: 0.3.0
   date: 2017-09-29
   title: MVP - Third Release
