@@ -24,7 +24,10 @@ block content
                   | @#{releaseNotes.scope}/#{releaseNotes.name}
               td #{releaseNotes.title}
               td
-                a.is-small.button(href=`/release-notes/${releaseNotes._id}`) Edit
+                a.is-small.button(href=`/release-notes/${releaseNotes._id}`)
+                  span.icon
+                    i.mdi !{mdi('pencil')}
+                  span Update
 
       .hero
         .hero-body.has-text-centered

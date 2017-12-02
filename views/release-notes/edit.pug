@@ -32,7 +32,7 @@ block content
                         input#js-file-input.file-input(type="file" name="release-notes" accept=".yml, .yaml" required)
                         span.file-cta
                           span.file-icon
-                            i.material-icons file_upload
+                            i.mdi.mdi-18 !{mdi('upload')}
                           span.file-label Choose
                         span#js-file-name.file-name ...release-notes.yml
                   .control
@@ -46,8 +46,8 @@ block content
                 a#js-badge-integration
                   img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
                   | &nbsp;&nbsp;&nbsp;
-                  span.icon.is-small(title='Copy markdown')
-                    i.material-icons.md-18 content_paste
+                  span.icon(title='Copy markdown')
+                    i.mdi.mdi-18 !{mdi('content-paste')}
                 div.control
                   textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text(rows=1 readonly).
                     [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
