@@ -10,6 +10,7 @@ releases:
   - Add imprint.
   - Introduce static asset revisioning by appending content hash to filename.
   - Serve roboto webfont to remove external deps and to optimize performance.
+  - Inline material design svg icons.
   changed:
   - Rework overall page layout.
 - version: 0.3.0
