@@ -18,8 +18,14 @@ class AccountRepository extends BaseRepository {
       },
       username: {
         type: String,
-        unique: true,
-        required: true
+        index: {
+          unique: true,
+          partialFilterExpression: {
+            email: {
+              $type: 'string'
+            }
+          }
+        }
       },
       passwordHash: String,
     };
@@ -39,7 +45,7 @@ class AccountRepository extends BaseRepository {
   }
 
   /**
-   * Find an account by its usernam.
+   * Find an account by its username.
    *
    * @param {string} username
    * @param {function} callback

@@ -90,6 +90,7 @@ class AuthController extends AbstractController {
         method: 'post',
         handler: [
           check('username', 'Username must be alphanumeric and may contain dashes.')
+            .optional({ checkFalsy: true })
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           check('email', 'Please provide a valid email address.')
             .isEmail(),
