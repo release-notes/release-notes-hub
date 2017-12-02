@@ -1,6 +1,7 @@
 'use strict';
 
 const assetRev = require('../lib/asset-rev');
+const svgEmbed = require('../lib/svg-embed');
 
 const APP_PATH = `${__dirname}/..`;
 
@@ -85,6 +86,9 @@ module.exports = {
       asset: assetRev({
         enabled: process.env.ENABLE_ASSET_REV !== 'false'
       }),
+      mdi: svgEmbed({
+        path: `${APP_PATH}/node_modules/mdi-svg/svg/`
+      })
     },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
   },
