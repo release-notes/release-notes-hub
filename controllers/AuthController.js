@@ -53,6 +53,41 @@ class AuthController extends AbstractController {
     res.redirect('/');
   }
 
+  publishClaimUsernameAction(req, res, next) {
+    const accountService = this.serviceManager.get('accountService');
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return void res.render('release-notes/publish', {
+        errors: errors.mapped(),
+        form: req.body
+      });
+    }
+
+    const username = req.body.username;
+
+    accountService.findOne({ username }, (lookupErr, account) => {
+      if (lookupErr) return void next(lookupErr);
+
+      if (account) {
+        return void res.render('release-notes/publish', {
+          errors: {
+            username: {
+              msg: `@${username} is already taken.`,
+            },
+          },
+          form: req.body
+        });
+      }
+
+      accountService.findByIdAndUpdate(req.user._id, { username }, (updateErr, updatedAccount) => {
+        if (updateErr) return void next(updateErr);
+
+        return void res.redirect('/publish');
+      });
+    });
+  }
+
   getTargetUrl(req) {
     const targetUrl = req.body.targetUrl || req.query.targetUrl;
 
@@ -105,6 +140,14 @@ class AuthController extends AbstractController {
         handler: [
           authService.authenticate('session'),
           (req, res, next) => this.signOutAction(req, res, next),
+        ]
+      },
+      '/publish-claim-username': {
+        method: 'post',
+        handler: [
+          check('username', 'Username must be alphanumeric and may contain dashes.')
+            .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
+          (req, res, next) => this.publishClaimUsernameAction(req, res, next),
         ]
       }
     }

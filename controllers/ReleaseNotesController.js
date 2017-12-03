@@ -36,6 +36,10 @@ class ReleaseNotesController extends AbstractController {
   }
 
   publishAction(req, res, next) {
+    if (!req.user.username) {
+      return void res.render('release-notes/publish');
+    }
+
     if (!req.file) {
       return void res.render('release-notes/publish', {
         errors: {
