@@ -21,7 +21,7 @@ class AccountRepository extends BaseRepository {
         index: {
           unique: true,
           partialFilterExpression: {
-            email: {
+            username: {
               $type: 'string'
             }
           }
