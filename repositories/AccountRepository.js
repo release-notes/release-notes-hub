@@ -24,7 +24,11 @@ class AccountRepository extends BaseRepository {
             username: {
               $type: 'string'
             }
-          }
+          },
+          collation: {
+            locale: 'en',
+            strength: 2
+          },
         }
       },
       passwordHash: String,
