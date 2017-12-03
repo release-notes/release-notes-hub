@@ -18,7 +18,7 @@
           a.navbar-item(href="/signup") Sign Up
         else
           .navbar-item.has-dropdown.is-hoverable
-            a.navbar-link #{user.username}
+            a.navbar-link #{user.username || user.email}
             .navbar-dropdown.is-boxed
               a.navbar-item(href="/publish") Publish Release Notes
               a.navbar-item(href="/release-notes") Manage Release Notes
