@@ -26,7 +26,7 @@ block content
                 label.label Username
                 p.control
                   input.input(
-                    type='text' autocomplete='username' name='username'
+                    type='text' name='username'
                     value=(form && form.username) placeholder='Pick an username' required
                   )
                   if errors && errors.username
@@ -41,16 +41,18 @@ block content
         form(method='post' enctype='multipart/form-data' action='/publish')
           .card-content
             .field.has-text-left
-              label.label Release Notes Name
+              label.label Release Notes Handle
               p.control
                 input.input(
-                  type='text' value=(form && form.name) autocomplete='name' name='name'
-                  placeholder="Unique name of the release notes"
+                  type='text' value=(form && form.name) name='name'
+                  placeholder="Handle of the release notes"
                   class=(errors && errors.name && 'is-danger')
                   disabled=!user.username
                 )
                 if errors && errors.name
                   span.help.is-danger= errors.name.msg
+                .help Your release notes handle (only numbers, letters and dashes)
+                  .help @#{user.username || 'your-name'}/<b>awesome-release-notes</b>
             .field.has-text-left
               label.label Release Notes File
               p.control
