@@ -18,7 +18,11 @@ class AccountService extends BaseRepositoryService {
       (taskCallback) => {
         async.parallel({
           byEmail: findByEmailCallback => this.repository.findOneByEmail(params.email, findByEmailCallback),
-          byUsername: findByUsernameCallback => this.repository.findOneByUsername(params.username, findByUsernameCallback),
+          byUsername: findByUsernameCallback => {
+            if (!params.username) return void findByUsernameCallback();
+
+            this.repository.findOneByUsername(params.username, findByUsernameCallback);
+          }
         }, (err, results) => {
           if (err) {
             return void callback(err);
@@ -40,8 +44,11 @@ class AccountService extends BaseRepositoryService {
         const accountArgs = {
           email: params.email,
           passwordHash,
-          username: params.username,
         };
+
+        if (params.username) {
+          accountArgs.username = params.username;
+        }
 
         this.repository.create(accountArgs, taskCallback);
       },

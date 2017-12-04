@@ -23,9 +23,9 @@ class AuthController extends AbstractController {
 
     if (!errors.isEmpty()) {
       return void res.render('auth/signup', {
+        targetUrl,
         errors: errors.mapped(),
         form: req.body,
-        targetUrl: targetUrl,
       });
     }
 
@@ -35,6 +35,16 @@ class AuthController extends AbstractController {
       password: req.body.password,
     }, (err, account) => {
       if (err) {
+        const formError = AuthController.mapSignupError(err);
+
+        if (formError) {
+          return void res.render('auth/signup', {
+            targetUrl,
+            errors: formError,
+            form: req.body,
+          });
+        }
+
         return void next(err);
       }
 
@@ -102,6 +112,28 @@ class AuthController extends AbstractController {
     const targetUrl = this.getTargetUrl(req) || '/';
 
     res.redirect(targetUrl);
+  }
+
+  static mapSignupError(err) {
+    if (err.message === 'Email is already in use.') {
+      return {
+        email: {
+          msg: err.message,
+        },
+      };
+    }
+
+    if (err.message === 'Username is already in use.'
+      || err.message.indexOf('username_1 dup key') !== -1
+    ) {
+      return {
+        username: {
+          msg: 'Username is already in use.',
+        },
+      };
+    }
+
+    return null;
   }
 
   getRoutes() {
