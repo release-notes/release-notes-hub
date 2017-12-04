@@ -91,7 +91,17 @@ class AuthController extends AbstractController {
       }
 
       accountService.findByIdAndUpdate(req.user._id, { username }, (updateErr, updatedAccount) => {
-        if (updateErr) return void next(updateErr);
+        if (updateErr) {
+          const formError = AuthController.mapSignupError(updateErr);
+
+          if (formError) {
+            return void res.render('release-notes/publish', {
+              errors: formError,
+              form: req.body,
+            });
+          }
+          return void next(updateErr);
+        }
 
         return void res.redirect('/publish');
       });
@@ -177,6 +187,8 @@ class AuthController extends AbstractController {
       '/publish-claim-username': {
         method: 'post',
         handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
           check('username', 'Username must be alphanumeric and may contain dashes.')
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           (req, res, next) => this.publishClaimUsernameAction(req, res, next),
