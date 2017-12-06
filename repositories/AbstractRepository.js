@@ -160,7 +160,7 @@ class AbstractRepository extends RepositoryService {
   findOne(query) {
     return this
       .getModel()
-      .findOne(query, callback);
+      .findOne(query);
   }
 
   /**
@@ -200,7 +200,7 @@ class AbstractRepository extends RepositoryService {
   remove(conditions) {
     return this
       .getModel()
-      .remove(conditions, callback);
+      .remove(conditions);
   }
 }
 
