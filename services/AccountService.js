@@ -1,6 +1,5 @@
 'use strict';
 
-const async = require('async');
 const bcrypt = require('bcryptjs');
 const BaseRepositoryService = require('@gfcc/mongo-tenant-repository/BaseRepositoryService');
 
@@ -13,65 +12,48 @@ class AccountService extends BaseRepositoryService {
     return config;
   }
 
-  createAccountWithCredentials(params, callback) {
-    async.waterfall([
-      (taskCallback) => {
-        async.parallel({
-          byEmail: findByEmailCallback => this.repository.findOneByEmail(params.email, findByEmailCallback),
-          byUsername: findByUsernameCallback => this.repository.findOneByUsername(params.username, findByUsernameCallback),
-        }, (err, results) => {
-          if (err) {
-            return void callback(err);
-          }
+  async createAccountWithCredentials({ email, username, password }) {
+    const [byEmail, byUsername] = await Promise.all([
+      this.repository.findOneByEmail(email),
+      username ? this.repository.findOneByUsername(username) : false,
+    ]);
 
-          if (results.byEmail) {
-            return void callback(new Error('Email is already in use.'));
-          }
+    if (byEmail) {
+      throw new Error('Email is already in use.');
+    }
 
-          if (results.byUsername) {
-            return void callback(new Error('Username is already in use.'));
-          }
+    if (byUsername) {
+      throw new Error('Username is already in use.');
+    }
 
-          taskCallback();
-        });
-      },
-      taskCallback => bcrypt.hash(params.password, 10, taskCallback),
-      (passwordHash, taskCallback) => {
-        const accountArgs = {
-          email: params.email,
-          passwordHash,
-          username: params.username,
-        };
+    const passwordHash = await bcrypt.hash(password, 10);
 
-        this.repository.create(accountArgs, taskCallback);
-      },
-    ], callback);
+    const accountArgs = {
+      email,
+      passwordHash,
+      username,
+    };
 
-    return this;
+    return this.repository.create(accountArgs);
   }
 
-  authenticateWithCredentials(params, callback) {
-    async.waterfall([
-      taskCallback => this.repository.findOneByEmail(params.email, taskCallback),
-      (account, taskCallback) => {
-        if (!account) {
-          return void taskCallback(new Error('Authentication failed for the given credentials.'));
-        }
+  async authenticateWithCredentials({ email, password }) {
+    const account = await this.repository.findOneByEmail(email);
 
-        bcrypt.compare(
-          params.password,
-          account.passwordHash,
-          (err, matched) => taskCallback(err, matched, account)
-        );
-      },
-      (passwordIsValid, account, taskCallback) => {
-        if (!passwordIsValid) {
-          return void taskCallback(new Error('Authentication failed for the given credentials.'));
-        }
+    if (!account) {
+      throw new Error('Authentication failed for the given credentials.');
+    }
 
-        taskCallback(null, account);
-      }
-    ], (err, account) => callback(err, account));
+    const passwordIsValid = await bcrypt.compare(
+      password,
+      account.passwordHash
+    );
+
+    if (!passwordIsValid) {
+      throw new Error('Authentication failed for the given credentials.');
+    }
+
+    return account;
   }
 }
 
