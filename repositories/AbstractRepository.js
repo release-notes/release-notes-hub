@@ -155,12 +155,14 @@ class AbstractRepository extends RepositoryService {
 
   /**
    * @param query
-   * @returns {Promise}
+   * @param projection
+   * @param options
+   * @return {Promise}
    */
-  findOne(query) {
+  findOne(query, projection, options) {
     return this
       .getModel()
-      .findOne(query);
+      .findOne(query, projection, options);
   }
 
   /**
