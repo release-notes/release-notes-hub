@@ -31,8 +31,11 @@ class AccountService extends AbstractRepositoryService {
     const accountArgs = {
       email,
       passwordHash,
-      username,
     };
+
+    if (params.username) {
+      accountArgs.username = params.username;
+    }
 
     return this.repository.create(accountArgs);
   }

@@ -11,8 +11,10 @@ releases:
   - Introduce static asset revisioning by appending content hash to filename.
   - Serve roboto webfont to remove external deps and to optimize performance.
   - Inline material design svg icons.
+  - Add support for signing up w/o username. (#11)
   changed:
   - Rework overall page layout.
+  - Treat username case insensitive. (#11)
 - version: 0.3.0
   date: 2017-09-29
   title: MVP - Third Release

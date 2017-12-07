@@ -29,17 +29,18 @@ block content
                 input.input(name='password' type='password' autocomplete='password' value=form.password minlength=10 required)
                 if errors && errors.password
                   .help.is-danger= errors.password.msg
-                else
-                  .help Your login password (min. 10 characters)
+
+                .help Your login password (min. 10 characters)
             hr
             .field.has-text-left
-              label.label Username
+              label.label Username <small>(optional)</small>
               p.control
-                input.input(type='text' autocomplete='username' name='username' value=form.username placeholder='Pick a username' required)
+                input.input(type='text' autocomplete='username' name='username' value=form.username placeholder='Pick a username')
                 if errors && errors.username
                   .help.is-danger= errors.username.msg
-                else
-                  .help Your unique username (only numbers, letters and dashes)
+
+                .help Your unique username (only numbers, letters and dashes)
+                .help release-notes.com/<b>@your-name</b>
           .card-content
             .field
               p.control

@@ -23,9 +23,9 @@ class AuthController extends AbstractController {
 
     if (!errors.isEmpty()) {
       return void res.render('auth/signup', {
+        targetUrl,
         errors: errors.mapped(),
         form: req.body,
-        targetUrl: targetUrl,
       });
     }
 
@@ -44,13 +44,68 @@ class AuthController extends AbstractController {
         res.redirect(targetUrl || '/');
       });
     } catch (err) {
-      next(err);
+      const formError = AuthController.mapSignupError(err);
+
+      if (formError) {
+        return void res.render('auth/signup', {
+          targetUrl,
+          errors: formError,
+          form: req.body,
+        });
+      }
+
+      return void next(err);
     }
   }
 
   signOutAction(req, res, next) {
     req.logout();
     res.redirect('/');
+  }
+
+  publishClaimUsernameAction(req, res, next) {
+    const accountService = this.serviceManager.get('accountService');
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return void res.render('release-notes/publish', {
+        errors: errors.mapped(),
+        form: req.body
+      });
+    }
+
+    const username = req.body.username;
+
+    accountService.getRepository().findOne({ username }, (lookupErr, account) => {
+      if (lookupErr) return void next(lookupErr);
+
+      if (account) {
+        return void res.render('release-notes/publish', {
+          errors: {
+            username: {
+              msg: `@${username} is already taken.`,
+            },
+          },
+          form: req.body
+        });
+      }
+
+      accountService.findByIdAndUpdate(req.user._id, { username }, (updateErr, updatedAccount) => {
+        if (updateErr) {
+          const formError = AuthController.mapSignupError(updateErr);
+
+          if (formError) {
+            return void res.render('release-notes/publish', {
+              errors: formError,
+              form: req.body,
+            });
+          }
+          return void next(updateErr);
+        }
+
+        return void res.redirect('/publish');
+      });
+    });
   }
 
   getTargetUrl(req) {
@@ -67,6 +122,28 @@ class AuthController extends AbstractController {
     const targetUrl = this.getTargetUrl(req) || '/';
 
     res.redirect(targetUrl);
+  }
+
+  static mapSignupError(err) {
+    if (err.message === 'Email is already in use.') {
+      return {
+        email: {
+          msg: err.message,
+        },
+      };
+    }
+
+    if (err.message === 'Username is already in use.'
+      || err.message.indexOf('username_1 dup key') !== -1
+    ) {
+      return {
+        username: {
+          msg: 'Username is already in use.',
+        },
+      };
+    }
+
+    return null;
   }
 
   getRoutes() {
@@ -90,6 +167,7 @@ class AuthController extends AbstractController {
         method: 'post',
         handler: [
           check('username', 'Username must be alphanumeric and may contain dashes.')
+            .optional({ checkFalsy: true })
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           check('email', 'Please provide a valid email address.')
             .isEmail(),
@@ -104,6 +182,16 @@ class AuthController extends AbstractController {
         handler: [
           authService.authenticate('session'),
           (req, res, next) => this.signOutAction(req, res, next),
+        ]
+      },
+      '/publish-claim-username': {
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          check('username', 'Username must be alphanumeric and may contain dashes.')
+            .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
+          (req, res, next) => this.publishClaimUsernameAction(req, res, next),
         ]
       }
     }

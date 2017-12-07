@@ -18,8 +18,18 @@ class AccountRepository extends AbstractRepository {
       },
       username: {
         type: String,
-        unique: true,
-        required: true
+        index: {
+          unique: true,
+          partialFilterExpression: {
+            username: {
+              $type: 'string'
+            }
+          },
+          collation: {
+            locale: 'en',
+            strength: 2
+          },
+        }
       },
       passwordHash: String,
     };
