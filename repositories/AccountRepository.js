@@ -54,6 +54,8 @@ class AccountRepository extends AbstractRepository {
   findOneByUsername(username) {
     return this.findOne({
       username: username,
+    }, null, {
+      collation: { locale: 'en', strength: 2 }
     });
   }
 }
