@@ -16,7 +16,7 @@ class AuthController extends AbstractController {
     });
   }
 
-  signUpAction(req, res, next) {
+  async signUpAction(req, res, next) {
     const accountService = this.serviceManager.get('accountService');
     const targetUrl = this.getTargetUrl(req);
     const errors = validationResult(req);
@@ -29,24 +29,12 @@ class AuthController extends AbstractController {
       });
     }
 
-    accountService.createAccountWithCredentials({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-    }, (err, account) => {
-      if (err) {
-        const formError = AuthController.mapSignupError(err);
-
-        if (formError) {
-          return void res.render('auth/signup', {
-            targetUrl,
-            errors: formError,
-            form: req.body,
-          });
-        }
-
-        return void next(err);
-      }
+    try {
+      const account = await accountService.createAccountWithCredentials({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+      });
 
       req.logIn(account, (loginErr) => {
         if (loginErr) {
@@ -55,7 +43,19 @@ class AuthController extends AbstractController {
 
         res.redirect(targetUrl || '/');
       });
-    });
+    } catch (err) {
+      const formError = AuthController.mapSignupError(err);
+
+      if (formError) {
+        return void res.render('auth/signup', {
+          targetUrl,
+          errors: formError,
+          form: req.body,
+        });
+      }
+
+      return void next(err);
+    }
   }
 
   signOutAction(req, res, next) {
@@ -63,7 +63,7 @@ class AuthController extends AbstractController {
     res.redirect('/');
   }
 
-  publishClaimUsernameAction(req, res, next) {
+  async publishClaimUsernameAction(req, res, next) {
     const accountService = this.serviceManager.get('accountService');
     const errors = validationResult(req);
 
@@ -76,8 +76,8 @@ class AuthController extends AbstractController {
 
     const username = req.body.username;
 
-    accountService.findOne({ username }, (lookupErr, account) => {
-      if (lookupErr) return void next(lookupErr);
+    try {
+      const account = accountService.getRepository().findOneByUsername(username);
 
       if (account) {
         return void res.render('release-notes/publish', {
@@ -90,22 +90,21 @@ class AuthController extends AbstractController {
         });
       }
 
-      accountService.findByIdAndUpdate(req.user._id, { username }, (updateErr, updatedAccount) => {
-        if (updateErr) {
-          const formError = AuthController.mapSignupError(updateErr);
+      await accountService.getRepository().findByIdAndUpdate(req.user._id, { username });
 
-          if (formError) {
-            return void res.render('release-notes/publish', {
-              errors: formError,
-              form: req.body,
-            });
-          }
-          return void next(updateErr);
-        }
+      res.redirect('/publish');
+    } catch (err) {
+      const formError = AuthController.mapSignupError(err);
 
-        return void res.redirect('/publish');
-      });
-    });
+      if (formError) {
+        return void res.render('release-notes/publish', {
+          errors: formError,
+          form: req.body,
+        });
+      }
+
+      return void next(err);
+    }
   }
 
   getTargetUrl(req) {

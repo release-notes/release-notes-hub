@@ -22,16 +22,12 @@ class SparkPostService extends Service {
     return Object.assign({}, this.defaultContent, content);
   }
 
-  sendMessage({ options, recipients, content }, callback) {
-    this.sparky.transmissions.send({
+  sendMessage({ options, recipients, content }) {
+    return this.sparky.transmissions.send({
       options: this.applyDefaulOptions(options),
       content: this.applyDefaulContent(content),
       recipients: recipients.map(r => ({ address: r, })),
-    })
-    .then(
-      data => callback(null, data),
-      err => callback(err)
-    );
+    });
   }
 }
 
