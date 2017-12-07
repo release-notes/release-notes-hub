@@ -16,7 +16,7 @@ class AuthController extends AbstractController {
     });
   }
 
-  signUpAction(req, res, next) {
+  async signUpAction(req, res, next) {
     const accountService = this.serviceManager.get('accountService');
     const targetUrl = this.getTargetUrl(req);
     const errors = validationResult(req);
@@ -29,14 +29,12 @@ class AuthController extends AbstractController {
       });
     }
 
-    accountService.createAccountWithCredentials({
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password,
-    }, (err, account) => {
-      if (err) {
-        return void next(err);
-      }
+    try {
+      const account = await accountService.createAccountWithCredentials({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+      });
 
       req.logIn(account, (loginErr) => {
         if (loginErr) {
@@ -45,7 +43,9 @@ class AuthController extends AbstractController {
 
         res.redirect(targetUrl || '/');
       });
-    });
+    } catch (err) {
+      next(err);
+    }
   }
 
   signOutAction(req, res, next) {

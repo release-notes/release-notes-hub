@@ -44,7 +44,7 @@ class AccountRepository extends AbstractRepository {
   findOneByUsername(username) {
     return this.findOne({
       username: username,
-    }, callback);
+    });
   }
 }
 

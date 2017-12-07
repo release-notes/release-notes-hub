@@ -17,7 +17,7 @@ class UpdateService extends Service {
     return this.calculateNewReleases(latestRelease, newReleaseNotes);
   }
 
-  applyUpdate(releaseNotesModel, newReleaseNotes, callback) {
+  applyUpdate(releaseNotesModel, newReleaseNotes) {
     const latestRelease = this.calculateLastRelease(newReleaseNotes);
     const releaseNotesUpdate = {
       title: newReleaseNotes.title,
@@ -27,10 +27,9 @@ class UpdateService extends Service {
       latestReleaseDate: latestRelease.date || ''
     };
 
-    this.serviceManager.get('releaseNotesRepository').findByIdAndUpdate(
+    return this.serviceManager.get('releaseNotesRepository').findByIdAndUpdate(
       releaseNotesModel._id,
-      { $set: releaseNotesUpdate},
-      callback
+      { $set: releaseNotesUpdate}
     );
   }
 

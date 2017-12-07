@@ -1,8 +1,8 @@
 'use strict';
 
-const BaseRepository = require('@gfcc/mongo-tenant-repository/BaseRepository');
+const AbstractRepository = require('./AbstractRepository');
 
-class SubscriptionRepository extends BaseRepository {
+class SubscriptionRepository extends AbstractRepository {
   getSchemaDefinition() {
     return {
       subscriberId: {
@@ -34,13 +34,12 @@ class SubscriptionRepository extends BaseRepository {
    * Lookup all subscriptions of the given subscriber.
    *
    * @param {string} subscriberId
-   * @param {function} callback
-   * @return {SubscriptionRepository}
+   * @return {Promise}
    */
-  findBySubscriberId(subscriberId, callback) {
+  findBySubscriberId(subscriberId) {
     return this.find({
       subscriberId,
-    }, callback);
+    });
   }
 
   /**
@@ -49,28 +48,26 @@ class SubscriptionRepository extends BaseRepository {
    * @param subscriberId
    * @param releaseNotesScope
    * @param releaseNotesName
-   * @param callback
-   * @return {BaseRepository}
+   * @return {Promise}
    */
-  findBySubscriberAndReleaseNotes({ subscriberId, releaseNotesScope, releaseNotesName }, callback) {
+  findBySubscriberAndReleaseNotes({ subscriberId, releaseNotesScope, releaseNotesName }) {
     return this.find({
       subscriberId,
       releaseNotesScope,
       releaseNotesName,
-    }, callback);
+    });
   }
 
   /**
    * Lookup all subscriptions on the given release notes.
    *
    * @param releaseNotesId
-   * @param callback
-   * @return {BaseRepository}
+   * @return {Promise}
    */
-  findByReleaseNotesId(releaseNotesId, callback) {
+  findByReleaseNotesId(releaseNotesId) {
     return this.find({
       releaseNotesId,
-    }, callback);
+    });
   }
 }
 

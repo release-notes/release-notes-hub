@@ -1,9 +1,9 @@
 'use strict';
 
 const bcrypt = require('bcryptjs');
-const BaseRepositoryService = require('@gfcc/mongo-tenant-repository/BaseRepositoryService');
+const AbstractRepositoryService = require('./AbstractRepositoryService');
 
-class AccountService extends BaseRepositoryService {
+class AccountService extends AbstractRepositoryService {
   getDefaultServiceConfig() {
     let config = super.getDefaultServiceConfig();
 

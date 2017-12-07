@@ -24,31 +24,38 @@ class AuthService extends AbstractService {
       callback(null, user._id);
     });
 
-    this.passport.deserializeUser((id, callback) => {
-      this.accountService.findById(id, (err, user) => {
+    this.passport.deserializeUser(async (id, callback) => {
+      try {
+        const user = await this.accountService.getRepository().findById(id);
+
         if (user) {
           user.id = id;
         }
-
-        callback(err, user)
-      });
+        callback(null, user);
+      } catch (err) {
+        next(err);
+      }
     });
   }
 
   registerCredentialsStrategy() {
     this.passport.use('credentials', new LocalStrategy({
       usernameField: 'email',
-    }, (username, password, done) => {
-        this.accountService.authenticateWithCredentials({
-          email: username,
-          password: password
-        }, (err, user) => {
-          if (err || !user) {
+    }, async (username, password, done) => {
+        try {
+          const user = await this.accountService.authenticateWithCredentials({
+            email: username,
+            password: password
+          });
+
+          if (!user) {
             return void done(null, false, { message: 'Invalid credentials.' });
           }
 
           done(null, user);
-        });
+        } catch (err) {
+          return void done(null, false, { message: 'Invalid credentials.' });
+        }
       }
     ));
   }

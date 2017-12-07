@@ -23,7 +23,6 @@
   ],
   "main": "server.js",
   "dependencies": {
-    "@gfcc/mongo-tenant-repository": "^2.0.1",
     "@release-notes/node": "^0.2.0",
     "async": "^2.6.0",
     "bcryptjs": "^2.4.3",

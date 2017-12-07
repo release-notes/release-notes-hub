@@ -1,8 +1,8 @@
 'use strict';
 
-const BaseRepository = require('@gfcc/mongo-tenant-repository/BaseRepository');
+const AbstractRepository = require('./AbstractRepository');
 
-class ReleaseNotesRepository extends BaseRepository {
+class ReleaseNotesRepository extends AbstractRepository {
   getSchemaDefinition() {
     const MixedType = this.getSchemaTypes().Mixed;
 
@@ -40,55 +40,54 @@ class ReleaseNotesRepository extends BaseRepository {
     return this;
   }
 
-  findOneByScopeAndName(scope, name, callback) {
-    this.findOne({
+  /**
+   * @param scope
+   * @param name
+   *
+   * @return {Promise}
+   */
+  findOneByScopeAndName(scope, name) {
+    return this.findOne({
       scope: scope,
       name: name
-    }, callback);
-
-    return this;
+    });
   }
 
-  findAllByScope(scope, callback) {
-    this.find({
+  /**
+   * @param scope
+   * @return {Promise}
+   */
+  findAllByScope(scope) {
+    return this.find({
       scope: scope
-    }, callback);
-
-    return this;
+    });
   }
 
   /**
    * Retrieves the list of release notes owned by the given account.
    *
    * @param {string} ownerAccountId
-   * @param callback
-   * @return {BaseRepository}
+   * @return {Promise}
    */
-  findAllByOwnerAccountId(ownerAccountId, callback) {
+  findAllByOwnerAccountId(ownerAccountId) {
     return this.find({
       ownerAccountId,
-    }, callback);
+    });
   }
 
   /**
    * Retrieve a list of the nth newest release notes.
    *
    * @param {number} count
-   * @param {function} callback
+   * @return {Promise}
    */
-  findNewest(count, callback) {
-    this.findList({}, {
+  findNewest(count) {
+    return this.findList({}, {
       limit: count,
       sort: {
         createdAt: -1
       }
-    }, (err, releaseNotesList) => {
-      if (err) {
-        return void callback(err);
-      }
-
-      return void callback(null, releaseNotesList.items);
-    });
+    }).then(list => list.items);
   }
 }
 
