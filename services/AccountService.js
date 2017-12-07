@@ -33,8 +33,8 @@ class AccountService extends AbstractRepositoryService {
       passwordHash,
     };
 
-    if (params.username) {
-      accountArgs.username = params.username;
+    if (username) {
+      accountArgs.username = username;
     }
 
     return this.repository.create(accountArgs);
