@@ -58,7 +58,6 @@
   },
   "scripts": {
     "build": "gulp build",
-    "start": "node server.js",
-    "postinstall": "gulp build"
+    "start": "node server.js"
   }
 }
