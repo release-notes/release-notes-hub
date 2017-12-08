@@ -91,7 +91,8 @@ module.exports = {
       }),
       mdi: svgEmbed({
         path: `${APP_PATH}/node_modules/mdi-svg/svg/`
-      })
+      }),
+      moment: '@require:moment',
     },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
   },

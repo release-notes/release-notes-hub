@@ -9,31 +9,44 @@ block content
       .container.has-text-centered
         h2.subtitle.is-3 Auth Tokens
 
-  .section
-    .container.has-text-centered
-      if authTokenList && authTokenList.length
-        table.table.is-inline-block
-          tr
-            th Token
-            th Description
-          each authToken in authTokenList
+  if authTokenList && authTokenList.length
+    .section
+      .container.has-text-centered
+        .is-inline-block
+          table.table
             tr
-              td #{authToken.token}
-              td #{authToken.description}
-
-      .hero
-        .hero-body.has-text-centered
-          .container
-            .card.is-inline-block
-              form(method='post' action='/auth-tokens/new')
-                .card-content
-                  .field.has-text-left
-                    label.label Description
-                    p.control
-                      input.input(type='text' name='description' value=(form && form.description) placeholder='Description')
-                      if errors && errors.description
-                        .help.is-danger= errors.description.msg
-                .card-content
-                  .field
-                    p.control
-                      input.button.is-primary.is-fullwidth(type='submit' value='Create Token')
+              th Token
+              th Description
+              th Created
+              th
+            each authToken in authTokenList
+              tr
+                td
+                  code
+                    | #{authToken.token}
+                td #{authToken.description}
+                td
+                  - var issueDate = moment(authToken.createdAt)
+                  span(title=issueDate.format('LLL'))
+                    | #{issueDate.fromNow()}
+                td
+                  form(method='post' action='/auth-tokens/delete')
+                    input(type='hidden' name='id' value=authToken._id)
+                    button.button.is-small(type='submit')
+                      span.icon
+                        i.mdi !{mdi('delete')}
+                      span Delete
+  .hero.is-light
+    .hero-body.has-text-centered
+      .container
+        .is-inline-block.has-text-left
+          //.card.is-inline-block.has-text-left
+          form(method='post' action='/auth-tokens/new')
+            //.card-content
+            h3.subtitle Create new access token
+            .field.has-addons
+              .control
+                input.input(type='text' name='description' placeholder="Token description")
+                .help.has-text-grey What is this token for?
+              .control
+                input.button.is-primary.is-fullwidth(type='submit' value='Create Token')

@@ -46,6 +46,23 @@ class AuthTokenController extends AbstractController {
     }
   }
 
+  async deleteAuthTokenAction(req, res, next) {
+    try {
+      if (!req.body.id) {
+        return res.redirect('/auth-tokens');
+      }
+
+      await this.authTokenRepository.remove({
+        _id: req.body.id,
+        accountId: req.user._id,
+      });
+
+      res.redirect('/auth-tokens');
+    } catch (err) {
+      next(err);
+    }
+  }
+
   getRoutes() {
     const authService = this.authService;
 
@@ -59,11 +76,23 @@ class AuthTokenController extends AbstractController {
         ],
       }],
       '/auth-tokens/new': [{
+        handler: (req, res) => res.redirect('/auth-tokens'),
+      },{
         method: 'post',
         handler: [
           authService.authenticate('session'),
           authService.requireUser(),
           (req, res, next) => this.createAuthTokenAction(req, res, next),
+        ]
+      }],
+      '/auth-tokens/delete': [{
+        handler: (req, res) => res.redirect('/auth-tokens'),
+      },{
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.deleteAuthTokenAction(req, res, next),
         ]
       }]
     };
