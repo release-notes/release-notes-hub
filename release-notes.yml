@@ -12,6 +12,7 @@ releases:
   - Serve roboto webfont to remove external deps and to optimize performance.
   - Inline material design svg icons.
   - Add support for signing up w/o username. (#11)
+  - Add support for managing private auth tokens. (#30)
   changed:
   - Rework overall page layout.
   - Treat username case insensitive. (#11)
