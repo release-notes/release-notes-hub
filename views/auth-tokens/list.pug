@@ -1,0 +1,39 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - My Release Notes'
+
+block content
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Auth Tokens
+
+  .section
+    .container.has-text-centered
+      if authTokenList && authTokenList.length
+        table.table.is-inline-block
+          tr
+            th Token
+            th Description
+          each authToken in authTokenList
+            tr
+              td #{authToken.token}
+              td #{authToken.description}
+
+      .hero
+        .hero-body.has-text-centered
+          .container
+            .card.is-inline-block
+              form(method='post' action='/auth-tokens/new')
+                .card-content
+                  .field.has-text-left
+                    label.label Description
+                    p.control
+                      input.input(type='text' name='description' value=(form && form.description) placeholder='Description')
+                      if errors && errors.description
+                        .help.is-danger= errors.description.msg
+                .card-content
+                  .field
+                    p.control
+                      input.button.is-primary.is-fullwidth(type='submit' value='Create Token')

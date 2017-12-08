@@ -24,11 +24,13 @@ module.exports = {
       indexController: `${APP_PATH}/controllers/IndexController`,
       apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
       authController: `${APP_PATH}/controllers/AuthController`,
+      authTokenController: `${APP_PATH}/controllers/AuthTokenController`,
       releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
       subscriptionController: `${APP_PATH}/controllers/SubscriptionController`,
 
       // repositories
       accountRepository: `${APP_PATH}/repositories/AccountRepository`,
+      authTokenRepository: `${APP_PATH}/repositories/AuthTokenRepository`,
       releaseNotesRepository: `${APP_PATH}/repositories/ReleaseNotesRepository`,
       subscriptionRepository: `${APP_PATH}/repositories/SubscriptionRepository`,
 
@@ -77,6 +79,7 @@ module.exports = {
     controllers: [
       'apiPublishController',
       'authController',
+      'authTokenController',
       'releaseNotesController',
       'subscriptionController',
       'indexController',
