@@ -24,6 +24,11 @@ block content
                   span.icon
                     i.mdi !{mdi('radar')}
                   span Subscriptions
+              li.tab(class=activeTab === 'auth-tokens' ? 'is-active' : '')
+                a(href='/auth-tokens')
+                  span.icon
+                    i.mdi !{mdi('lock')}
+                  span Auth Tokens
   .section
     .container.has-text-centered
       block pageContent
