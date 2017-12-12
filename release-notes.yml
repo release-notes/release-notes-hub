@@ -13,6 +13,7 @@ releases:
   - Inline material design svg icons.
   - Add support for signing up w/o username. (#11)
   - Add support for managing private auth tokens. (#30)
+  - Add support for signing in via github. (#7)
   changed:
   - Rework overall page layout.
   - Treat username case insensitive. (#11)
