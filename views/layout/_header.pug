@@ -20,12 +20,27 @@
           .navbar-item.has-dropdown.is-hoverable
             a.navbar-link #{user.username || user.email}
             .navbar-dropdown.is-boxed.is-right
-              a.navbar-item(href="/publish") Publish Release Notes
-              a.navbar-item(href="/release-notes") Manage Release Notes
-              a.navbar-item(href="/subscriptions") Manage Subscriptions
-              a.navbar-item(href="/auth-tokens") Manage Auth Tokens
+              a.navbar-item(href="/publish")
+                span.icon
+                  i.mdi !{mdi('upload')}
+                span Publish Release Notes
+              a.navbar-item(href="/release-notes")
+                span.icon
+                  i.mdi !{mdi('note-multiple-outline')}
+                span Manage Release Notes
+              a.navbar-item(href="/subscriptions")
+                span.icon
+                  i.mdi !{mdi('radar')}
+                span Manage Subscriptions
+              a.navbar-item(href="/auth-tokens")
+                span.icon
+                  i.mdi !{mdi('lock')}
+                span Manage Auth Tokens
               .navbar-divider
-              a.navbar-item(href="/signout") Sign Out
+              a.navbar-item(href="/signout")
+                span.icon
+                  i.mdi !{mdi('logout')}
+                span Sign Out
 
 
 append scripts
