@@ -45,7 +45,9 @@ module.exports = {
 
       // 3rd party
       sparkPost: `${APP_PATH}/services/SparkPostService`,
-    }
+    },
+
+    baseUrl: env.BASE_URL || 'https://release-notes.com',
   },
 
   logging: {
@@ -75,6 +77,7 @@ module.exports = {
     settings: {
       'views': `${APP_PATH}/views`,
       'view engine': 'pug',
+      'trust proxy': true,
     },
     port: process.env.PORT || '8080',
     controllers: [

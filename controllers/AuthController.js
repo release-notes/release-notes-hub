@@ -147,6 +147,7 @@ class AuthController extends AbstractController {
 
   getRoutes() {
     const authService = this.authService;
+    const baseUrl = this.getServiceManager().get('app.config').get('app.baseUrl');
 
     return {
       '/signin': [{
@@ -196,7 +197,7 @@ class AuthController extends AbstractController {
       '/auth/github': {
         handler: (req, res, next) => authService.authenticate('github', {
           scope: ['user:email'],
-          callbackURL: `${req.protocol}://${req.headers.host}/auth/github/callback?targetUrl=${this.getTargetUrl(req)}`,
+          callbackURL: `${baseUrl}/auth/github/callback?targetUrl=${this.getTargetUrl(req)}`,
         })(req, res, next),
       },
       '/auth/github/callback': {
