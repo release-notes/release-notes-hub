@@ -4,7 +4,7 @@ block globalVars
   - var metaTitle = `Release Notes - @${scope}/${releaseNotesName}`
 
 block content
-  .hero.is-light
+  .hero.is-primary
     .hero-body
       .container.has-text-centered
         h2.title.is-3 #{releaseNotes.title}
@@ -39,15 +39,15 @@ block content
 
 block header
   .container
-    nav.navbar.is-transparent.has-text-centered.has-content-centered
+    nav.navbar.is-primary.has-text-centered.has-content-centered
       .navbar-item
         if isSubscribed
-          a.button.is-primary(href=`/@${scope}/${releaseNotesName}/unsubscribe`)
+          a.button.is-primary.is-bordered(href=`/@${scope}/${releaseNotesName}/unsubscribe`)
             span.icon
               i.mdi.mdi-24 !{mdi('wifi-off')}
             span Unsubscribe from updates
         else
-          a.button.is-primary(href=`/@${scope}/${releaseNotesName}/subscribe`)
+          a.button.is-primary.is-bordered(href=`/@${scope}/${releaseNotesName}/subscribe`)
             span.icon
               i.mdi.mdi-24 !{mdi('radar')}
             span Subscribe for updates
