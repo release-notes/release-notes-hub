@@ -1,6 +1,7 @@
 'use strict';
 
 const AbstractService = require('kermit/Service');
+const GitHubStrategy = require('passport-github2');
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 
@@ -13,7 +14,9 @@ class AuthService extends AbstractService {
 
   bootstrap() {
     this.accountService = this.serviceManager.get('accountService');
+    this.logger = this.serviceManager.get('logging');
     this.registerCredentialsStrategy();
+    this.registerGitHubStrategy();
     this.initializeUserSessionSerialization();
 
     return this;
@@ -58,6 +61,32 @@ class AuthService extends AbstractService {
         }
       }
     ));
+  }
+
+  registerGitHubStrategy() {
+    const serviceConfig = this.serviceConfig.get('github');
+
+    this.passport.use(new GitHubStrategy({
+      clientID: serviceConfig.clientId,
+      clientSecret: serviceConfig.clientSecret,
+      scope: [ 'user:email' ],
+    }, async (accessToken, refreshToken, profile, done) => {
+      if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
+        this.logger.warn('Github auth failed to retrieve user email.');
+
+        return done(null, false);
+      }
+
+      const accountRepository = this.accountService.getRepository();
+      const email = profile.emails[0].value;
+      let user = await accountRepository.findOneByEmail(email);
+
+      if (!user) {
+        user = await accountRepository.create({ email });
+      }
+
+      return done(null, user);
+    }));
   }
 
   requireUser() {

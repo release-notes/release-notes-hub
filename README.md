@@ -24,6 +24,8 @@ The app is aware of the following environment variables:
 | MONGODB_DATABASE | The db to use | 'release-notes' |
 | SPARK_POST_API_KEY | Api key for sending transactional email | _empty_ |
 | EMAIL_DEFAULT_REPLY_TO | Default reply-to email address | 'Release Notes <hello@release-notes.com>' |
+| GITHUB_CLIENT_ID | The github client id | _empty_ |
+| GITHUB_CLIENT_SECRET | The github client secret | _empty_ |
 
 [ReleaseNotesHubDevEnv]: https://github.com/release-notes/release-notes-hub-dev-env
 

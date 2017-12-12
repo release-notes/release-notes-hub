@@ -2,7 +2,7 @@ extends ../layout/main
 
 block globalVars
   - var metaTitle = 'Release Notes - Sign In'
-
+  - var bodyCls = 'login'
 block content
   .hero.is-primary
     .hero-body
@@ -11,27 +11,31 @@ block content
 
   .section
     .container.has-text-centered
-      .card.is-inline-block
-        form(method='post' autocomplete='on' action='/signin')
-          input(type='hidden' name='targetUrl' value=targetUrl)
+      .is-inline-block
+        include _social-login
+        .card
+          form(method='post' autocomplete='on' action='/signin')
+            input(type='hidden' name='targetUrl' value=targetUrl)
 
-          .card-content
-            .field.has-text-left
-              label.label Email
-              p.control
-                input.input(type='email' autocomplete='email' name='email')
-            .field.has-text-left
-              label.label Password
-              p.control
-                input.input(name='password' type='password' autocomplete='password')
+            .card-content
+              h5.subtitle.is-5 Sign in with email
 
-          .card-content
-            .field
-              p.control
-                input.button.is-primary.is-fullwidth(type='submit' value='Sign In')
-          .card-footer
-            - var signUpUrl = '/signup'
-            if targetUrl
-              - signUpUrl += `?targetUrl=${targetUrl}`
+              .field.has-text-left
+                label.label Email
+                p.control
+                  input.input(type='email' autocomplete='email' name='email')
+              .field.has-text-left
+                label.label Password
+                p.control
+                  input.input(name='password' type='password' autocomplete='password')
 
-            a.card-footer-item(href=signUpUrl) Or create a new account?
+            .card-content
+              .field
+                p.control
+                  input.button.is-primary.is-fullwidth(type='submit' value='Sign In')
+            .card-footer
+              - var signUpUrl = '/signup'
+              if targetUrl
+                - signUpUrl += `?targetUrl=${targetUrl}`
+
+              a.card-footer-item(href=signUpUrl) Or create a new account?

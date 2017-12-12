@@ -4,6 +4,7 @@ const assetRev = require('../lib/asset-rev');
 const svgEmbed = require('../lib/svg-embed');
 
 const APP_PATH = `${__dirname}/..`;
+const env = process.env;
 
 module.exports = {
   app: {
@@ -95,6 +96,13 @@ module.exports = {
       moment: '@require:moment',
     },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
+  },
+
+  authService: {
+    github: {
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+    },
   },
 
   sparkPost: {

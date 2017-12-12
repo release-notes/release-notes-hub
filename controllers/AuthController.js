@@ -192,6 +192,18 @@ class AuthController extends AbstractController {
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           (req, res, next) => this.publishClaimUsernameAction(req, res, next),
         ]
+      },
+      '/auth/github': {
+        handler: (req, res, next) => authService.authenticate('github', {
+          scope: ['user:email'],
+          callbackURL: `${req.protocol}://${req.headers.host}/auth/github/callback?targetUrl=${this.getTargetUrl(req)}`,
+        })(req, res, next),
+      },
+      '/auth/github/callback': {
+        handler: [
+          authService.authenticate('github', { failureRedirect: '/signin' }),
+          (req, res) => this.redirectToTargetUrl(req, res),
+        ],
       }
     }
   };

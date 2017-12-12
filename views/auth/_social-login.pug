@@ -1,0 +1,22 @@
+block socialLogin
+  - var targetUrlParam = targetUrl ? `?targetUrl=${targetUrl}` : '';
+
+  .card.social-login
+    .card-content
+      h5.subtitle.is-5 Sign in with
+      ul
+        li.oauth-provider: a(href=`/auth/github${targetUrlParam}` title='Sign in with github')
+          span.icon
+            .mdi.mdi-24 !{mdi('github-circle')}
+        li.oauth-provider
+          span.icon.has-text-grey(title='Sign in with bitbucket - coming soon')
+            .mdi.mdi-24 !{mdi('bitbucket')}
+        li.oauth-provider
+          span.icon.has-text-grey(title='Sign in with google - coming soon')
+            .mdi.mdi-24 !{mdi('google')}
+        li.oauth-provider
+          span.icon.has-text-grey(title='Sign in with twitter - coming soon')
+            .mdi.mdi-24 !{mdi('twitter')}
+        li.oauth-provider
+          span.icon.has-text-grey(title='Sign in with facebook - coming soon')
+            .mdi.mdi-24 !{mdi('facebook')}

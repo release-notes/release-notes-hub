@@ -3,6 +3,7 @@ extends ../layout/main
 block globalVars
   - var metaTitle = 'Release Notes - Sign Up'
   - form = form || {}
+  - var bodyCls = 'login'
 
 block content
   .hero.is-primary
@@ -12,42 +13,46 @@ block content
 
   .section
     .container.has-text-centered
-      .card.is-inline-block
-        form(method='post' autocomplete='on' action='/signup')
-          input(type='hidden' name='targetUrl' value=targetUrl)
+      .is-inline-block
+        include _social-login
+        .card
+          form(method='post' autocomplete='on' action='/signup')
+            input(type='hidden' name='targetUrl' value=targetUrl)
 
-          .card-content
-            .field.has-text-left
-              label.label Email
-              p.control
-                input.input(type='email' autocomplete='email' name='email' value=form.email placeholder='Your Email Address' required)
-                if errors && errors.email
-                  .help.is-danger= errors.email.msg
-            .field.has-text-left
-              label.label Password
-              p.control
-                input.input(name='password' type='password' autocomplete='password' value=form.password minlength=10 required)
-                if errors && errors.password
-                  .help.is-danger= errors.password.msg
+            .card-content
+              h5.subtitle.is-5 Sign up with email
 
-                .help Your login password (min. 10 characters)
-            hr
-            .field.has-text-left
-              label.label Username <small>(optional)</small>
-              p.control
-                input.input(type='text' autocomplete='username' name='username' value=form.username placeholder='Pick a username')
-                if errors && errors.username
-                  .help.is-danger= errors.username.msg
+              .field.has-text-left
+                label.label Email
+                p.control
+                  input.input(type='email' autocomplete='email' name='email' value=form.email placeholder='Your Email Address' required)
+                  if errors && errors.email
+                    .help.is-danger= errors.email.msg
+              .field.has-text-left
+                label.label Password
+                p.control
+                  input.input(name='password' type='password' autocomplete='password' value=form.password minlength=10 required)
+                  if errors && errors.password
+                    .help.is-danger= errors.password.msg
 
-                .help Your unique username (only numbers, letters and dashes)
-                .help release-notes.com/<b>@your-name</b>
-          .card-content
-            .field
-              p.control
-                input.button.is-primary.is-fullwidth(type='submit' value='Sign Up')
-          .card-footer
-            - var signInUrl = '/signin'
-            if targetUrl
-              - signInUrl += `?targetUrl=${targetUrl}`
+                  .help Your login password (min. 10 characters)
+              hr
+              .field.has-text-left
+                label.label Username <small>(optional)</small>
+                p.control
+                  input.input(type='text' autocomplete='username' name='username' value=form.username placeholder='Pick a username')
+                  if errors && errors.username
+                    .help.is-danger= errors.username.msg
 
-            a.card-footer-item(href=signInUrl) Already have an account?
+                  .help Your unique username (only numbers, letters and dashes)
+                  .help release-notes.com/<b>@your-name</b>
+            .card-content
+              .field
+                p.control
+                  input.button.is-primary.is-fullwidth(type='submit' value='Sign Up')
+            .card-footer
+              - var signInUrl = '/signin'
+              if targetUrl
+                - signInUrl += `?targetUrl=${targetUrl}`
+
+              a.card-footer-item(href=signInUrl) Already have an account?

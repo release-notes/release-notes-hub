@@ -24,7 +24,7 @@ html(lang="en")
         link(rel='stylesheet' href=asset("css/bulma.css"))
         link(rel='stylesheet' href=asset("css/release-notes.css"))
 
-  body
+  body(class=bodyCls ? bodyCls : '')
     header
       block header
         include ./_header
