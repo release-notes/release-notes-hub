@@ -1,78 +1,74 @@
-extends ../layout/main
+extends ../layout/dashboard
 
 block globalVars
   - var metaTitle = `Release Notes - Update @${releaseNotes.scope}/${releaseNotes.name}`
+  - var pageSubtitle = `Update @${releaseNotes.scope}/${releaseNotes.name}`
+  - var activeTab = 'release-notes'
+  - var navSubLevel = 'edit'
 
-block content
-  .hero.is-primary
-    .hero-body
-      .container.has-text-centered
-        h2.subtitle.is-3 Update @#{releaseNotes.scope}/#{releaseNotes.name}
+block pageContent
+  if releaseNotes
+    .hero
+      .hero-body.has-text-centered
+        if errors && (errors.validation || errors.file)
+          .message
+            .message-body
+              .subtitle.is-5 Release Notes Validation failed.
+              if errors.validation
+                p= errors.validation.msg
+              if errors.file
+                p= errors.file.msg
+        .is-inline-block
+          .subtitle.is-4 Publish New Revision
+          form(method='post' enctype='multipart/form-data' action=`/release-notes/${releaseNotesId}`)
+            .field.is-grouped
+              .control
+                .file.has-name
+                  label.file-label
+                    input#js-file-input.file-input(type="file" name="release-notes" accept=".yml, .yaml" required)
+                    span.file-cta
+                      span.file-icon
+                        i.mdi.mdi-18 !{mdi('upload')}
+                      span.file-label Choose
+                    span#js-file-name.file-name ...release-notes.yml
+              .control
+                button.button.is-primary(type="submit") Publish
 
-  .section
-    .container.has-text-centered
-      if releaseNotes
-        .hero
-          .hero-body.has-text-centered
-            if errors && (errors.validation || errors.file)
-              .message
-                .message-body
-                  .subtitle.is-5 Release Notes Validation failed.
-                  if errors.validation
-                    p= errors.validation.msg
-                  if errors.file
-                    p= errors.file.msg
-            .is-inline-block
-              .subtitle.is-4 Publish New Revision
-              form(method='post' enctype='multipart/form-data' action=`/release-notes/${releaseNotesId}`)
-                .field.is-grouped
-                  .control
-                    .file.has-name
-                      label.file-label
-                        input#js-file-input.file-input(type="file" name="release-notes" accept=".yml, .yaml" required)
-                        span.file-cta
-                          span.file-icon
-                            i.mdi.mdi-18 !{mdi('upload')}
-                          span.file-label Choose
-                        span#js-file-name.file-name ...release-notes.yml
-                  .control
-                    button.button.is-primary(type="submit") Publish
-
-        .section
-          table.table
-            tr
-              th Badge
-              td
-                a#js-badge-integration
-                  img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
-                  | &nbsp;&nbsp;&nbsp;
-                  span.icon(title='Copy markdown')
-                    i.mdi.mdi-18 !{mdi('content-paste')}
-                div.control
-                  textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text(rows=1 readonly).
-                    [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
-            tr
-              th Title
-              td= releaseNotesDataModel.title
-            tr
-              th Description
-              td= releaseNotesDataModel.description
-            each release in releaseNotesDataModel.releases
-              tr
-                th= release.version
-                td.content
-                  if release.date
-                    .subtitle.is-6 #{release.date}
-                  each modifications, modificationType in release.getModifications()
-                    if modifications && modifications.length
-                      span.tag.is-dark #{modificationType}
-                      ul
-                        each modification in modifications
-                          li
-                            if typeof modification === 'string'
-                              | #{modification}
-                            else
-                              | #{modification.title}
+    .section
+      table.table
+        tr
+          th Badge
+          td
+            a#js-badge-integration
+              img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
+              | &nbsp;&nbsp;&nbsp;
+              span.icon(title='Copy markdown')
+                i.mdi.mdi-18 !{mdi('content-paste')}
+            div.control
+              textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text(rows=1 readonly).
+                [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
+        tr
+          th Title
+          td= releaseNotesDataModel.title
+        tr
+          th Description
+          td= releaseNotesDataModel.description
+        each release in releaseNotesDataModel.releases
+          tr
+            th= release.version
+            td.content
+              if release.date
+                .subtitle.is-6 #{release.date}
+              each modifications, modificationType in release.getModifications()
+                if modifications && modifications.length
+                  span.tag.is-dark #{modificationType}
+                  ul
+                    each modification in modifications
+                      li
+                        if typeof modification === 'string'
+                          | #{modification}
+                        else
+                          | #{modification.title}
 
 append scripts
   script.

@@ -1,33 +1,28 @@
-extends ../layout/main
+extends ../layout/dashboard
 
 block globalVars
   - var metaTitle = 'Release Notes - Subscriptions'
+  - var pageSubtitle = 'My Subscriptions'
+  - var activeTab = 'subscriptions'
 
-block content
-  .hero.is-primary
-    .hero-body
-      .container.has-text-centered
-        h2.subtitle.is-3 My Subscriptions
-
-  .section
-    .container.has-text-centered
-      if !subscriptions || !subscriptions.length
-        .message
-          .message-body
-            p You have not subscriptions, yet.
-      else
-        table.table.is-inline-block
-          tr
-            th ReleaseNotes
-            th Since
-            th
-          each subscription in subscriptions
-            tr
-              td
-                a(href=`/@${subscription.releaseNotesScope}/${subscription.releaseNotesName}`)
-                  | @#{subscription.releaseNotesScope}/#{subscription.releaseNotesName}
-              td #{subscription.createdAt}
-              td
-                .tags
-                  form(method='post' enctype='multipart/form-data' action=`/subscriptions/${subscription._id}/unsubscribe`)
-                    button.is-small.button(type="submit") Unsubscribe
+block pageContent
+  if !subscriptions || !subscriptions.length
+    .message
+      .message-body
+        p You have not subscriptions, yet.
+  else
+    table.table.is-inline-block
+      tr
+        th ReleaseNotes
+        th Since
+        th
+      each subscription in subscriptions
+        tr
+          td
+            a(href=`/@${subscription.releaseNotesScope}/${subscription.releaseNotesName}`)
+              | @#{subscription.releaseNotesScope}/#{subscription.releaseNotesName}
+          td #{subscription.createdAt}
+          td
+            .tags
+              form(method='post' enctype='multipart/form-data' action=`/subscriptions/${subscription._id}/unsubscribe`)
+                button.is-small.button(type="submit") Unsubscribe

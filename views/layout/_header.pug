@@ -1,8 +1,8 @@
 .container
-  nav.navbar.is-transparent
+  nav.navbar.is-transparent.is-primary
     .navbar-brand
       a.navbar-item(href="/")
-        img.logo(src=asset('img/release-notes-logo.svg'))
+        img.logo(src=asset('img/release-notes-logo-white.svg'))
 
         h1 Release Notes Hub
 
@@ -19,7 +19,7 @@
         else
           .navbar-item.has-dropdown.is-hoverable
             a.navbar-link #{user.username || user.email}
-            .navbar-dropdown.is-boxed
+            .navbar-dropdown.is-boxed.is-right
               a.navbar-item(href="/publish") Publish Release Notes
               a.navbar-item(href="/release-notes") Manage Release Notes
               a.navbar-item(href="/subscriptions") Manage Subscriptions

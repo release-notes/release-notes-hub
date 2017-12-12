@@ -1,69 +1,82 @@
-extends ../layout/main
+extends ../layout/dashboard
 
 block globalVars
   - var metaTitle = 'Release Notes - Publish'
+  - var pageSubtitle = 'Publish Release Notes'
+  - var activeTab = 'release-notes'
+  - var navSubLevel = 'publish'
 
-block content
-  .hero.is-primary
-    .hero-body
-      .container.has-text-centered
-        h2.subtitle.is-3 Publish Release Notes
+block pageContent
+  if err
+    .message
+      .message-body
+        .subtitle.is-5 Release Notes Validation failed.
+        p #{err.message}
 
-  .section
-    .container.has-text-centered
-      if err
-        .message
-          .message-body
-            .subtitle.is-5 Release Notes Validation failed.
-            p #{err.message}
-
-      .card.is-inline-block
-        if !user.username
-          form(method='post' action='/publish-claim-username')
-            .card-content
-              h3.subtitle Claim username
-              .field.has-text-left
-                label.label Username
-                p.control
-                  input.input(
-                    type='text' name='username'
-                    value=(form && form.username) placeholder='Pick an username' required
-                  )
-                  if errors && errors.username
-                    .help.is-danger= errors.username.msg
-                  .help Your unique username (only numbers, letters and dashes)
-                  .help release-notes.com/<b>@your-name</b>
-            .card-content
-              .field
-                p.control
-                  input.button.is-dark.is-fullwidth(type='submit' value="Let's go")
-          hr
-        form(method='post' enctype='multipart/form-data' action='/publish')
-          .card-content
-            .field.has-text-left
-              label.label Release Notes Handle
-              p.control
-                input.input(
-                  type='text' value=(form && form.name) name='name'
-                  placeholder="Handle of the release notes"
-                  class=(errors && errors.name && 'is-danger')
-                  disabled=!user.username
+  .card.is-inline-block
+    if !user.username
+      form(method='post' action='/publish-claim-username')
+        .card-content
+          h3.subtitle Claim username
+          .field.has-text-left
+            label.label Username
+            p.control
+              input.input(
+                type='text' name='username'
+                value=(form && form.username) placeholder='Pick an username' required
+              )
+              if errors && errors.username
+                .help.is-danger= errors.username.msg
+              .help Your unique username (only numbers, letters and dashes)
+              .help release-notes.com/<b>@your-name</b>
+        .card-content
+          .field
+            p.control
+              input.button.is-dark.is-fullwidth(type='submit' value="Let's go")
+      hr
+    form(method='post' enctype='multipart/form-data' action='/publish')
+      .card-content
+        .field.has-text-left
+          label.label Release Notes Handle
+          p.control
+            input.input(
+              type='text' value=(form && form.name) name='name'
+              placeholder="Handle of the release notes"
+              class=(errors && errors.name && 'is-danger')
+              disabled=!user.username
+            )
+            if errors && errors.name
+              span.help.is-danger= errors.name.msg
+            .help Your release notes handle (only numbers, letters and dashes)
+              .help @#{user.username || 'your-name'}/<b>awesome-release-notes</b>
+        .field.has-text-left
+          label.label Release Notes File
+          .control
+            .file.has-name(disabled=!user.username)
+              label.file-label
+                input#js-file-input.file-input(
+                  type="file" class=(errors && errors.file && 'is-danger')
+                  name="release-notes" accept=".yml, .yaml"
+                  disabled=!user.username required
                 )
-                if errors && errors.name
-                  span.help.is-danger= errors.name.msg
-                .help Your release notes handle (only numbers, letters and dashes)
-                  .help @#{user.username || 'your-name'}/<b>awesome-release-notes</b>
-            .field.has-text-left
-              label.label Release Notes File
-              p.control
-                input.input(
-                  name='release-notes' type='file' required class=(errors && errors.file && 'is-danger')
-                  disabled=!user.username
-                )
-                if errors && errors.file
-                  span.help.is-danger= errors.file.msg
+                span.file-cta
+                  span.file-icon
+                    i.mdi.mdi-18 !{mdi('upload')}
+                  span.file-label Choose
+                span#js-file-name.file-name ...release-notes.yml
+            if errors && errors.file
+              span.help.is-danger= errors.file.msg
+        //
+          label.label Release Notes File
+          p.control
+            input.input(
+              name='release-notes' type='file' required class=(errors && errors.file && 'is-danger')
+              disabled=!user.username
+            )
+            if errors && errors.file
+              span.help.is-danger= errors.file.msg
 
-          .card-content
-            .field
-              p.control
-                input.button.is-primary.is-fullwidth(type='submit' value='Publish' disabled=!user.username)
+      .card-content
+        .field
+          p.control
+            input.button.is-primary.is-fullwidth(type='submit' value='Publish' disabled=!user.username)

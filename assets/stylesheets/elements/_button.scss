@@ -1,0 +1,6 @@
+.button {
+  &.is-bordered,
+  &.is-bordered:hover {
+    border: 1px solid;
+  }
+}
