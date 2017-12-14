@@ -3,16 +3,12 @@
 const AbstractController = require('./AbstractController');
 
 class IndexController extends AbstractController {
-  async indexAction(req, res, next) {
-    try {
-      const releaseNotesList = await this.serviceManager.get('releaseNotesRepository').findNewest(6);
+  async indexAction(req, res) {
+    const releaseNotesList = await this.serviceManager.get('releaseNotesRepository').findNewest(6);
 
-      res.render('index/index', {
-        newest: releaseNotesList,
-      });
-    } catch (err) {
-      next(err);
-    }
+    res.render('index/index', {
+      newest: releaseNotesList,
+    });
   }
 
   getRoutes() {
