@@ -97,6 +97,7 @@ module.exports = {
         path: `${APP_PATH}/node_modules/mdi-svg/svg/`
       }),
       moment: '@require:moment',
+      marked: '@require:marked',
     },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
   },

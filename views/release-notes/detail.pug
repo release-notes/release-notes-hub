@@ -10,7 +10,7 @@ block content
         h2.title.is-3 #{releaseNotes.title}
 
         if releaseNotes.description
-          h2.subtitle #{releaseNotes.description}
+          h2.subtitle !{marked(releaseNotes.description)}
 
   .section
     .container.has-text-centered
@@ -25,6 +25,9 @@ block content
                   - var releaseMoment = moment(release.date)
                   .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
               .column.has-text-center
+                if release.description
+                  .content.has-text-left.is-inline-block-mobile
+                    | !{marked(release.description)}
                 .content.has-text-left.is-inline-block-mobile
                   each modifications, modificationType in release.getModifications()
                     if modifications && modifications.length
@@ -34,9 +37,9 @@ block content
                           each modification in modifications
                             li
                               if typeof modification === 'string'
-                                | #{modification}
+                                | !{marked(modification)}
                               else
-                                | #{modification.title}
+                                | !{marked(modification.title)}
 
 block header
   .container
