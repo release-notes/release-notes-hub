@@ -71,7 +71,7 @@ class ReleaseNotesController extends AbstractController {
       releaseNotesData.name = req.body.name;
 
       try {
-        const releaseNotesModel = await this.releaseNotesRepository.create(releaseNotesData)
+        const releaseNotesModel = await this.releaseNotesRepository.create(releaseNotesData);
         res.redirect(`/@${releaseNotesModel.scope}/${releaseNotesModel.name}`);
       } catch (err) {
         next(err);
@@ -79,80 +79,68 @@ class ReleaseNotesController extends AbstractController {
     });
   }
 
-  async renderMyReleaseNotesView(req, res, next) {
-    try {
-      const releaseNotesList = await this.releaseNotesRepository.findAllByOwnerAccountId(req.user._id);
-      res.render('release-notes/private-list', { releaseNotesList });
-    } catch (err) {
-      next(err);
-    }
+  async renderMyReleaseNotesView(req, res) {
+    const releaseNotesList = await this.releaseNotesRepository.findAllByOwnerAccountId(req.user._id);
+    res.render('release-notes/private-list', { releaseNotesList });
   }
 
   async editReleaseNotesAction(req, res, next) {
-    try {
-      const releaseNotes = await this.releaseNotesRepository.findById(req.params.releaseNotesId);
+    const releaseNotes = await this.releaseNotesRepository.findById(req.params.releaseNotesId);
 
-      if (releaseNotes.ownerAccountId !== req.user.id) {
-        return void next();
-      }
-
-      res.render('release-notes/edit', {
-        releaseNotes,
-        releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
-        releaseNotesId: releaseNotes._id,
-      });
-    } catch (err) {
-      next(err);
+    if (releaseNotes.ownerAccountId !== req.user.id) {
+      return void next();
     }
+
+    res.render('release-notes/edit', {
+      releaseNotes,
+      releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
+      releaseNotesId: releaseNotes._id,
+    });
   }
 
   async updateReleaseNotesAction(req, res, next) {
-    try {
-      const releaseNotes = await this.releaseNotesRepository.findById(req.params.releaseNotesId);
+    const releaseNotes = await this.releaseNotesRepository.findById(req.params.releaseNotesId);
 
-      if (releaseNotes.ownerAccountId !== req.user.id) {
-        return void next();
-      }
-
-      const viewVariables = {
-        releaseNotes,
-        releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
-        releaseNotesId: releaseNotes._id,
-      };
-
-      if (!req.file) {
-        viewVariables.errors = {file: {msg: 'No release-notes.yml file was uploaded.'}};
-        return void res.render('release-notes/edit', viewVariables);
-      }
-
-      releaseNotesLoader.loadReleaseNotes(
-        req.file.buffer,
-        async (releaseNotesValidationErr, releaseNotesUpdate) => {
-          try {
-            if (releaseNotesValidationErr) {
-              viewVariables.errors = {validation: {msg: releaseNotesValidationErr.message}};
-              res.statusCode = 400;
-              res.render('release-notes/edit', viewVariables);
-            }
-
-            this.notificationService.sendReleaseNotesUpdateNotification(releaseNotes, releaseNotesUpdate);
-
-            const updatedReleaseNotes = await this.updateService.applyUpdate(
-              releaseNotes,
-              releaseNotesUpdate
-            );
-
-            viewVariables.releaseNotesDataModel = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
-
-            res.render('release-notes/edit', viewVariables);
-          } catch (err) {
-            return void next(err);
-          }
-        }
-      );
-    } catch (err) {
-      next(err);
+    if (releaseNotes.ownerAccountId !== req.user.id) {
+      return void next();
     }
+
+    const viewVariables = {
+      releaseNotes,
+      releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
+      releaseNotesId: releaseNotes._id,
+    };
+
+    if (!req.file) {
+      viewVariables.errors = {file: {msg: 'No release-notes.yml file was uploaded.'}};
+      return void res.render('release-notes/edit', viewVariables);
+    }
+
+    releaseNotesLoader.loadReleaseNotes(
+      req.file.buffer,
+      async (releaseNotesValidationErr, releaseNotesUpdate) => {
+        try {
+          if (releaseNotesValidationErr) {
+            viewVariables.errors = {validation: {msg: releaseNotesValidationErr.message}};
+            res.statusCode = 400;
+            res.render('release-notes/edit', viewVariables);
+          }
+
+          this.notificationService.sendReleaseNotesUpdateNotification(releaseNotes, releaseNotesUpdate);
+
+          const updatedReleaseNotes = await this.updateService.applyUpdate(
+            releaseNotes,
+            releaseNotesUpdate
+          );
+
+          viewVariables.releaseNotesDataModel = ReleaseNotesDataModel.fromJSON(updatedReleaseNotes);
+
+          res.render('release-notes/edit', viewVariables);
+        } catch (err) {
+          return void next(err);
+        }
+      }
+    );
   }
 
   async renderRealeaseNotesView(req, res, next) {
@@ -160,47 +148,39 @@ class ReleaseNotesController extends AbstractController {
     const releaseNotesName = params.releaseNotesId;
     const releaseNotesScope = params.scope;
 
-    try {
-      const [releaseNotesModel, subscriptions] = await Promise.all([
-        this.releaseNotesRepository.findOneByScopeAndName(
-          releaseNotesScope, releaseNotesName
-        ),
-        req.user ? this.subscriptionRepository.findBySubscriberAndReleaseNotes({
-          releaseNotesName,
-          releaseNotesScope,
-          subscriberId: req.user._id
-        }) : [],
-      ]);
+    const [releaseNotesModel, subscriptions] = await Promise.all([
+      this.releaseNotesRepository.findOneByScopeAndName(
+        releaseNotesScope, releaseNotesName
+      ),
+      req.user ? this.subscriptionRepository.findBySubscriberAndReleaseNotes({
+        releaseNotesName,
+        releaseNotesScope,
+        subscriberId: req.user._id
+      }) : [],
+    ]);
 
-      const isSubscribed = subscriptions.length;
+    const isSubscribed = subscriptions.length;
 
-      // not found
-      if (!releaseNotesModel) return void next();
+    // not found
+    if (!releaseNotesModel) return void next();
 
-      res.render('release-notes/detail', {
-        releaseNotesModel,
-        isSubscribed,
-        releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotesModel),
-        releaseNotesName: releaseNotesModel.name,
-        scope: releaseNotesModel.scope,
-      });
-    } catch (err) {
-      next(err);
-    }
+    res.render('release-notes/detail', {
+      releaseNotesModel,
+      isSubscribed,
+      releaseNotes: ReleaseNotesDataModel.fromJSON(releaseNotesModel),
+      releaseNotesName: releaseNotesModel.name,
+      scope: releaseNotesModel.scope,
+    });
   }
 
   async renderAccountRealeaseNotesListView(req, res, next) {
     const scope = req.params.scope;
 
-    try {
-      const releaseNotesList = await this.releaseNotesRepository.findAllByScope(scope);
-      res.render('release-notes/list', {
-        releaseNotesList,
-        scope,
-      });
-    } catch (err) {
-      next(err);
-    }
+    const releaseNotesList = await this.releaseNotesRepository.findAllByScope(scope);
+    res.render('release-notes/list', {
+      releaseNotesList,
+      scope,
+    });
   }
 
   getRoutes() {

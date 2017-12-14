@@ -52,33 +52,26 @@ class AbstractController extends Service {
       handlers = routeDefinition.handler;
     }
 
-    handlers.unshift(
-      this.createControllerHardeningGuard()
-    );
-
-    server[method](url, ...handlers);
+    server[method](url, ...this.createControllerHardeningGuard(handlers));
   }
 
   /**
    * Wrap the controller action call within try/catch.
-   * In case an exception occurs, log the error as fatal and instantly return 500 / Internal Server Error response.
+   * Also catching promise errors.
    *
-   * @returns {Function}
+   * @param {function[]} handlers
+   * @returns {function[]}
    */
-  createControllerHardeningGuard() {
-    return (req, res, next) => {
-      try {
-        next();
-      } catch(e) {
-        this.logger.fatal(e);
-
-        res.status(500);
-        res.json({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'An error occured while handling the request.'
-        });
+  createControllerHardeningGuard(handlers) {
+    return handlers.map(handler =>
+      async (req, res, next) => {
+        try {
+          await handler(req, res, next);
+        } catch (err) {
+          next(err);
+        }
       }
-    }
+    );
   }
 }
 
