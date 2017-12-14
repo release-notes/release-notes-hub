@@ -1,13 +1,16 @@
 extends ../layout/main
 
 block globalVars
-  - var metaTitle = 'Release Notes - Subscriptions'
+  - var metaTitle = `Release Notes - Subscribe to @${scope}/${releaseNotesModel.name}`
 
 block content
-  .container.has-text-centered
-    .section
-      h1.subtitle.is-3 Subscribe to @#{scope}/#{releaseNotesModel.name}
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Subscribe to @#{scope}/#{releaseNotesModel.name}
 
+  .section
+    .container.has-text-centered
       if subscriptions && subscriptions.length
         .message
           .message-body

@@ -4,6 +4,25 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
+- version: Unreleased
+- version: 0.4.0
+  date: 2017-12-14
+  description: This release improves the overall UI/UX and code quality and introduces authentication via github.
+  added:
+  - Introduce badge and markdown for embedding. (#22)
+  - Add imprint.
+  - Introduce static asset revisioning by appending content hash to filename.
+  - Serve roboto webfont to remove external deps and to optimize performance.
+  - Inline material design svg icons.
+  - Add support for signing up w/o username. (#11)
+  - Add support for managing private auth tokens. (#30)
+  - Add support for signing in via github. (#7)
+  - Add support for rendering markdown in release notes.
+  changed:
+  - Rework overall page layout.
+  - Treat username case insensitive. (#11)
+  - Upgrade from node 6 to 8 (latest LTS).
+  - Upgrade code to use async/await instead of callbacks.
 - version: 0.3.0
   date: 2017-09-29
   title: MVP - Third Release

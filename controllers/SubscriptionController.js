@@ -1,6 +1,5 @@
 'use strict';
 
-const async = require('async');
 const AbstractController = require('./AbstractController');
 
 class SubscriptionController extends AbstractController {
@@ -20,145 +19,120 @@ class SubscriptionController extends AbstractController {
     return this;
   }
 
-  renderSubscriptionsView(req, res, next) {
-    this.subscriptionRepository.findBySubscriberId(
-      req.user._id,
-      (lookupErr, subscriptions) => {
-        if (lookupErr) return void next(lookupErr);
-
-        res.render('subscriptions/index', {
-          subscriptions,
-        });
-      }
+  async renderSubscriptionsView(req, res, next) {
+    const subscriptions = await this.subscriptionRepository.findBySubscriberId(
+      req.user._id
     );
+    res.render('subscriptions/index', {
+      subscriptions,
+    });
   }
 
-  renderSubscribeToRealeaseNotesView(req, res, next) {
+  async renderSubscribeToRealeaseNotesView(req, res, next) {
     const scope = req.params.scope;
     const releaseNotesName = req.params.releaseNotesId;
 
-    async.parallel({
-      releaseNotesModel: (taskCallback) => this.loadReleaseNotes(
+    const [releaseNotesModel, subscriptions] = await Promise.all([
+      this.loadReleaseNotes(
         scope,
-        releaseNotesName,
-        taskCallback
+        releaseNotesName
       ),
-      subscriptions: (taskCallback) => this.subscriptionRepository.findBySubscriberAndReleaseNotes({
+      this.subscriptionRepository.findBySubscriberAndReleaseNotes({
         subscriberId: req.user._id,
         releaseNotesScope: scope,
         releaseNotesName,
-      }, taskCallback),
-    }, (err, results) => {
-      if (err) return void next(err);
+      }),
+    ]);
 
-      // not found
-      if (!results.releaseNotesModel) return void next();
+    if (!releaseNotesModel) return void next();
 
-      res.render('subscriptions/subscribe', {
-        releaseNotesModel: results.releaseNotesModel,
-        subscriptions: results.subscriptions,
-        scope,
-      });
+    res.render('subscriptions/subscribe', {
+      releaseNotesModel,
+      subscriptions,
+      scope,
     });
   }
 
-  subscribeToRealeaseNotes(req, res, next) {
+  async subscribeToRealeaseNotes(req, res, next) {
     const scope = req.params.scope;
     const releaseNotesId = req.params.releaseNotesId;
 
-    this.loadReleaseNotes(
+    const releaseNotesModel = await this.loadReleaseNotes(
       scope,
-      releaseNotesId,
-      (lookupErr, releaseNotesModel) => {
-        if (lookupErr) return void next(lookupErr);
-
-        // not found
-        if (!releaseNotesModel) {
-          return void next();
-        }
-
-        this.subscriptionRepository.create({
-          subscriberId: req.user._id,
-          email: req.user.email,
-          releaseNotesId: releaseNotesModel._id,
-          releaseNotesScope: scope,
-          releaseNotesName: releaseNotesModel.name,
-        }, (persistenceErr/*, subscription*/) => {
-          if (persistenceErr) return void next(persistenceErr);
-
-          res.redirect('/subscriptions');
-        });
-      }
+      releaseNotesId
     );
+
+    // not found
+    if (!releaseNotesModel) {
+      return void next();
+    }
+
+    await this.subscriptionRepository.create({
+      subscriberId: req.user._id,
+      email: req.user.email,
+      releaseNotesId: releaseNotesModel._id,
+      releaseNotesScope: scope,
+      releaseNotesName: releaseNotesModel.name,
+    });
+
+    res.redirect('/subscriptions');
   }
 
-  renderUnsubscribeFromRealeaseNotesView(req, res, next) {
+  async renderUnsubscribeFromRealeaseNotesView(req, res, next) {
     const scope = req.params.scope;
     const releaseNotesName = req.params.releaseNotesName;
 
-    async.parallel({
-      releaseNotesModel: (taskCallback) => this.loadReleaseNotes(
+    const [releaseNotesModel, subscriptions] = await Promise.all([
+      this.loadReleaseNotes(
         scope,
-        releaseNotesName,
-        taskCallback
+        releaseNotesName
       ),
-      subscriptions: (taskCallback) => this.subscriptionRepository.findBySubscriberAndReleaseNotes({
+      this.subscriptionRepository.findBySubscriberAndReleaseNotes({
         subscriberId: req.user._id,
         releaseNotesScope: scope,
         releaseNotesName,
-      }, taskCallback),
-    }, (err, results) => {
-      if (err) return void next(err);
+      }),
+    ]);
 
-      // not found
-      if (!results.releaseNotesModel) return void next();
+    // not found
+    if (!releaseNotesModel) return void next();
 
-      res.render('subscriptions/unsubscribe', {
-        releaseNotesModel: results.releaseNotesModel,
-        subscriptions: results.subscriptions,
-        scope,
-      });
+    res.render('subscriptions/unsubscribe', {
+      releaseNotesModel,
+      subscriptions,
+      scope,
     });
   }
 
-  unsubscribeFromRealeaseNotes(req, res, next) {
+  async unsubscribeFromRealeaseNotes(req, res, next) {
     const releaseNotesScope = req.params.scope;
     const releaseNotesName = req.params.releaseNotesName;
 
-    this.subscriptionRepository.remove({
+    await this.subscriptionRepository.remove({
       subscriberId: req.user._id,
       releaseNotesScope,
       releaseNotesName,
-    }, (err) => {
-      if (err) return void next(err);
-
-      res.redirect('/subscriptions');
     });
+
+    res.redirect('/subscriptions');
   }
 
-  loadReleaseNotes(scope, name, callback) {
-    this.releaseNotesRepository.findOneByScopeAndName(
+  loadReleaseNotes(scope, name) {
+    return this.releaseNotesRepository.findOneByScopeAndName(
       scope,
-      name,
-      callback
+      name
     );
-
-    return this;
   }
 
-  unsubscribe(req, res, next) {
+  async unsubscribe(req, res, next) {
     const subscriptionId = req.params.subscriptionId;
+    const subscription = await this.subscriptionRepository.findById(subscriptionId);
 
-    this.subscriptionRepository.findById(subscriptionId, (lookUpErr, subscription) => {
-      if (lookUpErr) return void next(lookUpErr);
-      if (!subscription) return void next();
+    if (!subscription) return void next();
 
-      this.subscriptionRepository.findByIdAndRemove(subscription._id, (removalErr) => {
-        if (removalErr) return void next(removalErr);
+    await this.subscriptionRepository.findByIdAndRemove(subscription._id);
 
-        res.redirect('/subscriptions');
-      })
-    });
+    res.redirect('/subscriptions');
   }
 
   getRoutes() {

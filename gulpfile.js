@@ -4,11 +4,15 @@ const gulp = require('gulp');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
+const del = require('del');
+const rev = require('gulp-rev');
+const revReplace = require('gulp-rev-css-url');
 
 const ASSET_PATH = './assets';
 const SASS_PATH = ASSET_PATH + '/stylesheets';
 const IMAGES_PATH = ASSET_PATH + '/images';
 const JS_PATH = ASSET_PATH + '/javascripts';
+const FONTS_PATH = `${ASSET_PATH}/fonts`;
 const BUILD_PATH = './public';
 
 //*** SASS compiler task
@@ -34,9 +38,19 @@ gulp.task('copy:images', function() {
   ]).pipe(gulp.dest(BUILD_PATH));
 
   gulp.src([
+    `${ASSET_PATH}/badges/*`,
+  ]).pipe(gulp.dest(`${BUILD_PATH}/badges`));
+
+  gulp.src([
     IMAGES_PATH + '/**/*.png',
     IMAGES_PATH + '/**/*.svg'
   ]).pipe(gulp.dest(BUILD_PATH + '/img'))
+});
+
+gulp.task('copy:fonts', function () {
+  gulp.src([
+    `${FONTS_PATH}/*`
+  ]).pipe(gulp.dest(BUILD_PATH + '/fonts'));
 });
 
 gulp.task('js', function() {
@@ -50,9 +64,25 @@ gulp.task('js', function() {
   .pipe(gulp.dest(BUILD_PATH + '/js'))
 });
 
+gulp.task('clean', function() {
+  return del([
+    `${BUILD_PATH}/**/*.*`,
+    `!${BUILD_PATH}/.gitignore`
+  ]);
+});
 
 gulp.task('build', function() {
-  gulp.start(['sass', 'copy:images', 'js']);
+  gulp.start(['sass', 'copy:images', 'copy:fonts', 'js'], function() {
+    gulp.src([
+      BUILD_PATH  + '/**/*.*',
+      `!${BUILD_PATH}/**/*-${'[0-9a-f]'.repeat(10)}.*`,
+    ])
+    .pipe(rev())
+    .pipe(revReplace())
+    .pipe(gulp.dest(BUILD_PATH))
+    .pipe(rev.manifest())
+    .pipe(gulp.dest(BUILD_PATH))
+  });
 });
 
 

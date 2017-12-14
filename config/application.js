@@ -1,7 +1,10 @@
 'use strict';
 
-const
-  APP_PATH = `${__dirname}/..`;
+const assetRev = require('../lib/asset-rev');
+const svgEmbed = require('../lib/svg-embed');
+
+const APP_PATH = `${__dirname}/..`;
+const env = process.env;
 
 module.exports = {
   app: {
@@ -22,11 +25,13 @@ module.exports = {
       indexController: `${APP_PATH}/controllers/IndexController`,
       apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
       authController: `${APP_PATH}/controllers/AuthController`,
+      authTokenController: `${APP_PATH}/controllers/AuthTokenController`,
       releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
       subscriptionController: `${APP_PATH}/controllers/SubscriptionController`,
 
       // repositories
       accountRepository: `${APP_PATH}/repositories/AccountRepository`,
+      authTokenRepository: `${APP_PATH}/repositories/AuthTokenRepository`,
       releaseNotesRepository: `${APP_PATH}/repositories/ReleaseNotesRepository`,
       subscriptionRepository: `${APP_PATH}/repositories/SubscriptionRepository`,
 
@@ -40,7 +45,9 @@ module.exports = {
 
       // 3rd party
       sparkPost: `${APP_PATH}/services/SparkPostService`,
-    }
+    },
+
+    baseUrl: env.BASE_URL || 'https://release-notes.com',
   },
 
   logging: {
@@ -70,18 +77,36 @@ module.exports = {
     settings: {
       'views': `${APP_PATH}/views`,
       'view engine': 'pug',
+      'trust proxy': true,
     },
     port: process.env.PORT || '8080',
     controllers: [
       'apiPublishController',
       'authController',
+      'authTokenController',
       'releaseNotesController',
       'subscriptionController',
       'indexController',
       'errorController',
     ],
-    viewVariables: {},
+    viewVariables: {
+      asset: assetRev({
+        enabled: process.env.ENABLE_ASSET_REV !== 'false'
+      }),
+      mdi: svgEmbed({
+        path: `${APP_PATH}/node_modules/mdi-svg/svg/`
+      }),
+      moment: '@require:moment',
+      marked: '@require:marked',
+    },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
+  },
+
+  authService: {
+    github: {
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+    },
   },
 
   sparkPost: {

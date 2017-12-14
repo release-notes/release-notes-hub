@@ -1,11 +1,11 @@
 'use strict';
 
-const BaseRepository = require('@gfcc/mongo-tenant-repository/BaseRepository');
+const AbstractRepository = require('./AbstractRepository');
 
 /**
  * @class AccountRepository
  */
-class AccountRepository extends BaseRepository {
+class AccountRepository extends AbstractRepository {
   /**
    * @inheritDoc
    */
@@ -18,8 +18,18 @@ class AccountRepository extends BaseRepository {
       },
       username: {
         type: String,
-        unique: true,
-        required: true
+        index: {
+          unique: true,
+          partialFilterExpression: {
+            username: {
+              $type: 'string'
+            }
+          },
+          collation: {
+            locale: 'en',
+            strength: 2
+          },
+        }
       },
       passwordHash: String,
     };
@@ -27,30 +37,26 @@ class AccountRepository extends BaseRepository {
 
   /**
    * @param email
-   * @param callback
-   * @returns {AccountRepository}
+   * @returns {Promise}
    */
-  findOneByEmail(email, callback) {
-    this.findOne({
+  findOneByEmail(email) {
+    return this.findOne({
       email: email,
-    }, callback);
-
-    return this;
+    });
   }
 
   /**
-   * Find an account by its usernam.
+   * Find an account by its username.
    *
    * @param {string} username
-   * @param {function} callback
-   * @return {AccountRepository}
+   * @return {Promise}
    */
-  findOneByUsername(username, callback) {
-    this.findOne({
+  findOneByUsername(username) {
+    return this.findOne({
       username: username,
-    }, callback);
-
-    return this;
+    }, null, {
+      collation: { locale: 'en', strength: 2 }
+    });
   }
 }
 

@@ -10,33 +10,30 @@ html(lang="en")
       meta(name="description" content=metaDescription ? metaDescription : "Easy to use, human readable and machine processable release notes for everyone.")
       block stylesheets
         block appIcons
-          link(rel="apple-touch-icon", sizes="180x180", href="/apple-touch-icon.png")
-          link(rel="icon", type="image/png", sizes="32x32", href="/favicon-32x32.png")
-          link(rel="icon", type="image/png", sizes="16x16", href="/favicon-16x16.png")
-          link(rel="manifest", href="/manifest.json")
-          link(rel="mask-icon", href="/safari-pinned-tab.svg", color="#ed6c63")
+          link(rel="apple-touch-icon", sizes="180x180", href=asset('apple-touch-icon.png'))
+          link(rel="icon", type="image/png", sizes="32x32", href=asset('favicon-32x32.png'))
+          link(rel="icon", type="image/png", sizes="16x16", href=asset('favicon-16x16.png'))
+          link(rel="manifest", href=asset('manifest.json'))
+          link(rel="mask-icon", href=asset('safari-pinned-tab.svg'), color="#ed6c63")
           meta(name="apple-mobile-web-app-title", content="Release Notes")
           meta(name="application-name", content="Release Notes")
           meta(name="msapplication-TileColor", content="#ed6c63")
-          meta(name="msapplication-TileImage", content="/mstile-144x144.png")
+          meta(name="msapplication-TileImage", content=asset('mstile-144x144.png'))
           meta(name="theme-color", content="#ffffff")
 
-        link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:400,700')
-        link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
-        link(rel='stylesheet' href='/css/bulma.css?0.5.1')
-        link(rel='stylesheet' href='/css/release-notes.css')
+        link(rel='stylesheet' href=asset("css/bulma.css"))
+        link(rel='stylesheet' href=asset("css/release-notes.css"))
 
-  body
-    section
-      header
-        block header
-          include ./_header
+  body(class=bodyCls ? bodyCls : '')
+    header
+      block header
+        include ./_header
 
-      article(class=pageCls?pageCls:'')
-        block content
+    article(class=pageCls?pageCls:'')
+      block content
 
-      footer.footer
-        block footer
-          include ./_footer
+    footer.footer
+      block footer
+        include ./_footer
 
     block scripts

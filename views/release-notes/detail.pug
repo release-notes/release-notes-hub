@@ -1,26 +1,33 @@
 extends ../layout/main
 
 block globalVars
-  - var metaTitle = 'Release Notes - Publish'
+  - var metaTitle = `Release Notes - @${scope}/${releaseNotesName}`
 
 block content
-  .container.has-text-centered
-    .section
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.title.is-3 #{releaseNotes.title}
+
+        if releaseNotes.description
+          h2.subtitle !{marked(releaseNotes.description)}
+
+  .section
+    .container.has-text-centered
       if releaseNotes
         .release-notes
-          h1.title.is-1 #{releaseNotes.title}
-
-          if releaseNotes.description
-            h2.subtitle #{releaseNotes.description}
-
           each release in releaseNotes.releases
             .columns.release
               .column
                 .title.is-3 #{release.version}
 
                 if release.date
-                  .subtitle.is-6 #{release.date}
+                  - var releaseMoment = moment(release.date)
+                  .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
               .column.has-text-center
+                if release.description
+                  .content.has-text-left.is-inline-block-mobile
+                    | !{marked(release.description)}
                 .content.has-text-left.is-inline-block-mobile
                   each modifications, modificationType in release.getModifications()
                     if modifications && modifications.length
@@ -30,29 +37,28 @@ block content
                           each modification in modifications
                             li
                               if typeof modification === 'string'
-                                | #{modification}
+                                | !{marked(modification)}
                               else
-                                | #{modification.title}
+                                | !{marked(modification.title)}
 
 block header
   .container
-    nav.navbar.is-transparent.has-text-centered.has-content-centered
+    nav.navbar.is-primary.has-text-centered.has-content-centered
       .navbar-item
         if isSubscribed
-          a.button.is-primary(href=`/@${scope}/${releaseNotesName}/unsubscribe`)
+          a.button.is-primary.is-bordered(href=`/@${scope}/${releaseNotesName}/unsubscribe`)
             span.icon
-              i.material-icons portable_wifi_off
-            | &nbsp;&nbsp;&nbsp;
-            | Unsubscribe from updates
+              i.mdi.mdi-24 !{mdi('wifi-off')}
+            span Unsubscribe from updates
         else
-          a.button.is-primary(href=`/@${scope}/${releaseNotesName}/subscribe`)
+          a.button.is-primary.is-bordered(href=`/@${scope}/${releaseNotesName}/subscribe`)
             span.icon
-              i.material-icons track_changes
-            | &nbsp;&nbsp;&nbsp;
-            | Subscribe for updates
+              i.mdi.mdi-24 !{mdi('radar')}
+            span Subscribe for updates
 
 block footer
   .has-text-centered
     span.has-text-grey powered by&nbsp;
-      a.has-text-grey(href='/')
-        strong Release Notes
+      a(href='/')
+        img.logo(src=asset('img/release-notes-logo.svg'))
+        span(style="padding-left: 1.5rem") Release Notes

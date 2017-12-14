@@ -1,0 +1,33 @@
+.mdi {
+  display: inline-block;
+
+  svg {
+    display: inherit;
+    background-color: transparent;
+    fill: currentColor;
+    width: 1em;
+    height: 1em;
+  }
+
+  &.mdi-18 {
+    svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
+  }
+
+  &.mdi-24 {
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+
+  &.mdi-36 {
+    svg {
+      width: 2.25rem;
+      height: 2.25rem;
+    }
+  }
+}
+

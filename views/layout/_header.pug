@@ -1,8 +1,8 @@
 .container
-  nav.navbar.is-transparent
+  nav.navbar.is-transparent.is-primary
     .navbar-brand
       a.navbar-item(href="/")
-        img.logo(src="/img/release-notes-logo.svg")
+        img.logo(src=asset('img/release-notes-logo-white.svg'))
 
         h1 Release Notes Hub
 
@@ -18,13 +18,29 @@
           a.navbar-item(href="/signup") Sign Up
         else
           .navbar-item.has-dropdown.is-hoverable
-            a.navbar-link #{user.username}
-            .navbar-dropdown.is-boxed
-              a.navbar-item(href="/publish") Publish Release Notes
-              a.navbar-item(href="/release-notes") Manage Release Notes
-              a.navbar-item(href="/subscriptions") Manage Subscriptions
+            a.navbar-link #{user.username || user.email}
+            .navbar-dropdown.is-boxed.is-right
+              a.navbar-item(href="/publish")
+                span.icon
+                  i.mdi !{mdi('upload')}
+                span Publish Release Notes
+              a.navbar-item(href="/release-notes")
+                span.icon
+                  i.mdi !{mdi('note-multiple-outline')}
+                span Manage Release Notes
+              a.navbar-item(href="/subscriptions")
+                span.icon
+                  i.mdi !{mdi('radar')}
+                span Manage Subscriptions
+              a.navbar-item(href="/auth-tokens")
+                span.icon
+                  i.mdi !{mdi('lock')}
+                span Manage Auth Tokens
               .navbar-divider
-              a.navbar-item(href="/signout") Sign Out
+              a.navbar-item(href="/signout")
+                span.icon
+                  i.mdi !{mdi('logout')}
+                span Sign Out
 
 
 append scripts

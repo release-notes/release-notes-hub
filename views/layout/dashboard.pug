@@ -1,0 +1,34 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Publish'
+
+block content
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        block subtitle
+          h2.subtitle.is-3 #{pageSubtitle}
+    .hero-footer
+      .container
+        block dashboard-nav
+          nav.tabs.is-boxed
+            ul
+              li.tab(class=activeTab === 'release-notes' ? 'is-active': '')
+                a(href='/release-notes')
+                  span.icon
+                    i.mdi !{mdi('note-multiple-outline')}
+                  span Release Notes
+              li.tab(class=activeTab === 'subscriptions' ? 'is-active': '')
+                a(href='/subscriptions')
+                  span.icon
+                    i.mdi !{mdi('radar')}
+                  span Subscriptions
+              li.tab(class=activeTab === 'auth-tokens' ? 'is-active' : '')
+                a(href='/auth-tokens')
+                  span.icon
+                    i.mdi !{mdi('lock')}
+                  span Auth Tokens
+  .section
+    .container.has-text-centered
+      block pageContent

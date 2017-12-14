@@ -1,0 +1,36 @@
+extends ../layout/main
+
+block globalVars
+  - var metaTitle = 'Release Notes - Imprint'
+  - var pageCls = 'legal imprint'
+
+block content
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Release Notes Imprint
+
+  .section
+    .container
+      .columns
+        .column.is-one-quarter
+          - var aciveLegalNote = 'imprint'
+          include _legal-notes-nav
+        .column.is-half-desktop
+          .content
+            h3.subtitle.is-5 Release Notes is a service by
+            p.
+              Alrik Zachert<br>
+              Residenzstraße 46<br>
+              13409 Berlin<br>
+              Germany<br>
+              <br>
+              hello@release-notes.com
+              <br>
+
+            h3.subtitle.is-5 Disclaimer
+            p.
+              Despite careful control we take no liability for the content of external links.
+              <br>
+              For the content of linked pages their operators are responsible.
+

@@ -1,16 +1,17 @@
-FROM node:6
+FROM node:8
 
 COPY package.json /usr/src/app/package.json
-RUN cd /usr/src/app && npm install
+COPY yarn.lock /usr/src/app/yarn.lock
+RUN cd /usr/src/app && yarn
 
 # add rest of source
 COPY . /usr/src/app
 
 # build public assets
-RUN cd /usr/src/app && node_modules/gulp/bin/gulp.js build
+RUN cd /usr/src/app && yarn build
 
 WORKDIR /usr/src/app
-CMD ["npm", "start"]
+CMD ["yarn", "start"]
 
 EXPOSE 8080
 USER www-data

@@ -2,17 +2,26 @@ extends ../layout/main
 
 block globalVars
   - var metaTitle = 'Release Notes - Listing'
-
+  - var bodyCls = 'release-notes'
 block content
-  .container.has-text-centered
-    .section
+  .hero.is-primary
+    .hero-body
+      .container.has-text-centered
+        h2.subtitle.is-3 Release Notes of @#{scope}
+
+  .section
+    .container.has-text-centered
       .card.is-inline-block
         .card-content
-          h1.title.is-3 Release Notes of @#{scope}
-
-          ul.has-text-left
+          ul.has-text-left.release-notes-list
             each releaseNotes in releaseNotesList
               li
                 a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
                   | @#{releaseNotes.scope}/#{releaseNotes.name}
+                  if releaseNotes.latestVersion
+                    span &nbsp;(@#{releaseNotes.latestVersion})
+                if releaseNotes.latestReleaseDate
+                  span.has-text-grey
+                    - var releaseMoment = moment(releaseNotes.latestReleaseDate)
+                    .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
                 div.is-small #{releaseNotes.title}

@@ -1,13 +1,21 @@
 @import "../../node_modules/bulma/sass/utilities/initial-variables";
 
-$primary: #ed6c63;
-
+$red: #ed6c63;
+$yellow: #ffc857;
+$blue: #345995;
+$primary: $red;
+$link: $primary;
 $footer-background-color: $white;
-
 $menu-item-hover-background-color: transparent;
+
+$title-weight: 400;
+$subtitle-weight: 300;
+
 $navbar-height: 4rem;
-$footer-padding: 6rem 3rem;
-$footer-padding-mobile: 3rem 1rem;
+$footer-padding: 6rem 1.5rem;
+$footer-padding-mobile: 3rem 1.5rem;
+
+$navbar-dropdown-radius: 0.125rem;
 
 /* import additional styles  */
 @import "../../node_modules/bulma/sass/utilities/_all";

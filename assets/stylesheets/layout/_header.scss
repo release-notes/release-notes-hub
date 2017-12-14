@@ -1,5 +1,5 @@
 header {
-  border-bottom: 2px solid $white-ter;
+  background: $primary;
 
   @include desktop() {
     .navbar {
