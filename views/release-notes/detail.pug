@@ -22,7 +22,8 @@ block content
                 .title.is-3 #{release.version}
 
                 if release.date
-                  .subtitle.is-6 #{release.date}
+                  - var releaseMoment = moment(release.date)
+                  .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
               .column.has-text-center
                 .content.has-text-left.is-inline-block-mobile
                   each modifications, modificationType in release.getModifications()

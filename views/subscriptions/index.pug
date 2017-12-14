@@ -14,14 +14,16 @@ block pageContent
     table.table.is-inline-block
       tr
         th ReleaseNotes
-        th Since
+        th Subscribed
         th
       each subscription in subscriptions
         tr
           td
             a(href=`/@${subscription.releaseNotesScope}/${subscription.releaseNotesName}`)
               | @#{subscription.releaseNotesScope}/#{subscription.releaseNotesName}
-          td #{subscription.createdAt}
+          td
+            - var subscriptionMoment = moment(subscription.createdAt)
+            .subtitle.is-6(title=subscriptionMoment.format('LLL')) #{subscriptionMoment.fromNow()}
           td
             .tags
               form(method='post' enctype='multipart/form-data' action=`/subscriptions/${subscription._id}/unsubscribe`)
