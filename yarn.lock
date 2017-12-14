@@ -2038,9 +2038,9 @@ marked@^0.3.7:
   version "0.3.7"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.7.tgz#80ef3bbf1bd00d1c9cfebe42ba1b8c85da258d0d"
 
-mdi-svg@^2.0.46:
-  version "2.0.46"
-  resolved "https://registry.yarnpkg.com/mdi-svg/-/mdi-svg-2.0.46.tgz#241f20c29c03697854a90ca836a739d521a9edd6"
+mdi-svg@^2.1.19:
+  version "2.1.19"
+  resolved "https://registry.yarnpkg.com/mdi-svg/-/mdi-svg-2.1.19.tgz#e4bd226a89594ff4903727b45c196e355fde6a88"
 
 media-typer@0.3.0:
   version "0.3.0"
@@ -2159,9 +2159,9 @@ moment@^2.10.6:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
-moment@^2.19.3:
-  version "2.19.3"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.3.tgz#bdb99d270d6d7fda78cc0fbace855e27fe7da69f"
+moment@^2.19.4:
+  version "2.19.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.4.tgz#17e5e2c6ead8819c8ecfad83a0acccb312e94682"
 
 mongodb-core@2.1.15:
   version "2.1.15"
@@ -2216,9 +2216,9 @@ mongoose@4.x:
     regexp-clone "0.0.1"
     sliced "1.0.1"
 
-mongoose@^4.13.5:
-  version "4.13.5"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-4.13.5.tgz#5ae9df5ef8151efbadc33a71068dd879ae720cd2"
+mongoose@^4.13.7:
+  version "4.13.7"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-4.13.7.tgz#f760c770e6c8cdf34a6fe8b7443882b5fced1032"
   dependencies:
     async "2.1.4"
     bson "~1.0.4"
