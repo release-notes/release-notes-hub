@@ -23,6 +23,9 @@ html(lang="en")
 
         link(rel='stylesheet' href=asset("css/bulma.css"))
         link(rel='stylesheet' href=asset("css/release-notes.css"))
+      block piwik
+        if piwikEnabled
+          include ./_piwik
 
   body(class=bodyCls ? bodyCls : '')
     header

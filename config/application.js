@@ -98,6 +98,8 @@ module.exports = {
       }),
       moment: '@require:moment',
       marked: '@require:marked',
+      piwikEnabled: process.env.PIWIK_ENABLED !== 'false',
+      piwikSiteId: process.env.PIWIK_SITE_ID || 1,
     },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
   },
