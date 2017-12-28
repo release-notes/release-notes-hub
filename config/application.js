@@ -24,7 +24,6 @@ module.exports = {
       // controllers
       errorController: `${APP_PATH}/controllers/ErrorController`,
       indexController: `${APP_PATH}/controllers/IndexController`,
-      apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
       authController: `${APP_PATH}/controllers/AuthController`,
       authTokenController: `${APP_PATH}/controllers/AuthTokenController`,
       releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
@@ -83,7 +82,6 @@ module.exports = {
     port: process.env.PORT || '8080',
     controllers: [
       'api',
-      'apiPublishController',
       'authController',
       'authTokenController',
       'releaseNotesController',
