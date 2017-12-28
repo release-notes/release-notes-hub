@@ -19,6 +19,7 @@ module.exports = {
       // server
       express: `${APP_PATH}/services/ExpressService`,
       authService: `${APP_PATH}/services/AuthService`,
+      api: `${APP_PATH}/services/ApiService`,
 
       // controllers
       errorController: `${APP_PATH}/controllers/ErrorController`,
@@ -81,6 +82,7 @@ module.exports = {
     },
     port: process.env.PORT || '8080',
     controllers: [
+      'api',
       'apiPublishController',
       'authController',
       'authTokenController',
@@ -102,6 +104,10 @@ module.exports = {
       piwikSiteId: process.env.PIWIK_SITE_ID || 1,
     },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
+  },
+
+  api: {
+    version: '0.0.0',
   },
 
   authService: {

@@ -30,6 +30,7 @@
     "bunyan-format": "~0.2.1",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.2",
+    "express-openapi": "^1.1.0",
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
     "kermit": "^2.2.0",
