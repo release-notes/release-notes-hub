@@ -13,7 +13,8 @@ class ApiService extends Service {
 
   bind(expressApp) {
     const version = this.serviceConfig.get('version');
-    const authTokenRepository = this.serviceManager.get('authTokenRepository');
+    const serviceManager = this.serviceManager;
+    const authTokenRepository = serviceManager.get('authTokenRepository');
 
     expressOpenapi.initialize({
       app: expressApp,
@@ -24,6 +25,7 @@ class ApiService extends Service {
       validateApiDoc: true,
       dependencies: {
         version,
+        serviceManager,
       },
       consumesMiddleware: {
         'application/json': bodyParser.json(),
