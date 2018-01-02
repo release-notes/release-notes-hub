@@ -5,6 +5,7 @@ module.exports = function(version) {
 
   GET.apiDoc = {
     summary: 'Returns the api version.',
+    tags: ['General'],
     responses: {
       200: {
         description: 'The api version.',

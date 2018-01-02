@@ -51,6 +51,9 @@ In case of an error the api will respond with an json object containing an error
         description: 'Semantic version string. (see http://semver.org)'
       }
     },
+    tags: [{
+      name: 'General'
+    }],
     paths: {},
   };
 };
