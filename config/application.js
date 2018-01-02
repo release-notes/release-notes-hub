@@ -5,6 +5,7 @@ const svgEmbed = require('../lib/svg-embed');
 
 const APP_PATH = `${__dirname}/..`;
 const env = process.env;
+const APP_BASE_URL = env.BASE_URL || 'https://release-notes.com';
 
 module.exports = {
   app: {
@@ -24,6 +25,7 @@ module.exports = {
       // controllers
       errorController: `${APP_PATH}/controllers/ErrorController`,
       indexController: `${APP_PATH}/controllers/IndexController`,
+      apiController: `${APP_PATH}/controllers/ApiController`,
       authController: `${APP_PATH}/controllers/AuthController`,
       authTokenController: `${APP_PATH}/controllers/AuthTokenController`,
       releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
@@ -47,7 +49,7 @@ module.exports = {
       sparkPost: `${APP_PATH}/services/SparkPostService`,
     },
 
-    baseUrl: env.BASE_URL || 'https://release-notes.com',
+    baseUrl: APP_BASE_URL,
   },
 
   logging: {
@@ -82,6 +84,7 @@ module.exports = {
     port: process.env.PORT || '8080',
     controllers: [
       'api',
+      'apiController',
       'authController',
       'authTokenController',
       'releaseNotesController',
@@ -106,6 +109,10 @@ module.exports = {
 
   api: {
     version: '0.0.0',
+  },
+
+  apiController: {
+    baseUrl: env.API_BASE_URL || `${APP_BASE_URL}/api}`,
   },
 
   authService: {

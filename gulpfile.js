@@ -14,6 +14,7 @@ const IMAGES_PATH = ASSET_PATH + '/images';
 const JS_PATH = ASSET_PATH + '/javascripts';
 const FONTS_PATH = `${ASSET_PATH}/fonts`;
 const BUILD_PATH = './public';
+const NODE_MODULES_PATH = './node_modules';
 
 //*** SASS compiler task
 gulp.task('sass', function () {
@@ -64,6 +65,13 @@ gulp.task('js', function() {
   .pipe(gulp.dest(BUILD_PATH + '/js'))
 });
 
+gulp.task('copy:swagger-ui', function() {
+  gulp.src([
+    `${NODE_MODULES_PATH}/swagger-ui-dist/swagger-ui*`
+  ])
+  .pipe(gulp.dest(BUILD_PATH + '/vendor/swagger-ui'))
+});
+
 gulp.task('clean', function() {
   return del([
     `${BUILD_PATH}/**/*.*`,
@@ -72,7 +80,7 @@ gulp.task('clean', function() {
 });
 
 gulp.task('build', function() {
-  gulp.start(['sass', 'copy:images', 'copy:fonts', 'js'], function() {
+  gulp.start(['sass', 'copy:images', 'copy:fonts', 'js', 'copy:swagger-ui'], function() {
     gulp.src([
       BUILD_PATH  + '/**/*.*',
       `!${BUILD_PATH}/**/*-${'[0-9a-f]'.repeat(10)}.*`,

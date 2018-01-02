@@ -47,7 +47,8 @@
     "passport-github2": "^0.1.11",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.4",
-    "sparkpost": "^2.1.2"
+    "sparkpost": "^2.1.2",
+    "swagger-ui-dist": "^3.8.0"
   },
   "devDependencies": {
     "bulma": "^0.6.1",

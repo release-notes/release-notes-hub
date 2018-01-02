@@ -10,11 +10,20 @@ class ApiService extends Service {
       app: expressApp,
       apiDoc: apiDocV1({ version }),
       paths: './api/v1',
+      docsPath: '/api-spec',
       exposeApiDocs: true,
       validateApiDoc: true,
       dependencies: {
         version,
-      }
+      },
+      securityHandlers: {
+        Bearer: function(req, scopes, definition, callback) {
+          // always pass for now
+          console.warn(req.headers.authorization);
+
+          callback(null, true);
+        },
+      },
     });
   }
 }
