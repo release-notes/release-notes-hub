@@ -2,9 +2,16 @@ const expressOpenapi = require('express-openapi');
 const Service = require('kermit/Service');
 const apiDocV1 = require('../api/openapi-v1');
 
+const BEARER_AUTH_HEADER_REGEX = /^Bearer\s+[0-9a-zA-Z+=\/]+$/;
+
 class ApiService extends Service {
+  static get BEARER_AUTH_HEADER_REGEX() {
+    return BEARER_AUTH_HEADER_REGEX;
+  }
+
   bind(expressApp) {
     const version = this.serviceConfig.get('version');
+    const authTokenRepository = this.serviceManager.get('authTokenRepository');
 
     expressOpenapi.initialize({
       app: expressApp,
@@ -17,14 +24,52 @@ class ApiService extends Service {
         version,
       },
       securityHandlers: {
-        Bearer: function(req, scopes, definition, callback) {
-          // always pass for now
-          console.warn(req.headers.authorization);
+        async Bearer(req, scopes, definition, callback) {
+          const authHeader = req.headers.authorization;
 
-          callback(null, true);
+          if (!ApiService.isValidBearerAuthHeader(authHeader)) {
+            return callback({
+              status: 401,
+              challenge: 'Bearer',
+              message: {
+                code: 'INVALID_AUTH_HEADER',
+                message: 'Missing or invalid authorization header.',
+              },
+            });
+          }
+
+          const bearerToken = ApiService.parseBearerToken(authHeader);
+
+          try {
+            const auth = await authTokenRepository.findOneByToken(bearerToken);
+
+            if (!auth) {
+              return callback({
+                status: 401,
+                challenge: 'Bearer',
+                message: {
+                  code: 'NOT_AUTHORIZED',
+                  message: 'Error verifying access token.',
+                },
+              });
+            }
+
+            req.auth = auth;
+            callback(null, true);
+          } catch (err) {
+            callback(err);
+          }
         },
       },
     });
+  }
+
+  static isValidBearerAuthHeader(bearerAuthHeader) {
+    return ApiService.BEARER_AUTH_HEADER_REGEX.test(bearerAuthHeader);
+  }
+
+  static parseBearerToken(bearerAuthHeader) {
+    return bearerAuthHeader.substr(bearerAuthHeader.lastIndexOf(' ') + 1);
   }
 }
 
