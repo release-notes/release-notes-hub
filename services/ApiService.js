@@ -1,4 +1,6 @@
+const bodyParser = require('body-parser');
 const expressOpenapi = require('express-openapi');
+const multer = require('multer');
 const Service = require('kermit/Service');
 const apiDocV1 = require('../api/openapi-v1');
 
@@ -22,6 +24,17 @@ class ApiService extends Service {
       validateApiDoc: true,
       dependencies: {
         version,
+      },
+      consumesMiddleware: {
+        'application/json': bodyParser.json(),
+        'multipart/form-data'(req, res, next) {
+          multer().single('file')(req, res, (err) => {
+            if (err) return next(err);
+
+            req.body.file = req.file;
+            next();
+          });
+        }
       },
       securityHandlers: {
         async Bearer(req, scopes, definition, callback) {
