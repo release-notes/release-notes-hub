@@ -62,7 +62,7 @@ class ReleaseNotesController extends AbstractController {
     releaseNotesLoader.loadReleaseNotes(req.file.buffer, async (err, releaseNotes) => {
       if (err) {
         res.statusCode = 400;
-        res.render('release-notes/publish', { err });
+        return res.render('release-notes/publish', { err });
       }
 
       const releaseNotesData = releaseNotes.toJSON();
