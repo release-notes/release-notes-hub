@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const expressOpenapi = require('express-openapi');
 const multer = require('multer');
+const ReleaseNotesLoader = require('@release-notes/node/lib/ReleaseNotesLoader');
 const Service = require('kermit/Service');
 const apiDocV1 = require('../api/openapi-v1');
 
@@ -26,6 +27,7 @@ class ApiService extends Service {
       dependencies: {
         version,
         serviceManager,
+        ReleaseNotesLoader,
       },
       consumesMiddleware: {
         'application/json': bodyParser.json(),
