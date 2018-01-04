@@ -59,7 +59,6 @@ append scripts
   script.
     document.addEventListener('DOMContentLoaded', function() {
       function HideTopbarPlugin() {
-        // this plugin overrides the Topbar component to return nothing
         return {
           components: {
             Topbar: function () {
@@ -70,7 +69,7 @@ append scripts
       }
 
       // Build a system
-      const ui = SwaggerUIBundle({
+      var ui = SwaggerUIBundle({
         url: '#{apiSpecUrl}',
         dom_id: '#swagger-ui',
         deepLinking: true,
@@ -80,7 +79,7 @@ append scripts
         ],
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl,
-          HideTopbarPlugin,
+          HideTopbarPlugin
         ],
         layout: 'StandaloneLayout',
         validatorUrl: null,
