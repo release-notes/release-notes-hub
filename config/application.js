@@ -112,7 +112,7 @@ module.exports = {
   },
 
   apiController: {
-    baseUrl: env.API_BASE_URL || `${APP_BASE_URL}/api}`,
+    baseUrl: env.API_BASE_URL || `${APP_BASE_URL}/api`,
   },
 
   authService: {
