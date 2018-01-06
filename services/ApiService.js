@@ -14,12 +14,13 @@ class ApiService extends Service {
 
   bind(expressApp) {
     const version = this.serviceConfig.get('version');
+    const host = this.serviceConfig.get('host');
     const serviceManager = this.serviceManager;
     const authTokenRepository = serviceManager.get('authTokenRepository');
 
     expressOpenapi.initialize({
       app: expressApp,
-      apiDoc: apiDocV1({ version }),
+      apiDoc: apiDocV1({ version, host }),
       paths: './api/v1',
       docsPath: '/api-spec',
       exposeApiDocs: true,

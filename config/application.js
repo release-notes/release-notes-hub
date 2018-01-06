@@ -5,7 +5,8 @@ const svgEmbed = require('../lib/svg-embed');
 
 const APP_PATH = `${__dirname}/..`;
 const env = process.env;
-const APP_BASE_URL = env.BASE_URL || 'https://release-notes.com';
+const APP_HOST = env.HOST || 'release-notes.com';
+const APP_BASE_URL = env.BASE_URL || `https://${APP_HOST}`;
 
 module.exports = {
   app: {
@@ -109,6 +110,7 @@ module.exports = {
 
   api: {
     version: '0.0.0',
+    host: APP_HOST,
   },
 
   apiController: {

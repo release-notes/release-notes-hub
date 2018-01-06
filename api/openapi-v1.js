@@ -1,11 +1,11 @@
-module.exports = function({ version }) {
+module.exports = function({ version, host }) {
   const HANDLE_REGEX = '[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9]';
   const SCOPE_REGEX = `@?${HANDLE_REGEX}`;
 
   return {
     swagger: '2.0',
     basePath: '/api/v1',
-    host: "localhost:8080",
+    host,
     info: {
       title: 'The Release Notes API',
       version: version,
