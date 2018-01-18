@@ -1,6 +1,7 @@
 'use strict';
 
 const assetRev = require('../lib/asset-rev');
+const gist = require('../lib/gist');
 const svgEmbed = require('../lib/svg-embed');
 
 const APP_PATH = `${__dirname}/..`;
@@ -103,6 +104,7 @@ module.exports = {
       }),
       moment: '@require:moment',
       marked: '@require:marked',
+      gist: gist({ path: `${APP_PATH}/views/gists/` }),
       piwikEnabled: process.env.PIWIK_ENABLED !== 'false',
       piwikSiteId: process.env.PIWIK_SITE_ID || 1,
     },
