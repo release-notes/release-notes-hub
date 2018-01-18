@@ -10,10 +10,53 @@ block content
       .container.has-text-centered
         h2.subtitle.is-3 About Release Notes
 
-
   .section
     .container
       .content
-        h3.subtitle.is-5 TBD
-        p
-          a(href="https://github.com/release-notes/release-notes-hub/blob/master/views/index/about.pug") Improve this page on GitHub.
+        .columns
+          .column.is-one-quarter
+            h3.subtitle.is-4 Platform
+          .column.is-half-desktop
+            p.
+              Release Notes is an open source platform for automated release notes management around traditional CHANGELOG files
+              and our generalized
+              <a href="https://github.com/release-notes/release-notes-spec">Release Notes Schema Specification</a> via
+              <a href="https://github.com/release-notes/release-notes-cli">CLI tools</a>.
+              Our <a href="https://github.com/release-notes/release-notes-node">node lib</a> is the first implementation of the
+              <a href="https://github.com/release-notes/release-notes-schema">JSON schema definition</a> that should make porting to other languages easy.
+        .columns
+          .column.is-one-quarter
+            h3.subtitle.is-4 Getting started
+          .column.is-half-desktop
+            p.
+              First <a href="/signup">create an release notes account</a>.<br>
+              You can signup with your email address or via github (google, twitter, bitbucket comming soon).
+              A good starting point is to <a href="/@release-notes/release-notes-hub/subscribe">subscribe</a> to the
+              <a href="/@release-notes/release-notes-hub">release notes of this hub</a>.
+            h4.subtitle Install Cli Tool
+            p
+              pre.hljs: code
+                | !{gist('install-cli.shell')}
+
+            h4.subtitle Publish to the hub
+            p
+              pre.hljs: code
+                | !{gist('cli-publish.shell')}
+        .columns
+          .column.is-one-quarter
+            h3.subtitle.is-4 Schema Specification
+          .column.is-half-desktop
+            h4.subtitle CHANGELOG.md
+            p
+              pre.hljs: code
+                | !{gist('changelog.md')}
+
+            .has-text-centered
+              i.mdi.mdi-36 !{mdi('swap-vertical')}
+
+            h4.subtitle release-notes.yml
+            p
+              pre.hljs: code
+                | !{gist('release-notes.yml')}
+append stylesheets
+  link(rel='stylesheet' href=asset("css/vendor/highlight-js.css"))

@@ -1,0 +1,3 @@
+$ yarn global add @release-notes/cli
+// or
+$ npm i -g @release-notes/cli

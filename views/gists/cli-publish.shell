@@ -1,0 +1,4 @@
+$ release-notes publish \
+    --scope my-user-name \
+    --name some-package-name \
+    --token PMxU6hEiLQPdoGkKy8rij1qsgrQmplk5gvWdJWubrNg=
