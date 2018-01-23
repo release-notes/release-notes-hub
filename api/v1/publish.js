@@ -1,11 +1,11 @@
-module.exports = function(serviceManager, ReleaseNotesLoader) {
-  const releaseNotesLoader = new ReleaseNotesLoader();
+module.exports = function(serviceManager) {
+  const releaseNotesLoader = serviceManager.get('releaseNotesLoader');
   const releaseNotesRepository = serviceManager.get('releaseNotesRepository');
   const accountRepository = serviceManager.get('accountRepository');
   const notificationService = serviceManager.get('releaseNotesNotificationService');
   const updateService = serviceManager.get('releaseNotesUpdateService');
 
-  async function POST(req, res, next) {
+  async function POST(req, res) {
     const accountId = req.auth.accountId;
     const { name, file } = req.body;
     const scope = req.body.scope.replace('@', '');
@@ -33,49 +33,55 @@ module.exports = function(serviceManager, ReleaseNotesLoader) {
       });
     }
 
-    releaseNotesLoader.loadReleaseNotes(file.buffer, async (err, releaseNotesUpdate) => {
-      if (err) {
-        return res.status(400).json({
-          code: 'INVALID_RELEASE_NOTES',
-          message: 'The uploaded release notes file could not be parsed.',
-          details: err.validationErrors,
-        });
-      }
+    let releaseNotesUpdate;
+    let type = 'yml';
+    const extension = file.originalname.substr(file.originalname.lastIndexOf('.') + 1);
 
-      const releaseNotesData = releaseNotesUpdate.toJSON();
-      releaseNotesData.ownerAccountId = accountId;
-      releaseNotesData.scope = scope;
-      releaseNotesData.name = name;
+    if (file.mimetype === 'text/markdown' || extension === 'md') {
+      type = 'md';
+    } else if (file.mimetype === 'application/json' || extension === 'json') {
+      type = 'json';
+    }
 
-      let updatedReleaseNotes;
+    try {
+      releaseNotesUpdate = await releaseNotesLoader.load(file.buffer, type);
+    } catch (err) {
+      return res.status(400).json({
+        code: 'INVALID_RELEASE_NOTES',
+        message: 'The uploaded release notes file could not be parsed.',
+        details: err.validationErrors,
+      });
+    }
 
-      try {
-        if (persistedReleaseNotes) {
-          notificationService.sendReleaseNotesUpdateNotification(persistedReleaseNotes, releaseNotesUpdate);
+    const releaseNotesData = releaseNotesUpdate.toJSON();
+    releaseNotesData.ownerAccountId = accountId;
+    releaseNotesData.scope = scope;
+    releaseNotesData.name = name;
 
-          updatedReleaseNotes = await updateService.applyUpdate(
-            persistedReleaseNotes,
-            releaseNotesUpdate
-          );
-        } else {
-          const latestRelease = updateService.calculateLastRelease(releaseNotesData);
-          releaseNotesData.latestVersion = latestRelease.version || '';
-          releaseNotesData.latestReleaseDate = latestRelease.date || '';
-          updatedReleaseNotes = await releaseNotesRepository.create(releaseNotesData);
-          res.status(201);
-        }
+    let updatedReleaseNotes;
 
-        res.json({
-          name: updatedReleaseNotes.name,
-          scope: updatedReleaseNotes.scope,
-          latestVersion: updatedReleaseNotes.latestVersion,
-          latestReleaseDate: updatedReleaseNotes.latestReleaseDate,
-          createdAt: updatedReleaseNotes.createdAt,
-          updatedAt: updatedReleaseNotes.updatedAt,
-        });
-      } catch (err) {
-        next(err);
-      }
+    if (persistedReleaseNotes) {
+      notificationService.sendReleaseNotesUpdateNotification(persistedReleaseNotes, releaseNotesUpdate);
+
+      updatedReleaseNotes = await updateService.applyUpdate(
+        persistedReleaseNotes,
+        releaseNotesUpdate
+      );
+    } else {
+      const latestRelease = updateService.calculateLastRelease(releaseNotesData);
+      releaseNotesData.latestVersion = latestRelease.version || '';
+      releaseNotesData.latestReleaseDate = latestRelease.date || '';
+      updatedReleaseNotes = await releaseNotesRepository.create(releaseNotesData);
+      res.status(201);
+    }
+
+    res.json({
+      name: updatedReleaseNotes.name,
+      scope: updatedReleaseNotes.scope,
+      latestVersion: updatedReleaseNotes.latestVersion,
+      latestReleaseDate: updatedReleaseNotes.latestReleaseDate,
+      createdAt: updatedReleaseNotes.createdAt,
+      updatedAt: updatedReleaseNotes.updatedAt,
     });
   }
 
