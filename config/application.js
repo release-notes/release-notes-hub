@@ -42,6 +42,7 @@ module.exports = {
       accountService: `${APP_PATH}/services/AccountService`,
 
       // business logic services
+      releaseNotesLoader: `${APP_PATH}/services/releaseNotes/Loader`,
       releaseNotesUpdateService: `${APP_PATH}/services/releaseNotes/UpdateService`,
       releaseNotesNotificationService: `${APP_PATH}/services/releaseNotes/NotificationService`,
       emailService: `${APP_PATH}/services/EmailService`,
