@@ -205,6 +205,35 @@ class AuthController extends AbstractController {
           authService.authenticate('github', { failureRedirect: '/signin' }),
           (req, res) => this.redirectToTargetUrl(req, res),
         ],
+      },
+      '/auth/google': {
+        handler: (req, res, next) => authService.authenticate('google', {
+          scope: ['email'],
+          callbackURL: `${baseUrl}/auth/google/callback`,
+          state: encodeURIComponent(JSON.stringify({
+            targetUrl: this.getTargetUrl(req),
+          }))
+        })(req, res, next),
+      },
+      '/auth/google/callback': {
+        handler: [
+          authService.authenticate('google', { failureRedirect: '/signin' }),
+          (req, res) => {
+            if (req.query.state) {
+              try {
+                const state = JSON.parse(decodeURIComponent(req.query.state));
+
+                if (state.targetUrl) {
+                  req.query.targetUrl = state.targetUrl;
+                }
+              } catch (err) {
+                this.logger.warn('Failed to parse google oauth state parameter.', err);
+              }
+            }
+
+            this.redirectToTargetUrl(req, res);
+          }
+        ],
       }
     }
   };

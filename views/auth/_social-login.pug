@@ -11,8 +11,8 @@ block socialLogin
         li.oauth-provider
           span.icon.has-text-grey(title='Sign in with bitbucket - coming soon')
             .mdi.mdi-24 !{mdi('bitbucket')}
-        li.oauth-provider
-          span.icon.has-text-grey(title='Sign in with google - coming soon')
+        li.oauth-provider: a(href=`/auth/google${targetUrlParam}` title='Sign in with google')
+          span.icon
             .mdi.mdi-24 !{mdi('google')}
         li.oauth-provider
           span.icon.has-text-grey(title='Sign in with twitter - coming soon')
