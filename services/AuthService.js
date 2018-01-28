@@ -2,6 +2,7 @@
 
 const AbstractService = require('kermit/Service');
 const GitHubStrategy = require('passport-github2');
+const GoogleStrategy = require('passport-google-oauth20');
 const LocalStrategy = require('passport-local').Strategy;
 const passport = require('passport');
 
@@ -17,6 +18,7 @@ class AuthService extends AbstractService {
     this.logger = this.serviceManager.get('logging');
     this.registerCredentialsStrategy();
     this.registerGitHubStrategy();
+    this.registerGoogleStrategy();
     this.initializeUserSessionSerialization();
 
     return this;
@@ -73,6 +75,33 @@ class AuthService extends AbstractService {
     }, async (accessToken, refreshToken, profile, done) => {
       if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
         this.logger.warn('Github auth failed to retrieve user email.');
+
+        return done(null, false);
+      }
+
+      const accountRepository = this.accountService.getRepository();
+      const email = profile.emails[0].value;
+      let user = await accountRepository.findOneByEmail(email);
+
+      if (!user) {
+        user = await accountRepository.create({ email });
+      }
+
+      return done(null, user);
+    }));
+  }
+
+  registerGoogleStrategy() {
+    const serviceConfig = this.serviceConfig.get('google');
+
+    this.passport.use(new GoogleStrategy({
+      clientID: serviceConfig.clientId,
+      clientSecret: serviceConfig.clientSecret,
+      callbackURL: '/auth/google/callback',
+      scope: [ 'email' ],
+    }, async (accessToken, refreshToken, profile, done) => {
+      if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
+        this.logger.warn('Google auth failed to retrieve user email.');
 
         return done(null, false);
       }
