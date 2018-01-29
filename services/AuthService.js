@@ -65,16 +65,17 @@ class AuthService extends AbstractService {
     ));
   }
 
-  registerGitHubStrategy() {
-    const serviceConfig = this.serviceConfig.get('github');
+  registerOAuthStrategy({ provider, scope, Strategy }) {
+    const serviceConfig = this.serviceConfig.get(provider);
 
-    this.passport.use(new GitHubStrategy({
+    this.passport.use(new Strategy({
       clientID: serviceConfig.clientId,
       clientSecret: serviceConfig.clientSecret,
-      scope: [ 'user:email' ],
+      callbackURL: `/auth/${provider}/callback`,
+      scope,
     }, async (accessToken, refreshToken, profile, done) => {
       if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
-        this.logger.warn('Github auth failed to retrieve user email.');
+        this.logger.warn(`${provider} auth failed to retrieve user email.`);
 
         return done(null, false);
       }
@@ -92,30 +93,19 @@ class AuthService extends AbstractService {
   }
 
   registerGoogleStrategy() {
-    const serviceConfig = this.serviceConfig.get('google');
+    this.registerOAuthStrategy({
+      provider: 'google',
+      scope: ['email'],
+      Strategy: GoogleStrategy,
+    });
+  }
 
-    this.passport.use(new GoogleStrategy({
-      clientID: serviceConfig.clientId,
-      clientSecret: serviceConfig.clientSecret,
-      callbackURL: '/auth/google/callback',
-      scope: [ 'email' ],
-    }, async (accessToken, refreshToken, profile, done) => {
-      if (!profile.emails || !profile.emails[0] || !profile.emails[0].value) {
-        this.logger.warn('Google auth failed to retrieve user email.');
-
-        return done(null, false);
-      }
-
-      const accountRepository = this.accountService.getRepository();
-      const email = profile.emails[0].value;
-      let user = await accountRepository.findOneByEmail(email);
-
-      if (!user) {
-        user = await accountRepository.create({ email });
-      }
-
-      return done(null, user);
-    }));
+  registerGitHubStrategy() {
+    this.registerOAuthStrategy({
+      provider: 'github',
+      scope: ['user:email'],
+      Strategy: GitHubStrategy,
+    });
   }
 
   requireUser() {

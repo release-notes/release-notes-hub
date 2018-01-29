@@ -145,6 +145,39 @@ class AuthController extends AbstractController {
     return null;
   }
 
+  getOAuthHandler({ provider, scope }) {
+    const baseUrl = this.getServiceManager().get('app.config').get('app.baseUrl');
+
+    return (req, res, next) => this.authService.authenticate(provider, {
+      scope,
+      callbackURL: `${baseUrl}/auth/${provider}/callback`,
+      state: encodeURIComponent(JSON.stringify({
+        targetUrl: this.getTargetUrl(req),
+      }))
+    })(req, res, next)
+  }
+
+  getOAuthCallbackHandler({ provider }) {
+    return [
+      this.authService.authenticate(provider, { failureRedirect: '/signin' }),
+      (req, res) => {
+        if (req.query.state) {
+          try {
+            const state = JSON.parse(decodeURIComponent(req.query.state));
+
+            if (state.targetUrl) {
+              req.query.targetUrl = state.targetUrl;
+            }
+          } catch (err) {
+            this.logger.warn(`Failed to parse ${provider} oauth state parameter.`, err);
+          }
+        }
+
+        this.redirectToTargetUrl(req, res);
+      }
+    ];
+  }
+
   getRoutes() {
     const authService = this.authService;
     const baseUrl = this.getServiceManager().get('app.config').get('app.baseUrl');
@@ -195,45 +228,16 @@ class AuthController extends AbstractController {
         ]
       },
       '/auth/github': {
-        handler: (req, res, next) => authService.authenticate('github', {
-          scope: ['user:email'],
-          callbackURL: `${baseUrl}/auth/github/callback?targetUrl=${this.getTargetUrl(req)}`,
-        })(req, res, next),
+        handler: this.getOAuthHandler({ provider: 'github', scope: ['user:email'] }),
       },
       '/auth/github/callback': {
-        handler: [
-          authService.authenticate('github', { failureRedirect: '/signin' }),
-          (req, res) => this.redirectToTargetUrl(req, res),
-        ],
+        handler: this.getOAuthCallbackHandler({ provider: 'github' }),
       },
       '/auth/google': {
-        handler: (req, res, next) => authService.authenticate('google', {
-          scope: ['email'],
-          callbackURL: `${baseUrl}/auth/google/callback`,
-          state: encodeURIComponent(JSON.stringify({
-            targetUrl: this.getTargetUrl(req),
-          }))
-        })(req, res, next),
+        handler: this.getOAuthHandler({ provider: 'google', scope: ['email'] }),
       },
       '/auth/google/callback': {
-        handler: [
-          authService.authenticate('google', { failureRedirect: '/signin' }),
-          (req, res) => {
-            if (req.query.state) {
-              try {
-                const state = JSON.parse(decodeURIComponent(req.query.state));
-
-                if (state.targetUrl) {
-                  req.query.targetUrl = state.targetUrl;
-                }
-              } catch (err) {
-                this.logger.warn('Failed to parse google oauth state parameter.', err);
-              }
-            }
-
-            this.redirectToTargetUrl(req, res);
-          }
-        ],
+        handler: this.getOAuthCallbackHandler({ provider: 'google' }),
       }
     }
   };
