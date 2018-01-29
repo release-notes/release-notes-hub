@@ -8,6 +8,7 @@ releases:
   added:
   - Introduce page view tracking with self hosted piwik.([#3](https://github.com/release-notes/release-notes-hub/issues/3))
   - Add support for publishing CHANGELOG.md files. [#38](https://github.com/release-notes/release-notes-hub/issues/38)
+  - Add support for signing in via google. [#8](https://github.com/release-notes/release-notes-hub/issues/8)
 - version: 0.4.0
   date: 2017-12-14
   description: This release improves the overall UI/UX and code quality and introduces authentication via github.
