@@ -15,38 +15,62 @@ block content
       .content
         .columns
           .column.is-one-quarter
+            h3.subtitle.is-4 What?
+          .column.is-half-desktop
+            p.
+              release-notes.com is a hub for <strong>hosted changelog pages</strong>.
+              You can <strong>publish release notes</strong> via cli tool or with your favourite ci/cd pipeline and our api.
+              Manage your subscriptions and <strong>receive update notifications</strong>.
+        .columns
+          .column.is-one-quarter
+            h3.subtitle.is-4 Why?
+          .column.is-half-desktop
+            p.
+              Software development is only 50% about actually writing code. Maybe even more relevant is communication.
+              Release notes are the best way to manifest and communicate updates like bug fixes or release announcements.
+              Providing good release notes makes it possible for other people to keep track on software changes.
+        .columns
+          .column.is-one-quarter
             h3.subtitle.is-4 Platform
           .column.is-half-desktop
             p.
               Release Notes is an open source platform for automated release notes management around traditional CHANGELOG files
               and our generalized
               <a href="https://github.com/release-notes/release-notes-spec">Release Notes Schema Specification</a> via
-              <a href="https://github.com/release-notes/release-notes-cli">CLI tools</a>.
+              <a href="#cli-tool">CLI tools</a> and a <a href="/api">REST API</a>.
               Our <a href="https://github.com/release-notes/release-notes-node">node lib</a> is the first implementation of the
-              <a href="https://github.com/release-notes/release-notes-schema">JSON schema definition</a> that should make porting to other languages easy.
+              <a href="https://github.com/release-notes/release-notes-schema">JSON schema definition</a> that should make porting libs to other languages easy.
         .columns
           .column.is-one-quarter
             h3.subtitle.is-4 Getting started
           .column.is-half-desktop
             p.
-              First <a href="/signup">create an release notes account</a>.<br>
-              You can signup with your email address or via github (google, twitter, bitbucket comming soon).
-              A good starting point is to <a href="/@release-notes/release-notes-hub/subscribe">subscribe</a> to the
-              <a href="/@release-notes/release-notes-hub">release notes of this hub</a>.
-            h4.subtitle Install Cli Tool
-            p
-              pre.hljs: code
-                | !{gist('install-cli.shell')}
-
+              A good starting point is to subscribe to the release notes of this hub.<br><br>
+              <a href="/@release-notes/release-notes-hub"><img src="/badges/v1.svg" /></a><br><br>
+              Therefore you <a href="/signup">create an account</a> by signing up with your email address, your github or google account.
+              <br><br>
+              Upload your first <a href="#changelog-md">CHANGELOG.md</a> or <a href="#release-notes-yml">release-notes.yml</a> file and setup a release notes page.
+              <br><br>
+              <a class="button is-small is-primary" href="/publish">Publish Release Notes</a>
+        .columns
+          .column.is-one-quarter
+            h3#cli-tool.subtitle.is-4 CLI Tool
+          .column.is-half-desktop
+            p.
+              If you like the console we have a <a href="https://github.com/release-notes/release-notes-cli">cli tool</a> for you:
+            pre.hljs: code
+              | !{gist('install-cli.shell')}
+            pre.hljs: code
+              | !{gist('cli-commands.shell')}
             h4.subtitle Publish to the hub
             p
               pre.hljs: code
                 | !{gist('cli-publish.shell')}
         .columns
           .column.is-one-quarter
-            h3.subtitle.is-4 Schema Specification
+            h3.subtitle.is-4 Formats
           .column.is-half-desktop
-            h4.subtitle CHANGELOG.md
+            h4#changelog-md.subtitle CHANGELOG.md
             p
               pre.hljs: code
                 | !{gist('changelog.md')}
@@ -54,7 +78,7 @@ block content
             .has-text-centered
               i.mdi.mdi-36 !{mdi('swap-vertical')}
 
-            h4.subtitle release-notes.yml
+            h4#release-notes-yml.subtitle release-notes.yml
             p
               pre.hljs: code
                 | !{gist('release-notes.yml')}
