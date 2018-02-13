@@ -14,6 +14,14 @@ block content
   .hero
     .hero-body
       .container.has-text-centered
+        h3.subtitle.is-3 About
+        h5.subtitle.is-5 Publish your <code>CHANGELOG.md</code> or <code>release-notes.yml</code> files to the hub.
+        h5.subtitle.is-5 Broadcast software updates and release announcements to your community.
+        br
+        a.button.is-primary.is-medium(href='/publish') Publish Release Notes
+  .hero
+    .hero-body
+      .container.has-text-centered
         h3.subtitle.is-3 Features
 
         .columns.is-grid.is-multiline.features
@@ -49,7 +57,7 @@ block content
   .hero
     .hero-body.has-text-centered
       .container
-        a.button.is-primary.is-medium(href='/publish') Publish Release Notes
+        a.button.is-primary.is-medium(href='/@release-notes/release-notes-hub') Subscribe for updates
 
   if newest && newest.length
     .hero
