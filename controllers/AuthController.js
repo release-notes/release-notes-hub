@@ -77,7 +77,7 @@ class AuthController extends AbstractController {
     const username = req.body.username;
 
     try {
-      const account = accountService.getRepository().findOneByUsername(username);
+      const account = await accountService.getRepository().findOneByUsername(username);
 
       if (account) {
         return void res.render('release-notes/publish', {
