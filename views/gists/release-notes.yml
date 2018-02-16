@@ -1,0 +1,20 @@
+title: Release Notes of an awesome project
+description: >
+  Awesome project makes your cli a better place.
+
+releases:
+- version: Unreleased
+  added:
+  - Add more fancy stuff.
+  deprecated:
+  - Deprecate some "not so awesome" command.
+- version: 0.1.1
+  date: 2017-10-30
+  fixed:
+  - title: Do not overflow.
+    tags: ["Security"]
+- version: 0.1.0
+  date: 2017-10-30
+  description: The first release
+  added:
+  - Introduce some awesomeness.

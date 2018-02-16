@@ -39,16 +39,18 @@ block pageContent
         .field.has-text-left
           label.label Release Notes Handle
           p.control
-            input.input(
+            input.input#js-release-notes-handle-input(
               type='text' value=(form && form.name) name='name'
               placeholder="Handle of the release notes"
               class=(errors && errors.name && 'is-danger')
+              required
               disabled=!user.username
             )
             if errors && errors.name
               span.help.is-danger= errors.name.msg
             .help Your release notes handle (only numbers, letters and dashes)
-              .help @#{user.username || 'your-name'}/<b>awesome-release-notes</b>
+              div release-notes.com/@#{user.username || 'your-name'}/
+                b#js-release-notes-handle awesome-release-notes
         .field.has-text-left
           label.label Release Notes File
           .control
@@ -63,20 +65,36 @@ block pageContent
                   span.file-icon
                     i.mdi.mdi-18 !{mdi('upload')}
                   span.file-label Choose
-                span#js-file-name.file-name ...release-notes.yml
+                span#js-file-name.file-name ...changelog file
             if errors && errors.file
               span.help.is-danger= errors.file.msg
-        //
-          label.label Release Notes File
-          p.control
-            input.input(
-              name='release-notes' type='file' required class=(errors && errors.file && 'is-danger')
-              disabled=!user.username
-            )
-            if errors && errors.file
-              span.help.is-danger= errors.file.msg
-
+            .help Some CHANGELOG.md or release-notes.yml file.
       .card-content
         .field
           p.control
             input.button.is-primary.is-fullwidth(type='submit' value='Publish' disabled=!user.username)
+
+append scripts
+  script.
+    document.addEventListener('DOMContentLoaded', function () {
+      var fileInputEl = document.getElementById('js-file-input');
+      var fileNameEl = document.getElementById('js-file-name');
+      var releaseNotesHandleInputEl = document.getElementById('js-release-notes-handle-input');
+      var releaseNotesHandleEl = document.getElementById('js-release-notes-handle')
+
+      fileInputEl.addEventListener('change', function () {
+        if (fileInputEl.files.length > 0) {
+          fileNameEl.innerHTML = fileInputEl.files[0].name;
+        }
+      });
+
+      function onReleaseNotesHandleChange() {
+        var releaseNotesHandle = releaseNotesHandleInputEl.value.replace(/[^0-9a-z\-]/ig, '');
+
+        releaseNotesHandleInputEl.value = releaseNotesHandle;
+        releaseNotesHandleEl.innerText = releaseNotesHandle || 'awesome-release-notes';
+      }
+
+      releaseNotesHandleInputEl.addEventListener('change', onReleaseNotesHandleChange);
+      releaseNotesHandleInputEl.addEventListener('keyup', onReleaseNotesHandleChange);
+    });
