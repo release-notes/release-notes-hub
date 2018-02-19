@@ -1,0 +1,15 @@
+script(type="text/javascript").
+  var _paq = _paq || [];
+  _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+  _paq.push(["setCookieDomain", "*.release-notes.com"]);
+  _paq.push(["setDomains", ["*.release-notes.com"]]);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//piwik.release-notes.com/";
+    _paq.push(['setTrackerUrl', u+'piwik.php']);
+    _paq.push(['setSiteId', '#{piwikSiteId}']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+  })();
+noscript: p: img(src=`//piwik.release-notes.com/piwik.php?idsite=${piwikSiteId}&rec=1` style="border:0;" alt="")

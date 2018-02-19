@@ -4,7 +4,15 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
-- version: Unreleased
+- version: 0.5.0
+  date: 2018-02-19
+  description: |
+    Changelog file support and API :tada:
+  added:
+  - Introduce page view tracking with self hosted piwik.([#3](https://github.com/release-notes/release-notes-hub/issues/3))
+  - Add support for publishing CHANGELOG.md files. [#38](https://github.com/release-notes/release-notes-hub/issues/38)
+  - Introduce API with first `/publish` endpoint. [#35](https://github.com/release-notes/release-notes-hub/issues/35)
+  - Add support for signing in via google. [#8](https://github.com/release-notes/release-notes-hub/issues/8)
 - version: 0.4.0
   date: 2017-12-14
   description: This release improves the overall UI/UX and code quality and introduces authentication via github.

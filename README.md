@@ -26,6 +26,10 @@ The app is aware of the following environment variables:
 | EMAIL_DEFAULT_REPLY_TO | Default reply-to email address | 'Release Notes <hello@release-notes.com>' |
 | GITHUB_CLIENT_ID | The github client id | _empty_ |
 | GITHUB_CLIENT_SECRET | The github client secret | _empty_ |
+| GOOGLE_CLIENT_ID | The google client id | _empty_ |
+| GOOGLE_CLIENT_SECRET | The google client secret | _empty_ |
+| PIWIK_ENABLED | Whether piwik tracking is enabled | true |
+| PIWIK_SITE_ID | The related piwik site id | 1 |
 
 [ReleaseNotesHubDevEnv]: https://github.com/release-notes/release-notes-hub-dev-env
 

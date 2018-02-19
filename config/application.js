@@ -1,10 +1,13 @@
 'use strict';
 
 const assetRev = require('../lib/asset-rev');
+const gist = require('../lib/gist');
 const svgEmbed = require('../lib/svg-embed');
 
 const APP_PATH = `${__dirname}/..`;
 const env = process.env;
+const APP_HOST = env.HOST || 'release-notes.com';
+const APP_BASE_URL = env.BASE_URL || `https://${APP_HOST}`;
 
 module.exports = {
   app: {
@@ -19,11 +22,12 @@ module.exports = {
       // server
       express: `${APP_PATH}/services/ExpressService`,
       authService: `${APP_PATH}/services/AuthService`,
+      api: `${APP_PATH}/services/ApiService`,
 
       // controllers
       errorController: `${APP_PATH}/controllers/ErrorController`,
       indexController: `${APP_PATH}/controllers/IndexController`,
-      apiPublishController: `${APP_PATH}/controllers/api/PublishController`,
+      apiController: `${APP_PATH}/controllers/ApiController`,
       authController: `${APP_PATH}/controllers/AuthController`,
       authTokenController: `${APP_PATH}/controllers/AuthTokenController`,
       releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
@@ -39,6 +43,7 @@ module.exports = {
       accountService: `${APP_PATH}/services/AccountService`,
 
       // business logic services
+      releaseNotesLoader: `${APP_PATH}/services/releaseNotes/Loader`,
       releaseNotesUpdateService: `${APP_PATH}/services/releaseNotes/UpdateService`,
       releaseNotesNotificationService: `${APP_PATH}/services/releaseNotes/NotificationService`,
       emailService: `${APP_PATH}/services/EmailService`,
@@ -47,7 +52,7 @@ module.exports = {
       sparkPost: `${APP_PATH}/services/SparkPostService`,
     },
 
-    baseUrl: env.BASE_URL || 'https://release-notes.com',
+    baseUrl: APP_BASE_URL,
   },
 
   logging: {
@@ -81,7 +86,8 @@ module.exports = {
     },
     port: process.env.PORT || '8080',
     controllers: [
-      'apiPublishController',
+      'api',
+      'apiController',
       'authController',
       'authTokenController',
       'releaseNotesController',
@@ -98,14 +104,30 @@ module.exports = {
       }),
       moment: '@require:moment',
       marked: '@require:marked',
+      gist: gist({ path: `${APP_PATH}/views/gists/` }),
+      piwikEnabled: process.env.PIWIK_ENABLED !== 'false',
+      piwikSiteId: process.env.PIWIK_SITE_ID || 1,
     },
     sessionSecret: process.env.SESSION_SECRET || 'change-me'
+  },
+
+  api: {
+    version: '0.1.0',
+    host: APP_HOST,
+  },
+
+  apiController: {
+    baseUrl: env.API_BASE_URL || `${APP_BASE_URL}/api`,
   },
 
   authService: {
     github: {
       clientId: env.GITHUB_CLIENT_ID,
       clientSecret: env.GITHUB_CLIENT_SECRET,
+    },
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
 

@@ -1,0 +1,13 @@
+$ release-notes -h
+release-notes <command> [args]
+
+Commands:
+  release-notes init [file]      Initialize release notes file
+  release-notes convert [file]   Convert release notes to another format
+  release-notes validate [file]  Validate release notes file
+  release-notes publish [file]   Publish release notes file to the hub
+                                 (https://release-notes.com)
+
+Options:
+  --version, -v  Show version number
+  --help, -h     Show help
