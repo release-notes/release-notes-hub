@@ -1,5 +1,7 @@
 extends ../layout/main
 
+include ../includes/gist
+
 block globalVars
   - var metaTitle = 'Release Notes - About'
   - var pageCls = 'about'
@@ -46,10 +48,10 @@ block content
             h3#cli-tool.subtitle.is-4 CLI Tool
             p.
               If you like the console we have a <a href="https://github.com/release-notes/release-notes-cli">cli tool</a> for you:
-            pre.hljs: code
-              | !{gist('install-cli.shell')}
-            pre.hljs: code
-              | !{gist('cli-commands.shell')}
+            +gist('install-cli.shell')
+
+            +gist('cli-commands.shell')
+
             h3.subtitle.is-4 Formats
             h4#changelog-md.subtitle CHANGELOG.md
             p.
@@ -60,8 +62,7 @@ block content
               <br><br>
               The following example changelog follows the recommendations of <a href="https://keepachangelog.com" target="_blank">keep a changelog</a>.
             p
-              pre.hljs: code
-                | !{gist('changelog.md')}
+              +gist('changelog.md')
 
             .has-text-centered
               i.mdi.mdi-36 !{mdi('swap-vertical')}
@@ -70,7 +71,6 @@ block content
             p.
               In order to make changelogs hackable we came up with an evolving <a href="https://github.com/release-notes/release-notes-spec">yml schema specification</a>.
             p
-              pre.hljs: code
-                | !{gist('release-notes.yml')}
+              +gist('release-notes.yml')
 append stylesheets
   link(rel='stylesheet' href=asset("css/vendor/highlight-js.css"))
