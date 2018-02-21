@@ -36,6 +36,7 @@ module.exports = {
       // repositories
       accountRepository: `${APP_PATH}/repositories/AccountRepository`,
       authTokenRepository: `${APP_PATH}/repositories/AuthTokenRepository`,
+      organizationRepository: `${APP_PATH}/repositories/OrganizationRepository`,
       releaseNotesRepository: `${APP_PATH}/repositories/ReleaseNotesRepository`,
       subscriptionRepository: `${APP_PATH}/repositories/SubscriptionRepository`,
 
