@@ -30,6 +30,7 @@ module.exports = {
       apiController: `${APP_PATH}/controllers/ApiController`,
       authController: `${APP_PATH}/controllers/AuthController`,
       authTokenController: `${APP_PATH}/controllers/AuthTokenController`,
+      organizationController: `${APP_PATH}/controllers/OrganizationController`,
       releaseNotesController: `${APP_PATH}/controllers/ReleaseNotesController`,
       subscriptionController: `${APP_PATH}/controllers/SubscriptionController`,
 
@@ -91,6 +92,7 @@ module.exports = {
       'apiController',
       'authController',
       'authTokenController',
+      'organizationController',
       'releaseNotesController',
       'subscriptionController',
       'indexController',

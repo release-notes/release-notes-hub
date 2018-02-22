@@ -26,6 +26,9 @@ class OrganizationRepository extends AbstractRepository {
           },
         }
       },
+      members: [{
+        accountId: String,
+      }]
     };
   }
 
@@ -35,12 +38,16 @@ class OrganizationRepository extends AbstractRepository {
    * @param {string} name
    * @return {Promise}
    */
-  findOneByUsername(name) {
+  findOneByName(name) {
     return this.findOne({
       name,
     }, null, {
       collation: { locale: 'en', strength: 2 }
     });
+  }
+
+  findByMember(accountId) {
+    return this.find({ 'members.accountId': accountId });
   }
 }
 
