@@ -6,20 +6,27 @@ block globalVars
   - var activeTab = 'organizations'
 
 block pageContent
-  if !organizations || !organizations.length
-    .message
-      .message-body
-        p You have not organizations, yet.
-  else
-    table.table.is-inline-block
-      tr
-        th Name
-        th Members
-      each organization in organizations
-        tr
-          td
-            | #{organization.name}
-          td #{organization.members && organization.members.length}
+  .columns
+    .column.is-half-desktop.is-offset-one-quarter-desktop
+      if !organizations || !organizations.length
+        .message
+          .message-body
+            p You have not organizations, yet.
+      else
+        h3.subtitle Your Organizations
+        table.table.is-fullwidth
+          tr
+            th Name
+            th Role
+            th Members
+          each organization in organizations
+            tr
+              td
+                a(href=`/@${organization.name}`)
+                  strong #{organization.name}
+              td
+                span.tag.is-rounded Owner
+              td #{organization.members && organization.members.length}
 
 
 append content
@@ -35,6 +42,6 @@ append content
                 if errors && errors.name
                   .help.is-danger= errors.name.msg
                 .help.has-text-grey Unique organization name (only numbers, letters and dashes)
-                .help.has-text-grey release-notes.com/<b>@org-awesome</b>
+                .help.has-text-grey Your name on release-notes.com/<b>@org-awesome</b>
               .control
                 input.button.is-primary.is-fullwidth(type='submit' value='Create Organization')
