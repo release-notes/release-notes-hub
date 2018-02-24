@@ -114,6 +114,8 @@ class OrganizationController extends AbstractController {
         ]
       }],
       '/organizations/new': [{
+        handler: (req, res) => res.redirect('/organizations')
+      }, {
         method: 'post',
         handler: [
           authService.authenticate('session'),
