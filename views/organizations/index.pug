@@ -25,7 +25,10 @@ block pageContent
                 a(href=`/@${organization.name}`)
                   strong #{organization.name}
               td
-                span.tag.is-rounded Owner
+                if organization.name === user.username
+                  span.tag.is-primary.is-rounded Account
+                else
+                  span.tag.is-rounded Owner
               td #{organization.members && organization.members.length}
 
 
