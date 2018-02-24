@@ -3,9 +3,14 @@
 const AbstractController = require('./AbstractController');
 const { check, validationResult } = require('express-validator/check');
 
+const createFormErrors = (field, msg) => ({
+  [field]: { msg }
+});
+
 class OrganizationController extends AbstractController {
   /**
    * @property {OrganizationRepository} organizationRepository
+   * @property {AccountRepository} accountRepository
    */
 
   bootstrap() {
@@ -14,15 +19,16 @@ class OrganizationController extends AbstractController {
     const sm = this.getServiceManager();
 
     this.organizationRepository = sm.get('organizationRepository', true);
+    this.accountRepository = sm.get('accountRepository', true);
 
     return this;
   }
 
-  async renderOrganizationListView(req, res) {
-    this.renderOrganizazionListViewWithParams(req, res, {});
+  async listOrganizationsAction(req, res) {
+    this.renderOrganizationListView(req, res, {});
   }
 
-  async renderOrganizazionListViewWithParams(req, res, params) {
+  async renderOrganizationListView(req, res, params) {
     const organizations = await this.organizationRepository.findByMember(
       req.user._id
     );
@@ -33,40 +39,67 @@ class OrganizationController extends AbstractController {
     });
   }
 
-  async createOrganization(req, res, next) {
+  async createOrganizationAction(req, res, next) {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return void this.renderOrganizazionListViewWithParams(req, res, {
+      return void this.renderOrganizationListView(req, res, {
         errors: errors.mapped(),
         form: req.body,
       });
     }
 
     const name = req.body.name;
-
     const organization = await this.organizationRepository.findOneByName(name);
 
     if (organization) {
-      return void this.renderOrganizazionListViewWithParams(req, res, {
-        errors: {
-          name: {
-            msg: 'Organization name is already in use. Please choose another one.'
-          }
-        },
-      });
+      const errors = createFormErrors('name', 'Organization name is already in use. Please choose another one.');
+      return void this.renderOrganizationListView(req, res, { errors });
     }
 
-    await this.organizationRepository.create({
-      name,
-      members: [{
-        accountId: req.user._id,
-      }],
-    });
-
+    await this.createOrganization({ name, owner: req.user });
     this.renderOrganizationListView(req, res);
   }
 
+  async claimUsernameAction(req, res, next) {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return void this.renderOrganizationListView(req, res, {
+        errors: errors.mapped(),
+        form: req.body,
+      });
+    }
+
+    const username = req.body.username;
+    const [ account, organization ] = await Promise.all([
+      this.accountRepository.findOneByUsername(username),
+      this.organizationRepository.findOneByName(username),
+    ]);
+
+    if (account || organization) {
+      return void this.renderOrganizationListView(req, res, {
+        errors: createFormErrors('username', `@${username} is already taken.`),
+        form: req.body
+      });
+    }
+
+    await Promise.all([
+      this.accountRepository.findByIdAndUpdate(req.user._id, { username }),
+      this.createOrganization({ name: username, owner: req.user }),
+    ]);
+
+    res.redirect('/organizations');
+  }
+
+  createOrganization({ name, owner }) {
+    return this.organizationRepository.create({
+      name,
+      members: [{
+        accountId: owner._id,
+      }],
+    });
+  }
 
   getRoutes() {
     const authService = this.authService;
@@ -77,7 +110,7 @@ class OrganizationController extends AbstractController {
         handler: [
           authService.authenticate('session'),
           authService.requireUser(),
-          (req, res, next) => this.renderOrganizationListView(req, res, next)
+          (req, res, next) => this.listOrganizationsAction(req, res, next)
         ]
       }],
       '/organizations/new': [{
@@ -87,7 +120,19 @@ class OrganizationController extends AbstractController {
           authService.requireUser(),
           check('name', 'Organization name must be alphanumeric and may contain dashes.')
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
-          (req, res, next) => this.createOrganization(req, res, next)
+          (req, res, next) => this.createOrganizationAction(req, res, next)
+        ]
+      }],
+      '/organizations/claim-username': [{
+        handler: (req, res) => res.redirect('/organizations'),
+      }, {
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          check('username', 'Username must be alphanumeric and may contain dashes.')
+            .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
+          (req, res, next) => this.claimUsernameAction(req, res, next)
         ]
       }],
     };
