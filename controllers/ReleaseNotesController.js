@@ -30,10 +30,6 @@ class ReleaseNotesController extends AbstractController {
     return this;
   }
 
-  renderPublishView(req, res, next) {
-    res.render('release-notes/publish');
-  }
-
   async publishAction(req, res) {
     const scope = req.user.username;
 
@@ -217,7 +213,7 @@ class ReleaseNotesController extends AbstractController {
         handler: [
           authService.authenticate('session'),
           authService.requireUser(),
-          (req, res, next) => this.renderPublishView(req, res, next)
+          (req, res) => res.render('release-notes/publish'),
         ]
       }, {
         method: 'post',
