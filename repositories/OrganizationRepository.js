@@ -27,8 +27,14 @@ class OrganizationRepository extends AbstractRepository {
         }
       },
       members: [{
+        _id: false,
         accountId: String,
-      }]
+        joinedAt: Date,
+        role: {
+          type: String,
+          enum: ['owner']
+        },
+      }],
     };
   }
 

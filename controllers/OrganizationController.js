@@ -33,6 +33,10 @@ class OrganizationController extends AbstractController {
       req.user._id
     );
 
+    organizations.forEach(organization => {
+      organization.membership = organization.members.find((member) => member.accountId === req.user._id.toString());
+    });
+
     res.render('organizations/index', {
       organizations,
       ...params,
@@ -97,6 +101,8 @@ class OrganizationController extends AbstractController {
       name,
       members: [{
         accountId: owner._id,
+        joinedAt: new Date(),
+        role: 'owner',
       }],
     });
   }

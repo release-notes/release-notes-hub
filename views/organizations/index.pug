@@ -18,19 +18,20 @@ block pageContent
           tr
             th Organization
             th
-            th
+            th Joined
             th
           each organization in organizations
             tr
               td
                 a(href=`/@${organization.name}`)
-                  strong #{organization.name}
+                  strong @#{organization.name}
               td
                 if organization.name === user.username
-                  span.tag.is-primary.is-rounded Account
+                  span.organization-role.tag.is-primary.is-rounded Account
                 else
-                  span.tag.is-rounded Owner
+                  span.organization-role.tag.is-rounded #{organization.membership.role}
               td
+                small.has-text-grey joined #{moment(organization.membership.joinedAt).fromNow()}
               td
                 span.icon.is-large(title="Members")
                   i.mdi !{mdi('account-multiple')}
