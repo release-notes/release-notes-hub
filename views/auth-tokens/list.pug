@@ -1,36 +1,36 @@
 extends ../layout/dashboard
 
-block globalVars
+append globalVars
   - var metaTitle = 'Release Notes - Auth Tokens'
   - var pageSubtitle = 'Private Auth Tokens'
   - var activeTab = 'auth-tokens'
 
 block pageContent
   if authTokenList && authTokenList.length
-    .is-inline-block
-      table.table
+    table.table.is-fullwidth
+      tr
+        th Token
+        th Description
+        th Created
+        th
+      each authToken in authTokenList
         tr
-          th Token
-          th Description
-          th Created
-          th
-        each authToken in authTokenList
-          tr
-            td
-              code
-                | #{authToken.token}
-            td #{authToken.description}
-            td
-              - var issueDate = moment(authToken.createdAt)
-              span(title=issueDate.format('LLL'))
-                | #{issueDate.fromNow()}
-            td
-              form(method='post' action='/auth-tokens/delete')
-                input(type='hidden' name='id' value=authToken._id)
-                button.button.is-small(type='submit')
-                  span.icon
-                    i.mdi !{mdi('delete')}
-                  span Delete
+          td
+            code
+              | #{authToken.token}
+          td
+            small.has-text-grey
+              | #{authToken.description}
+          td
+            - var issueDate = moment(authToken.createdAt)
+            small.has-text-grey(title=issueDate.format('LLL'))
+              | issued #{issueDate.fromNow()}
+          td
+            form(method='post' action='/auth-tokens/delete')
+              input(type='hidden' name='id' value=authToken._id)
+              button.button(type='submit' title="Delete Auth Token")
+                span.icon
+                  i.mdi !{mdi('delete')}
 
 append content
   .hero.is-light

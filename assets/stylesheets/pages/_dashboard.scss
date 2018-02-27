@@ -1,0 +1,26 @@
+.dashboard-page {
+  .table {
+    td, th {
+      vertical-align: middle;
+      height: 4rem;
+
+      &:last-child {
+        text-align: right;
+      }
+
+      .button {
+        vertical-align: initial;
+      }
+    }
+  }
+}
+
+.organizations-page {
+  .organization-role {
+    text-transform: capitalize;
+
+    &:empty {
+      display: none;
+    }
+  }
+}

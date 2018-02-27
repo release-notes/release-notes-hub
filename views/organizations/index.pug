@@ -1,24 +1,25 @@
 extends ../layout/dashboard
 
-block globalVars
+append globalVars
   - var metaTitle = 'Release Notes - Organizations'
   - var pageSubtitle = 'My Organizations'
   - var activeTab = 'organizations'
+  - var pageCls = 'organizations-page'
 
 block pageContent
   .columns
-    .column.is-half-desktop.is-offset-one-quarter-desktop
+    .column
       if !organizations || !organizations.length
         .message
           .message-body
             p You have not organizations, yet.
       else
-        h3.subtitle Organizations
         table.table.is-fullwidth
           tr
-            th Name
-            th Role
-            th Members
+            th Organization
+            th
+            th
+            th
           each organization in organizations
             tr
               td
@@ -29,7 +30,14 @@ block pageContent
                   span.tag.is-primary.is-rounded Account
                 else
                   span.tag.is-rounded Owner
-              td #{organization.members && organization.members.length}
+              td
+              td
+                span.icon.is-large(title="Members")
+                  i.mdi !{mdi('account-multiple')}
+                  span &nbsp;&nbsp;#{organization.members && organization.members.length}
+                a.button(href=`/organizations/@${organization.name}` title="Edit Organization")
+                  span.icon
+                    i.mdi !{mdi('settings')}
 
 
 append content
