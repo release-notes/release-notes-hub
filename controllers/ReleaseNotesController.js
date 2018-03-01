@@ -22,12 +22,24 @@ class ReleaseNotesController extends AbstractController {
     const sm = this.getServiceManager();
 
     this.releaseNotesRepository = sm.get('releaseNotesRepository');
+    this.organizationRepository = sm.get('organizationRepository');
     this.subscriptionRepository = sm.get('subscriptionRepository');
     this.notificationService = sm.get('releaseNotesNotificationService');
     this.updateService = sm.get('releaseNotesUpdateService');
     this.releaseNotesLoader = sm.get('releaseNotesLoader');
 
     return this;
+  }
+
+  async renderPublishViewAction(req, res) {
+    this.renderPublishView(req, res);
+  }
+
+  async renderPublishView(req, res, params = {}) {
+    const userId = req.user._id;
+    const organizations = await this.organizationRepository.findByMember(userId);
+
+    res.render('release-notes/publish', { organizations, ...params });
   }
 
   async publishAction(req, res) {

@@ -37,6 +37,21 @@ block pageContent
     form(method='post' enctype='multipart/form-data' action='/publish')
       .card-content
         .field.has-text-left
+          label.label Scope
+          p.control
+            .select
+              select#js-release-notes-scope-input(
+                name='scope'
+                class=(errors && errors.name && 'is-danger')
+                required
+                disabled=!user.username
+              )
+                each organization in organizations
+                  option(value=organization.name) @#{organization.name}
+
+            if errors && errors.scope
+              span.help.is-danger= errors.scope.msg
+        .field.has-text-left
           label.label Release Notes Handle
           p.control
             input.input#js-release-notes-handle-input(
