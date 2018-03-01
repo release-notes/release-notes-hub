@@ -52,7 +52,7 @@ block pageContent
             if errors && errors.scope
               span.help.is-danger= errors.scope.msg
         .field.has-text-left
-          label.label Release Notes Handle
+          label.label Release Notes Name
           p.control
             input.input#js-release-notes-handle-input(
               type='text' value=(form && form.name) name='name'
@@ -63,8 +63,11 @@ block pageContent
             )
             if errors && errors.name
               span.help.is-danger= errors.name.msg
-            .help Your release notes handle (only numbers, letters and dashes)
-              div release-notes.com/@#{user.username || 'your-name'}/
+            .help Your release notes name (only numbers, letters and dashes)
+              div Your page on release-notes.com/
+                | @
+                span#js-release-notes-scope #{organizations[0] ? organizations[0].name : 'org-name'}
+                | /
                 b#js-release-notes-handle awesome-release-notes
         .field.has-text-left
           label.label Release Notes File
@@ -94,6 +97,8 @@ append scripts
     document.addEventListener('DOMContentLoaded', function () {
       var fileInputEl = document.getElementById('js-file-input');
       var fileNameEl = document.getElementById('js-file-name');
+      var scopeInputEl = document.getElementById('js-release-notes-scope-input');
+      var scopeEl = document.getElementById('js-release-notes-scope');
       var releaseNotesHandleInputEl = document.getElementById('js-release-notes-handle-input');
       var releaseNotesHandleEl = document.getElementById('js-release-notes-handle')
 
@@ -101,6 +106,10 @@ append scripts
         if (fileInputEl.files.length > 0) {
           fileNameEl.innerHTML = fileInputEl.files[0].name;
         }
+      });
+
+      scopeInputEl.addEventListener('change', function () {
+        scopeEl.innerText = scopeInputEl.value;
       });
 
       function onReleaseNotesHandleChange() {
