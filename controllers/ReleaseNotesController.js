@@ -11,6 +11,7 @@ class ReleaseNotesController extends AbstractController {
   /**
    * @property {SubscriptionRepository} subscriptionRepository
    * @property {ReleaseNotesRepository} releaseNotesRepository
+   * @property {OrganizationRepository} organizationRepository
    * @property {UpdateService} updateService
    * @property {NotificationService} notificationService
    * @property {ReleaseNotesLoader} releaseNotesLoader
@@ -130,7 +131,9 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async editReleaseNotesAction(req, res, next) {
-    const releaseNotes = await this.releaseNotesRepository.findById(req.params.releaseNotesId);
+    const { scope, name } = req.params;
+
+    const releaseNotes = await this.releaseNotesRepository.findOneByScopeAndName(scope, name);
 
     if (releaseNotes.ownerAccountId !== req.user.id) {
       return void next();
@@ -144,7 +147,8 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async updateReleaseNotesAction(req, res, next) {
-    const releaseNotes = await this.releaseNotesRepository.findById(req.params.releaseNotesId);
+    const { scope, name } = req.params;
+    const releaseNotes = await this.releaseNotesRepository.findOneByScopeAndName(scope, name);
 
     if (releaseNotes.ownerAccountId !== req.user.id) {
       return void next();
@@ -246,7 +250,7 @@ class ReleaseNotesController extends AbstractController {
           (req, res, next) => this.renderMyReleaseNotesView(req, res, next)
         ]
       }],
-      '/release-notes/:releaseNotesId': [{
+      '/release-notes/@:scope/:name': [{
         method: 'get',
         handler: [
           authService.authenticate('session'),

@@ -25,7 +25,7 @@ block pageContent
                   | @#{releaseNotes.scope}/#{releaseNotes.name}
               td #{releaseNotes.title}
               td
-                a.button(href=`/release-notes/${releaseNotes._id}` title='Edit Release Notes')
+                a.button(href=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}` title='Edit Release Notes')
                   span.icon
                     i.mdi !{mdi('settings')}
 append content

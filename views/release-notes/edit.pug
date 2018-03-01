@@ -20,7 +20,7 @@ block pageContent
                 p= errors.file.msg
         .is-inline-block
           .subtitle.is-4 Publish New Revision
-          form(method='post' enctype='multipart/form-data' action=`/release-notes/${releaseNotesId}`)
+          form(method='post' enctype='multipart/form-data' action=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}`)
             .field.is-grouped
               .control
                 .file.has-name
