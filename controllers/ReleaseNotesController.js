@@ -229,7 +229,7 @@ class ReleaseNotesController extends AbstractController {
         handler: [
           authService.authenticate('session'),
           authService.requireUser(),
-          (req, res) => res.render('release-notes/publish'),
+          (req, res) => this.renderPublishViewAction(req, res),
         ]
       }, {
         method: 'post',
@@ -237,6 +237,8 @@ class ReleaseNotesController extends AbstractController {
           authService.authenticate('session'),
           authService.requireUser(),
           uploadHandler.single('release-notes'),
+          check('scope', 'Scope must be alphanumeric and may contain dashes.')
+            .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           check('name', 'Name must be alphanumeric and may contain dashes.')
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           (req, res, next) => this.publishAction(req, res, next)
