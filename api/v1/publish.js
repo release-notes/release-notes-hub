@@ -1,34 +1,32 @@
-module.exports = function(serviceManager) {
+module.exports = function(serviceManager, accessCheck) {
   const releaseNotesLoader = serviceManager.get('releaseNotesLoader');
   const releaseNotesRepository = serviceManager.get('releaseNotesRepository');
   const accountRepository = serviceManager.get('accountRepository');
+  const organizationRepository = serviceManager.get('organizationRepository');
   const notificationService = serviceManager.get('releaseNotesNotificationService');
   const updateService = serviceManager.get('releaseNotesUpdateService');
+  const { userHasPublishRights } = accessCheck;
 
   async function POST(req, res) {
     const accountId = req.auth.accountId;
     const { name, file } = req.body;
     const scope = req.body.scope.replace('@', '');
 
-    const [account, persistedReleaseNotes] = await Promise.all([
+    const [account, organization, persistedReleaseNotes] = await Promise.all([
       accountRepository.findById(accountId),
+      organizationRepository.findOneByName(scope),
       releaseNotesRepository.findOneByScopeAndName(scope, name),
     ]);
 
-    if (!account.username) {
-      return res.status(409).json({
-        code: 'MISSING_USER_NAME',
-        message: 'You need to claim a username for your account in order to publish release notes.',
-      });
-    }
+    if (!userHasPublishRights({ organization, user: account })) {
+      const organizations = await organizationRepository.findByMember(account._id);
 
-    if (scope.toLowerCase() !== account.username.toLowerCase()) {
       return res.status(403).json({
         code: 'ACCESS_DENIED',
         message: 'You do not have access rights to publish to this scope.',
         details: {
           scopeToPublish: scope,
-          accessibleScopes: [account.username],
+          accessibleScopes: organizations.map(org => org.name),
         }
       });
     }
@@ -168,19 +166,6 @@ module.exports = function(serviceManager) {
           }]
         },
       },
-      409: {
-        description: 'The release notes couldn\'t be published due to a resource conflict.',
-        schema: {
-          allOf: [{
-            $ref: '#/definitions/Error'
-          }, {
-            example: {
-              code: 'MISSING_USER_NAME',
-              message: 'You need to claim a username for your account in order to publish release notes.',
-            }
-          }]
-        },
-      }
     }
   };
 

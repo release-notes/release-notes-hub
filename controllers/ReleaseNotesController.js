@@ -3,6 +3,7 @@
 const AbstractController = require('./AbstractController');
 const ReleaseNotesDataModel = require('@release-notes/node/lib/models/ReleaseNotes');
 const { check, validationResult } = require('express-validator/check');
+const { userHasPublishRights } = require('../core/access-check');
 const multer = require('multer');
 
 const uploadHandler = multer();
@@ -44,12 +45,6 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async publishAction(req, res) {
-    const scope = req.user.username;
-
-    if (!scope) {
-      return void res.render('release-notes/publish');
-    }
-
     const file = req.file;
 
     if (!file) {
@@ -72,23 +67,31 @@ class ReleaseNotesController extends AbstractController {
       });
     }
 
-    const name = req.body.name;
+    const { name, scope } = req.body;
 
     try {
+      const organization = await this.organizationRepository.findOneByName(scope);
+
+      if (!userHasPublishRights({ organization, user: req.user })) {
+        return this.renderPublishView(req, res.status(403), {
+          err: new Error(`You are not authorized to publish to @${scope}`)
+        });
+      }
+
       const updatedReleaseNotes = await this.performReleaseNotesUpdate(file, {
-        scope, name, accountId: req.user._id
+        scope, name, organization
       });
 
       res.redirect(`/@${updatedReleaseNotes.scope}/${updatedReleaseNotes.name}`);
     } catch (err) {
-      return res.status(400).render('release-notes/publish', { err });
+      return this.renderPublishView(req, res.status(400), { err });
     }
   }
 
-  async performReleaseNotesUpdate(file, { releaseNotes, scope, name, accountId }) {
+  async performReleaseNotesUpdate(file, { releaseNotes, name, organization }) {
     const [releaseNotesUpdate, persistedReleaseNotes] = await Promise.all([
       this.loadReleaseNotesFromUpload(file),
-      releaseNotes || this.releaseNotesRepository.findOneByScopeAndName(scope, name)
+      releaseNotes || this.releaseNotesRepository.findOneByScopeAndName(organization.name, name)
     ]);
 
     if (persistedReleaseNotes) {
@@ -103,7 +106,6 @@ class ReleaseNotesController extends AbstractController {
       const releaseNotesData = {
         ...releaseNotesUpdate.toJSON(),
         scope, name,
-        ownerAccountId: accountId,
         latestVersion: latestRelease.version || '',
         latestReleaseDate: latestRelease.date || ''
       };
@@ -126,38 +128,55 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async renderMyReleaseNotesView(req, res) {
-    const releaseNotesList = await this.releaseNotesRepository.findAllByOwnerAccountId(req.user._id);
+    const organizations = await this.organizationRepository.findByMember(req.user._id);
+    const releaseNotesList = await this.releaseNotesRepository.findAllByScopes(
+      organizations.map(o => o.name)
+    );
+
     res.render('release-notes/private-list', { releaseNotesList });
   }
 
   async editReleaseNotesAction(req, res, next) {
     const { scope, name } = req.params;
+    const [releaseNotes, organization] = await Promise.all([
+      this.releaseNotesRepository.findOneByScopeAndName(scope, name),
+      this.organizationRepository.findOneByName(scope)
+    ]);
 
-    const releaseNotes = await this.releaseNotesRepository.findOneByScopeAndName(scope, name);
+    if (!releaseNotes) {
+      return void next();
+    }
 
-    if (releaseNotes.ownerAccountId !== req.user.id) {
+    if (!userHasPublishRights({ organization, user: req.user })) {
+      // @todo display proper error message
       return void next();
     }
 
     res.render('release-notes/edit', {
       releaseNotes,
       releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
-      releaseNotesId: releaseNotes._id,
     });
   }
 
   async updateReleaseNotesAction(req, res, next) {
     const { scope, name } = req.params;
-    const releaseNotes = await this.releaseNotesRepository.findOneByScopeAndName(scope, name);
+    const [releaseNotes, organization] = await Promise.all([
+      this.releaseNotesRepository.findOneByScopeAndName(scope, name),
+      this.organizationRepository.findOneByName(scope)
+    ]);
 
-    if (releaseNotes.ownerAccountId !== req.user.id) {
+    if (!releaseNotes) {
+      return void next();
+    }
+
+    if (!userHasPublishRights({ organization, user: req.user })) {
+      // @todo display proper error message
       return void next();
     }
 
     const viewVariables = {
       releaseNotes,
       releaseNotesDataModel: ReleaseNotesDataModel.fromJSON(releaseNotes),
-      releaseNotesId: releaseNotes._id,
     };
 
     if (!req.file) {
