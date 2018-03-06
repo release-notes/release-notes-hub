@@ -37,11 +37,11 @@ block pageContent
     form(method='post' enctype='multipart/form-data' action='/publish')
       .card-content
         .field.has-text-left
-          label.label Scope
+          label.label Team
           p.control
             .select
-              select#js-release-notes-scope-input(
-                name='scope'
+              select#js-release-notes-team-input(
+                name='team'
                 class=(errors && errors.name && 'is-danger')
                 required
                 disabled=!user.username
@@ -49,8 +49,8 @@ block pageContent
                 each team in teams
                   option(value=team.name) @#{team.name}
 
-            if errors && errors.scope
-              span.help.is-danger= errors.scope.msg
+            if errors && errors.team
+              span.help.is-danger= errors.team.msg
         .field.has-text-left
           label.label Release Notes Name
           p.control
@@ -66,7 +66,7 @@ block pageContent
             .help Your release notes name (only numbers, letters and dashes)
               div Your page on release-notes.com/
                 | @
-                span#js-release-notes-scope #{teams[0] ? teams[0].name : 'org-name'}
+                span#js-release-notes-team #{teams[0] ? teams[0].name : 'org-name'}
                 | /
                 b#js-release-notes-handle awesome-release-notes
         .field.has-text-left
@@ -97,8 +97,8 @@ append scripts
     document.addEventListener('DOMContentLoaded', function () {
       var fileInputEl = document.getElementById('js-file-input');
       var fileNameEl = document.getElementById('js-file-name');
-      var scopeInputEl = document.getElementById('js-release-notes-scope-input');
-      var scopeEl = document.getElementById('js-release-notes-scope');
+      var teamInputEl = document.getElementById('js-release-notes-team-input');
+      var teamEl = document.getElementById('js-release-notes-team');
       var releaseNotesHandleInputEl = document.getElementById('js-release-notes-handle-input');
       var releaseNotesHandleEl = document.getElementById('js-release-notes-handle')
 
@@ -108,8 +108,8 @@ append scripts
         }
       });
 
-      scopeInputEl.addEventListener('change', function () {
-        scopeEl.innerText = scopeInputEl.value;
+      teamInputEl.addEventListener('change', function () {
+        teamEl.innerText = teamInputEl.value;
       });
 
       function onReleaseNotesHandleChange() {

@@ -67,22 +67,20 @@ class ReleaseNotesController extends AbstractController {
       });
     }
 
-    const { name, scope } = req.body;
+    const { name, team: teamName } = req.body;
 
     try {
-      const team = await this.teamRepository.findOneByName(scope);
+      const team = await this.teamRepository.findOneByName(teamName);
 
       if (!userHasPublishRights({ team, user: req.user })) {
         return this.renderPublishView(req, res.status(403), {
-          err: new Error(`You are not authorized to publish to @${scope}`)
+          err: new Error(`You are not authorized to publish to @${teamName}`)
         });
       }
 
-      const updatedReleaseNotes = await this.performReleaseNotesUpdate(file, {
-        scope, name, team
-      });
+      const updatedReleaseNotes = await this.performReleaseNotesUpdate(file, { name, team });
 
-      res.redirect(`/@${updatedReleaseNotes.scope}/${updatedReleaseNotes.name}`);
+      res.redirect(`/@${teamName}/${updatedReleaseNotes.name}`);
     } catch (err) {
       return this.renderPublishView(req, res.status(400), { err });
     }
@@ -105,7 +103,7 @@ class ReleaseNotesController extends AbstractController {
       const latestRelease = this.updateService.calculateLastRelease(releaseNotesUpdate);
       const releaseNotesData = {
         ...releaseNotesUpdate.toJSON(),
-        scope, name,
+        scope: team.name, name,
         latestVersion: latestRelease.version || '',
         latestReleaseDate: latestRelease.date || ''
       };
@@ -137,10 +135,10 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async editReleaseNotesAction(req, res, next) {
-    const { scope, name } = req.params;
+    const { scope: teamName, name } = req.params;
     const [releaseNotes, team] = await Promise.all([
-      this.releaseNotesRepository.findOneByScopeAndName(scope, name),
-      this.teamRepository.findOneByName(scope)
+      this.releaseNotesRepository.findOneByScopeAndName(teamName, name),
+      this.teamRepository.findOneByName(teamName)
     ]);
 
     if (!releaseNotes) {
@@ -159,10 +157,10 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async updateReleaseNotesAction(req, res, next) {
-    const { scope, name } = req.params;
+    const { scope: teamName, name } = req.params;
     const [releaseNotes, team] = await Promise.all([
-      this.releaseNotesRepository.findOneByScopeAndName(scope, name),
-      this.teamRepository.findOneByName(scope)
+      this.releaseNotesRepository.findOneByScopeAndName(teamName, name),
+      this.teamRepository.findOneByName(teamName)
     ]);
 
     if (!releaseNotes) {
@@ -200,17 +198,15 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async renderRealeaseNotesView(req, res, next) {
-    const params = req.params;
-    const releaseNotesName = params.releaseNotesId;
-    const releaseNotesScope = params.scope;
+    const { team, releaseNotesName } = req.params;
 
     const [releaseNotesModel, subscriptions] = await Promise.all([
       this.releaseNotesRepository.findOneByScopeAndName(
-        releaseNotesScope, releaseNotesName
+        team, releaseNotesName
       ),
       req.user ? this.subscriptionRepository.findBySubscriberAndReleaseNotes({
         releaseNotesName,
-        releaseNotesScope,
+        releaseNotesScope: team,
         subscriberId: req.user._id
       }) : [],
     ]);
@@ -230,12 +226,13 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async renderAccountRealeaseNotesListView(req, res, next) {
-    const scope = req.params.scope;
+    const team = req.params.team;
 
-    const releaseNotesList = await this.releaseNotesRepository.findAllByScope(scope);
+    const releaseNotesList = await this.releaseNotesRepository.findAllByScope(team);
+
     res.render('release-notes/list', {
       releaseNotesList,
-      scope,
+      scope: team,
     });
   }
 
@@ -256,7 +253,7 @@ class ReleaseNotesController extends AbstractController {
           authService.authenticate('session'),
           authService.requireUser(),
           uploadHandler.single('release-notes'),
-          check('scope', 'Scope must be alphanumeric and may contain dashes.')
+          check('team', 'Team must be alphanumeric and may contain dashes.')
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
           check('name', 'Name must be alphanumeric and may contain dashes.')
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
@@ -271,7 +268,7 @@ class ReleaseNotesController extends AbstractController {
           (req, res, next) => this.renderMyReleaseNotesView(req, res, next)
         ]
       }],
-      '/release-notes/@:scope/:name': [{
+      '/release-notes/@:team/:name': [{
         method: 'get',
         handler: [
           authService.authenticate('session'),
@@ -287,10 +284,10 @@ class ReleaseNotesController extends AbstractController {
           (req, res, next) => this.updateReleaseNotesAction(req, res, next)
         ]
       }],
-      '/@:scope': {
+      '/@:team': {
         handler: (req, res, next) => this.renderAccountRealeaseNotesListView(req, res, next),
       },
-      '/@:scope/:releaseNotesId': {
+      '/@:team/:releaseNotesName': {
         handler: (req, res, next) => this.renderRealeaseNotesView(req, res, next),
       }
     }
