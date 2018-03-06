@@ -41,6 +41,7 @@
     "kermit-service-observer": "~0.1.1",
     "marked": "^0.3.15",
     "mdi-svg": "^2.1.19",
+    "migrate": "^1.2.0",
     "moment": "^2.20.1",
     "mongoose": "^5.0.6",
     "mongoose-paginate": "^5.0.3",
