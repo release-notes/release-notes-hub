@@ -46,8 +46,8 @@ block pageContent
                 required
                 disabled=!user.username
               )
-                each organization in organizations
-                  option(value=organization.name) @#{organization.name}
+                each team in teams
+                  option(value=team.name) @#{team.name}
 
             if errors && errors.scope
               span.help.is-danger= errors.scope.msg
@@ -66,7 +66,7 @@ block pageContent
             .help Your release notes name (only numbers, letters and dashes)
               div Your page on release-notes.com/
                 | @
-                span#js-release-notes-scope #{organizations[0] ? organizations[0].name : 'org-name'}
+                span#js-release-notes-scope #{teams[0] ? teams[0].name : 'org-name'}
                 | /
                 b#js-release-notes-handle awesome-release-notes
         .field.has-text-left

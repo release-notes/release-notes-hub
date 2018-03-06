@@ -1,15 +1,15 @@
 module.exports = {
   /**
-   * Check if the given user is allowed to publish release notes to an organization.
+   * Check if the given user is allowed to publish release notes to a team.
    *
-   * @param organization
+   * @param team
    * @param user
    * @return {boolean}
    */
-  userHasPublishRights({ organization, user }) {
-    if (!organization || !user) return false;
+  userHasPublishRights({ team, user }) {
+    if (!team || !user) return false;
 
-    const membership = organization.members.find((member) => member.accountId === user._id.toString());
+    const membership = team.members.find((member) => member.accountId === user._id.toString());
 
     return membership && membership.role === 'owner';
   }

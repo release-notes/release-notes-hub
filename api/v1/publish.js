@@ -2,7 +2,7 @@ module.exports = function(serviceManager, accessCheck) {
   const releaseNotesLoader = serviceManager.get('releaseNotesLoader');
   const releaseNotesRepository = serviceManager.get('releaseNotesRepository');
   const accountRepository = serviceManager.get('accountRepository');
-  const organizationRepository = serviceManager.get('organizationRepository');
+  const teamRepository = serviceManager.get('teamRepository');
   const notificationService = serviceManager.get('releaseNotesNotificationService');
   const updateService = serviceManager.get('releaseNotesUpdateService');
   const { userHasPublishRights } = accessCheck;
@@ -12,21 +12,21 @@ module.exports = function(serviceManager, accessCheck) {
     const { name, file } = req.body;
     const scope = req.body.scope.replace('@', '');
 
-    const [account, organization, persistedReleaseNotes] = await Promise.all([
+    const [account, team, persistedReleaseNotes] = await Promise.all([
       accountRepository.findById(accountId),
-      organizationRepository.findOneByName(scope),
+      teamRepository.findOneByName(scope),
       releaseNotesRepository.findOneByScopeAndName(scope, name),
     ]);
 
-    if (!userHasPublishRights({ organization, user: account })) {
-      const organizations = await organizationRepository.findByMember(account._id);
+    if (!userHasPublishRights({ team, user: account })) {
+      const teams = await teamRepository.findByMember(account._id);
 
       return res.status(403).json({
         code: 'ACCESS_DENIED',
         message: 'You do not have access rights to publish to this scope.',
         details: {
           scopeToPublish: scope,
-          accessibleScopes: organizations.map(org => org.name),
+          accessibleScopes: teams.map(org => org.name),
         }
       });
     }

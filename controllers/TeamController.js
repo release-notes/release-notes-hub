@@ -7,9 +7,9 @@ const createFormErrors = (field, msg) => ({
   [field]: { msg }
 });
 
-class OrganizationController extends AbstractController {
+class TeamController extends AbstractController {
   /**
-   * @property {OrganizationRepository} organizationRepository
+   * @property {TeamRepository} teamRepository
    * @property {AccountRepository} accountRepository
    */
 
@@ -18,71 +18,71 @@ class OrganizationController extends AbstractController {
 
     const sm = this.getServiceManager();
 
-    this.organizationRepository = sm.get('organizationRepository', true);
+    this.teamRepository = sm.get('teamRepository', true);
     this.accountRepository = sm.get('accountRepository', true);
 
     return this;
   }
 
-  async listOrganizationsAction(req, res) {
-    this.renderOrganizationListView(req, res, {});
+  async listTeamsAction(req, res) {
+    this.renderTeamListView(req, res, {});
   }
 
-  async renderOrganizationListView(req, res, params) {
-    const organizations = await this.organizationRepository.findByMember(
+  async renderTeamListView(req, res, params) {
+    const teams = await this.teamRepository.findByMember(
       req.user._id
     );
 
-    organizations.forEach(organization => {
-      organization.membership = organization.members.find((member) => member.accountId === req.user._id.toString());
+    teams.forEach(team => {
+      team.membership = team.members.find((member) => member.accountId === req.user._id.toString());
     });
 
-    res.render('organizations/index', {
-      organizations,
+    res.render('teams/index', {
+      teams,
       ...params,
     });
   }
 
-  async createOrganizationAction(req, res, next) {
+  async createTeamAction(req, res, next) {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return void this.renderOrganizationListView(req, res, {
+      return void this.renderTeamListView(req, res, {
         errors: errors.mapped(),
         form: req.body,
       });
     }
 
     const name = req.body.name;
-    const organization = await this.organizationRepository.findOneByName(name);
+    const team = await this.teamRepository.findOneByName(name);
 
-    if (organization) {
-      const errors = createFormErrors('name', 'Organization name is already in use. Please choose another one.');
-      return void this.renderOrganizationListView(req, res, { errors });
+    if (team) {
+      const errors = createFormErrors('name', 'Team name is already in use. Please choose another one.');
+      return void this.renderTeamListView(req, res, { errors });
     }
 
-    await this.createOrganization({ name, owner: req.user });
-    this.renderOrganizationListView(req, res);
+    await this.createTeam({ name, owner: req.user });
+    this.renderTeamListView(req, res);
   }
 
   async claimUsernameAction(req, res, next) {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return void this.renderOrganizationListView(req, res, {
+      return void this.renderTeamListView(req, res, {
         errors: errors.mapped(),
         form: req.body,
       });
     }
 
     const username = req.body.username;
-    const [ account, organization ] = await Promise.all([
+    const [ account, team ] = await Promise.all([
       this.accountRepository.findOneByUsername(username),
-      this.organizationRepository.findOneByName(username),
+      this.teamRepository.findOneByName(username),
     ]);
 
-    if (account || organization) {
-      return void this.renderOrganizationListView(req, res, {
+    if (account || team) {
+      return void this.renderTeamListView(req, res, {
         errors: createFormErrors('username', `@${username} is already taken.`),
         form: req.body
       });
@@ -90,14 +90,14 @@ class OrganizationController extends AbstractController {
 
     await Promise.all([
       this.accountRepository.findByIdAndUpdate(req.user._id, { username }),
-      this.createOrganization({ name: username, owner: req.user }),
+      this.createTeam({ name: username, owner: req.user }),
     ]);
 
-    res.redirect('/organizations');
+    res.redirect('/teams');
   }
 
-  createOrganization({ name, owner }) {
-    return this.organizationRepository.create({
+  createTeam({ name, owner }) {
+    return this.teamRepository.create({
       name,
       members: [{
         accountId: owner._id,
@@ -111,28 +111,28 @@ class OrganizationController extends AbstractController {
     const authService = this.authService;
 
     return {
-      '/organizations': [{
+      '/teams': [{
         method: 'get',
         handler: [
           authService.authenticate('session'),
           authService.requireUser(),
-          (req, res, next) => this.listOrganizationsAction(req, res, next)
+          (req, res, next) => this.listTeamsAction(req, res, next)
         ]
       }],
-      '/organizations/new': [{
-        handler: (req, res) => res.redirect('/organizations')
+      '/teams/new': [{
+        handler: (req, res) => res.redirect('/teams')
       }, {
         method: 'post',
         handler: [
           authService.authenticate('session'),
           authService.requireUser(),
-          check('name', 'Organization name must be alphanumeric and may contain dashes.')
+          check('name', 'Team name must be alphanumeric and may contain dashes.')
             .matches(/^[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]$/),
-          (req, res, next) => this.createOrganizationAction(req, res, next)
+          (req, res, next) => this.createTeamAction(req, res, next)
         ]
       }],
-      '/organizations/claim-username': [{
-        handler: (req, res) => res.redirect('/organizations'),
+      '/teams/claim-username': [{
+        handler: (req, res) => res.redirect('/teams'),
       }, {
         method: 'post',
         handler: [
@@ -147,4 +147,4 @@ class OrganizationController extends AbstractController {
   }
 }
 
-module.exports = OrganizationController;
+module.exports = TeamController;

@@ -12,7 +12,7 @@ class ReleaseNotesController extends AbstractController {
   /**
    * @property {SubscriptionRepository} subscriptionRepository
    * @property {ReleaseNotesRepository} releaseNotesRepository
-   * @property {OrganizationRepository} organizationRepository
+   * @property {TeamRepository} teamRepository
    * @property {UpdateService} updateService
    * @property {NotificationService} notificationService
    * @property {ReleaseNotesLoader} releaseNotesLoader
@@ -24,7 +24,7 @@ class ReleaseNotesController extends AbstractController {
     const sm = this.getServiceManager();
 
     this.releaseNotesRepository = sm.get('releaseNotesRepository');
-    this.organizationRepository = sm.get('organizationRepository');
+    this.teamRepository = sm.get('teamRepository');
     this.subscriptionRepository = sm.get('subscriptionRepository');
     this.notificationService = sm.get('releaseNotesNotificationService');
     this.updateService = sm.get('releaseNotesUpdateService');
@@ -39,9 +39,9 @@ class ReleaseNotesController extends AbstractController {
 
   async renderPublishView(req, res, params = {}) {
     const userId = req.user._id;
-    const organizations = await this.organizationRepository.findByMember(userId);
+    const teams = await this.teamRepository.findByMember(userId);
 
-    res.render('release-notes/publish', { organizations, ...params });
+    res.render('release-notes/publish', { teams, ...params });
   }
 
   async publishAction(req, res) {
@@ -70,16 +70,16 @@ class ReleaseNotesController extends AbstractController {
     const { name, scope } = req.body;
 
     try {
-      const organization = await this.organizationRepository.findOneByName(scope);
+      const team = await this.teamRepository.findOneByName(scope);
 
-      if (!userHasPublishRights({ organization, user: req.user })) {
+      if (!userHasPublishRights({ team, user: req.user })) {
         return this.renderPublishView(req, res.status(403), {
           err: new Error(`You are not authorized to publish to @${scope}`)
         });
       }
 
       const updatedReleaseNotes = await this.performReleaseNotesUpdate(file, {
-        scope, name, organization
+        scope, name, team
       });
 
       res.redirect(`/@${updatedReleaseNotes.scope}/${updatedReleaseNotes.name}`);
@@ -88,10 +88,10 @@ class ReleaseNotesController extends AbstractController {
     }
   }
 
-  async performReleaseNotesUpdate(file, { releaseNotes, name, organization }) {
+  async performReleaseNotesUpdate(file, { releaseNotes, name, team }) {
     const [releaseNotesUpdate, persistedReleaseNotes] = await Promise.all([
       this.loadReleaseNotesFromUpload(file),
-      releaseNotes || this.releaseNotesRepository.findOneByScopeAndName(organization.name, name)
+      releaseNotes || this.releaseNotesRepository.findOneByScopeAndName(team.name, name)
     ]);
 
     if (persistedReleaseNotes) {
@@ -128,9 +128,9 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async renderMyReleaseNotesView(req, res) {
-    const organizations = await this.organizationRepository.findByMember(req.user._id);
+    const teams = await this.teamRepository.findByMember(req.user._id);
     const releaseNotesList = await this.releaseNotesRepository.findAllByScopes(
-      organizations.map(o => o.name)
+      teams.map(o => o.name)
     );
 
     res.render('release-notes/private-list', { releaseNotesList });
@@ -138,16 +138,16 @@ class ReleaseNotesController extends AbstractController {
 
   async editReleaseNotesAction(req, res, next) {
     const { scope, name } = req.params;
-    const [releaseNotes, organization] = await Promise.all([
+    const [releaseNotes, team] = await Promise.all([
       this.releaseNotesRepository.findOneByScopeAndName(scope, name),
-      this.organizationRepository.findOneByName(scope)
+      this.teamRepository.findOneByName(scope)
     ]);
 
     if (!releaseNotes) {
       return void next();
     }
 
-    if (!userHasPublishRights({ organization, user: req.user })) {
+    if (!userHasPublishRights({ team, user: req.user })) {
       // @todo display proper error message
       return void next();
     }
@@ -160,16 +160,16 @@ class ReleaseNotesController extends AbstractController {
 
   async updateReleaseNotesAction(req, res, next) {
     const { scope, name } = req.params;
-    const [releaseNotes, organization] = await Promise.all([
+    const [releaseNotes, team] = await Promise.all([
       this.releaseNotesRepository.findOneByScopeAndName(scope, name),
-      this.organizationRepository.findOneByName(scope)
+      this.teamRepository.findOneByName(scope)
     ]);
 
     if (!releaseNotes) {
       return void next();
     }
 
-    if (!userHasPublishRights({ organization, user: req.user })) {
+    if (!userHasPublishRights({ team, user: req.user })) {
       // @todo display proper error message
       return void next();
     }

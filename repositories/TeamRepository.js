@@ -3,9 +3,9 @@
 const AbstractRepository = require('./AbstractRepository');
 
 /**
- * @class OrganizationRepository
+ * @class TeamRepository
  */
-class OrganizationRepository extends AbstractRepository {
+class TeamRepository extends AbstractRepository {
   /**
    * @inheritDoc
    */
@@ -39,7 +39,7 @@ class OrganizationRepository extends AbstractRepository {
   }
 
   /**
-   * Find an organization by its name.
+   * Find a team by its name.
    *
    * @param {string} name
    * @return {Promise}
@@ -57,4 +57,4 @@ class OrganizationRepository extends AbstractRepository {
   }
 }
 
-module.exports = OrganizationRepository;
+module.exports = TeamRepository;

@@ -36,10 +36,10 @@ append content
           a.button.is-primary(href='/publish') Publish Release Notes
         else
           .is-inline-block.has-text-left
-            form(method='post' action='/organizations/claim-username?targetUrl=/')
+            form(method='post' action='/teams/claim-username?targetUrl=/')
               h3.subtitle Claim Username
               h6.subtitle.is-6.
-                In order to create or join organizations, you need to setup an username.
+                In order to create or join teams, you need to setup an username.
               .field.has-addons
                 .control
                   input.input(type='text' name='username' value=(form && form.username) placeholder="Pick an username")
