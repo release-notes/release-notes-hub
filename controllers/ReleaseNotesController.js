@@ -135,7 +135,7 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async editReleaseNotesAction(req, res, next) {
-    const { scope: teamName, name } = req.params;
+    const { team: teamName, name } = req.params;
     const [releaseNotes, team] = await Promise.all([
       this.releaseNotesRepository.findOneByScopeAndName(teamName, name),
       this.teamRepository.findOneByName(teamName)
@@ -157,7 +157,7 @@ class ReleaseNotesController extends AbstractController {
   }
 
   async updateReleaseNotesAction(req, res, next) {
-    const { scope: teamName, name } = req.params;
+    const { team: teamName, name } = req.params;
     const [releaseNotes, team] = await Promise.all([
       this.releaseNotesRepository.findOneByScopeAndName(teamName, name),
       this.teamRepository.findOneByName(teamName)
