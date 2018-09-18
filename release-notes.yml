@@ -4,6 +4,14 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
+- version: 0.6.0
+  date: 2018-09-18
+  description: |
+    Teams :tada:
+  added:
+    - Add support for publishing release notes to different teams.
+  fixed:
+    - Fix sorting of newest release notes on front page.
 - version: 0.5.0
   date: 2018-02-19
   description: |

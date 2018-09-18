@@ -82,7 +82,7 @@ class ReleaseNotesRepository extends AbstractRepository {
     return this.findList({}, {
       limit: count,
       sort: {
-        createdAt: -1
+        updatedAt: -1
       }
     }).then(list => list.items);
   }
