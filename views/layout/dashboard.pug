@@ -2,6 +2,7 @@ extends ../layout/main
 
 block globalVars
   - var metaTitle = 'Release Notes - Publish'
+  - var bodyCls = 'dashboard-page'
 
 block content
   .hero.is-primary
@@ -24,6 +25,11 @@ block content
                   span.icon
                     i.mdi !{mdi('radar')}
                   span Subscriptions
+              li.tab(class=activeTab === 'teams' ? 'is-active' : '')
+                a(href='/teams')
+                  span.icon
+                    i.mdi !{mdi('account-multiple')}
+                  span Teams
               li.tab(class=activeTab === 'auth-tokens' ? 'is-active' : '')
                 a(href='/auth-tokens')
                   span.icon

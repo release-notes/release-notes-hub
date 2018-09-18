@@ -7,9 +7,8 @@ class ReleaseNotesRepository extends AbstractRepository {
     const MixedType = this.getSchemaTypes().Mixed;
 
     return {
-      scope: { type: String, 'default': 'global', required: true },
+      scope: { type: String, required: true },
       name: { type: String, required: true },
-      ownerAccountId: { type: String, required: true },
 
       latestVersion: String,
       latestReleaseDate: Date,
@@ -64,14 +63,12 @@ class ReleaseNotesRepository extends AbstractRepository {
   }
 
   /**
-   * Retrieves the list of release notes owned by the given account.
-   *
-   * @param {string} ownerAccountId
+   * @param scopes string[]
    * @return {Promise}
    */
-  findAllByOwnerAccountId(ownerAccountId) {
+  findAllByScopes(scopes) {
     return this.find({
-      ownerAccountId,
+      scope: { $in: scopes }
     });
   }
 
@@ -85,7 +82,7 @@ class ReleaseNotesRepository extends AbstractRepository {
     return this.findList({}, {
       limit: count,
       sort: {
-        createdAt: -1
+        updatedAt: -1
       }
     }).then(list => list.items);
   }

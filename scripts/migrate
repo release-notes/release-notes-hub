@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+const umzug = require('umzug-cli');
+const MongoClient = require('../lib/migrate/mongo-client');
+
+(async function() {
+  try {
+    const { client, db } = await MongoClient();
+
+    umzug({
+      storage: 'mongodb',
+      storageOptions: {
+        connection: db,
+      },
+      migrations: {
+        params: [{
+          db
+        }],
+      },
+    }).cli(process.argv.slice(2));
+  } catch (err) {
+    console.error(err);
+  }
+})();

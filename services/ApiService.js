@@ -4,6 +4,7 @@ const multer = require('multer');
 const ReleaseNotesLoader = require('@release-notes/node/lib/ReleaseNotesLoader');
 const Service = require('kermit/Service');
 const apiDocV1 = require('../api/openapi-v1');
+const accessCheck = require('../core/access-check');
 
 const BEARER_AUTH_HEADER_REGEX = /^Bearer\s+[0-9a-zA-Z+=\/]+$/;
 
@@ -29,6 +30,7 @@ class ApiService extends Service {
         version,
         serviceManager,
         ReleaseNotesLoader,
+        accessCheck,
       },
       consumesMiddleware: {
         'application/json': bodyParser.json(),

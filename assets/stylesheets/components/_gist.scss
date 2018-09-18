@@ -1,0 +1,27 @@
+$gist-spacing: .75rem !default;
+
+.gist {
+  border-radius: $radius-large;
+
+  .title-bar {
+    padding-bottom: $gist-spacing;
+
+    .handle {
+      display: inline-block;
+      height: $gist-spacing;
+      width: $gist-spacing;
+      content: "";
+      border-radius: $gist-spacing;
+      background: $red;
+      margin-right: $gist-spacing;
+
+      &+.handle {
+        background-color: $yellow;
+
+        &+.handle {
+          background-color: $green;
+        }
+      }
+    }
+  }
+}

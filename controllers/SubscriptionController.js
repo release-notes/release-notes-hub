@@ -29,17 +29,16 @@ class SubscriptionController extends AbstractController {
   }
 
   async renderSubscribeToRealeaseNotesView(req, res, next) {
-    const scope = req.params.scope;
-    const releaseNotesName = req.params.releaseNotesId;
+    const { team, releaseNotesName } = req.params;
 
     const [releaseNotesModel, subscriptions] = await Promise.all([
       this.loadReleaseNotes(
-        scope,
+        team,
         releaseNotesName
       ),
       this.subscriptionRepository.findBySubscriberAndReleaseNotes({
         subscriberId: req.user._id,
-        releaseNotesScope: scope,
+        releaseNotesScope: team,
         releaseNotesName,
       }),
     ]);
@@ -49,17 +48,16 @@ class SubscriptionController extends AbstractController {
     res.render('subscriptions/subscribe', {
       releaseNotesModel,
       subscriptions,
-      scope,
+      scope: team,
     });
   }
 
   async subscribeToRealeaseNotes(req, res, next) {
-    const scope = req.params.scope;
-    const releaseNotesId = req.params.releaseNotesId;
+    const { team, releaseNotesName } = req.params;
 
     const releaseNotesModel = await this.loadReleaseNotes(
-      scope,
-      releaseNotesId
+      team,
+      releaseNotesName
     );
 
     // not found
@@ -71,7 +69,7 @@ class SubscriptionController extends AbstractController {
       subscriberId: req.user._id,
       email: req.user.email,
       releaseNotesId: releaseNotesModel._id,
-      releaseNotesScope: scope,
+      releaseNotesScope: team,
       releaseNotesName: releaseNotesModel.name,
     });
 
@@ -79,17 +77,16 @@ class SubscriptionController extends AbstractController {
   }
 
   async renderUnsubscribeFromRealeaseNotesView(req, res, next) {
-    const scope = req.params.scope;
-    const releaseNotesName = req.params.releaseNotesName;
+    const { team, releaseNotesName } = req.params;
 
     const [releaseNotesModel, subscriptions] = await Promise.all([
       this.loadReleaseNotes(
-        scope,
+        team,
         releaseNotesName
       ),
       this.subscriptionRepository.findBySubscriberAndReleaseNotes({
         subscriberId: req.user._id,
-        releaseNotesScope: scope,
+        releaseNotesScope: team,
         releaseNotesName,
       }),
     ]);
@@ -100,13 +97,12 @@ class SubscriptionController extends AbstractController {
     res.render('subscriptions/unsubscribe', {
       releaseNotesModel,
       subscriptions,
-      scope,
+      scope: team,
     });
   }
 
   async unsubscribeFromRealeaseNotes(req, res, next) {
-    const releaseNotesScope = req.params.scope;
-    const releaseNotesName = req.params.releaseNotesName;
+    const { team: releaseNotesScope, releaseNotesName } = req.params;
 
     await this.subscriptionRepository.remove({
       subscriberId: req.user._id,
@@ -117,9 +113,9 @@ class SubscriptionController extends AbstractController {
     res.redirect('/subscriptions');
   }
 
-  loadReleaseNotes(scope, name) {
+  loadReleaseNotes(team, name) {
     return this.releaseNotesRepository.findOneByScopeAndName(
-      scope,
+      team,
       name
     );
   }
@@ -155,7 +151,7 @@ class SubscriptionController extends AbstractController {
           (req, res, next) => this.unsubscribe(req, res, next)
         ]
       }],
-      '/@:scope/:releaseNotesId/subscribe': [{
+      '/@:team/:releaseNotesName/subscribe': [{
         method: 'get',
         handler: [
           authService.authenticate('session'),
@@ -170,7 +166,7 @@ class SubscriptionController extends AbstractController {
           (req, res, next) => this.subscribeToRealeaseNotes(req, res, next),
         ]
       }],
-      '/@:scope/:releaseNotesName/unsubscribe': [{
+      '/@:team/:releaseNotesName/unsubscribe': [{
         method: 'get',
         handler: [
           authService.authenticate('session'),

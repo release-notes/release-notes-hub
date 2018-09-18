@@ -1,30 +1,51 @@
 extends ../layout/dashboard
 
-block globalVars
+append globalVars
   - var metaTitle = 'Release Notes - My Release Notes'
   - var pageSubtitle = 'My Release Notes'
   - var activeTab = 'release-notes'
 
 block pageContent
-  if releaseNotesList && releaseNotesList.length
-    table.table.is-inline-block
-      tr
-        th Name
-        th Title
-        th
-      each releaseNotes in releaseNotesList
-        tr
-          td
-            a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
-              | @#{releaseNotes.scope}/#{releaseNotes.name}
-          td #{releaseNotes.title}
-          td
-            a.is-small.button(href=`/release-notes/${releaseNotes._id}`)
-              span.icon
-                i.mdi !{mdi('pencil')}
-              span Update
-
-  .hero
+  .columns
+    .column
+      if !releaseNotesList || !releaseNotesList.length
+        .message
+          .message-body
+            p Get started and publish your first release page.
+      else
+        table.table.is-fullwidth
+          tr
+            th Name
+            th Title
+            th
+          each releaseNotes in releaseNotesList
+            tr
+              td
+                a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
+                  | @#{releaseNotes.scope}/#{releaseNotes.name}
+              td #{releaseNotes.title}
+              td
+                a.button(href=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}` title='Edit Release Notes')
+                  span.icon
+                    i.mdi !{mdi('settings')}
+append content
+  .hero.is-light
     .hero-body.has-text-centered
       .container
-        a.button.is-primary(href='/publish') Publish Release Notes
+        if user.username
+          a.button.is-primary(href='/publish') Publish Release Notes
+        else
+          .is-inline-block.has-text-left
+            form(method='post' action='/teams/claim-username?targetUrl=/')
+              h3.subtitle Claim Username
+              h6.subtitle.is-6.
+                In order to create or join teams, you need to setup an username.
+              .field.has-addons
+                .control
+                  input.input(type='text' name='username' value=(form && form.username) placeholder="Pick an username")
+                  if errors && errors.username
+                    .help.is-danger= errors.username.msg
+                  .help.has-text-grey Your unique username (only numbers, letters and dashes)
+                  .help.has-text-grey Your name on release-notes.com/<b>@org-awesome</b>
+                .control
+                  input.button.is-primary.is-fullwidth(type='submit' value='Claim Username')

@@ -1,6 +1,6 @@
 extends ../layout/dashboard
 
-block globalVars
+append globalVars
   - var metaTitle = 'Release Notes - Subscriptions'
   - var pageSubtitle = 'My Subscriptions'
   - var activeTab = 'subscriptions'
@@ -11,9 +11,9 @@ block pageContent
       .message-body
         p You have not subscriptions, yet.
   else
-    table.table.is-inline-block
+    table.table.is-fullwidth
       tr
-        th ReleaseNotes
+        th Release Notes
         th Subscribed
         th
       each subscription in subscriptions
@@ -23,8 +23,8 @@ block pageContent
               | @#{subscription.releaseNotesScope}/#{subscription.releaseNotesName}
           td
             - var subscriptionMoment = moment(subscription.createdAt)
-            .subtitle.is-6(title=subscriptionMoment.format('LLL')) #{subscriptionMoment.fromNow()}
+            small.has-text-grey(title=subscriptionMoment.format('LLL')) #{subscriptionMoment.fromNow()}
           td
-            .tags
-              form(method='post' enctype='multipart/form-data' action=`/subscriptions/${subscription._id}/unsubscribe`)
-                button.is-small.button(type="submit") Unsubscribe
+            a.button(href=`/@${subscription.releaseNotesScope}/${subscription.releaseNotesName}/unsubscribe` title="Edit Subscription")
+              span.icon
+                i.mdi !{mdi('settings')}
