@@ -12,17 +12,25 @@ class AccountService extends AbstractRepositoryService {
     return config;
   }
 
+  bootstrap() {
+    super.bootstrap();
+    this.teamRepository = this.serviceManager.get('teamRepository');
+
+    return this;
+  }
+
   async createAccountWithCredentials({ email, username, password }) {
-    const [byEmail, byUsername] = await Promise.all([
+    const [byEmail, byUsername, byTeam] = await Promise.all([
       this.repository.findOneByEmail(email),
       username ? this.repository.findOneByUsername(username) : false,
+      username ? this.teamRepository.findOneByName(username) : false
     ]);
 
     if (byEmail) {
       throw new Error('Email is already in use.');
     }
 
-    if (byUsername) {
+    if (byUsername || byTeam) {
       throw new Error('Username is already in use.');
     }
 
@@ -37,7 +45,21 @@ class AccountService extends AbstractRepositoryService {
       accountArgs.username = username;
     }
 
-    return this.repository.create(accountArgs);
+    return this.repository.create(accountArgs).then(account => {
+      if (account.username) {
+        this.teamRepository.create({
+          name: username,
+          members: [{
+            accountId: account._id,
+            username: account.username,
+            joinedAt: account.createdAt,
+            role: 'owner',
+          }],
+        });
+      }
+
+      return account;
+    });
   }
 
   async authenticateWithCredentials({ email, password }) {
