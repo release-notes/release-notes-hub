@@ -29,6 +29,7 @@ class TeamRepository extends AbstractRepository {
       members: [{
         _id: false,
         accountId: String,
+        username: String,
         joinedAt: Date,
         role: {
           type: String,
@@ -48,6 +49,19 @@ class TeamRepository extends AbstractRepository {
     return this.findOne({
       name,
     }, null, {
+      collation: { locale: 'en', strength: 2 }
+    });
+  }
+
+  /**
+   * @param {string} accountId The account id of user member
+   * @param {string} name The team name
+   * @return {Promise}
+   */
+  findOneByAccountIdAndName({accountId, name}) {
+    return this.findOne({
+        name, 'members.accountId': accountId
+      }, null, {
       collation: { locale: 'en', strength: 2 }
     });
   }

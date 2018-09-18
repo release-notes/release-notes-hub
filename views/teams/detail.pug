@@ -1,0 +1,28 @@
+extends ../layout/dashboard
+
+append globalVars
+  - var metaTitle = `Release Notes - Team - @${team.name}`
+  - var pageSubtitle = `Team - @${team.name}`
+  - var activeTab = 'teams'
+  - var pageCls = 'teams-page'
+
+block pageContent
+  .columns
+    .column
+      table.table.is-fullwidth
+        tr
+          th Member
+          th Role
+          th Joined
+        each member in team.members
+          tr
+            td
+              a(href=`/@${member.username}`)
+                strong @#{member.username}
+            td
+              if member.username === team.name
+                span.team-role.tag.is-primary.is-rounded Account
+              else
+                span.team-role.tag.is-rounded #{member.role}
+            td
+              small.has-text-grey joined #{moment(member.joinedAt).fromNow()}

@@ -15,6 +15,9 @@ block pageContent
 
   .card.is-inline-block
     if !user.username
+      .message
+        .message-body
+          p In order to publish some release notes, you need to choose a username.
       form(method='post' action='/publish-claim-username')
         .card-content
           h3.subtitle Claim username
@@ -33,64 +36,64 @@ block pageContent
           .field
             p.control
               input.button.is-dark.is-fullwidth(type='submit' value="Let's go")
-      hr
-    form(method='post' enctype='multipart/form-data' action='/publish')
-      .card-content
-        .field.has-text-left
-          label.label Team
-          p.control
-            .select
-              select#js-release-notes-team-input(
-                name='team'
+    else
+      form(method='post' enctype='multipart/form-data' action='/publish')
+        .card-content
+          .field.has-text-left
+            label.label Team
+            p.control
+              .select
+                select#js-release-notes-team-input(
+                  name='team'
+                  class=(errors && errors.name && 'is-danger')
+                  required
+                  disabled=!user.username
+                )
+                  each team in teams || []
+                    option(value=team.name) @#{team.name}
+
+              if errors && errors.team
+                span.help.is-danger= errors.team.msg
+          .field.has-text-left
+            label.label Release Notes Name
+            p.control
+              input.input#js-release-notes-handle-input(
+                type='text' value=(form && form.name) name='name'
+                placeholder="Handle of the release notes"
                 class=(errors && errors.name && 'is-danger')
                 required
                 disabled=!user.username
               )
-                each team in teams
-                  option(value=team.name) @#{team.name}
-
-            if errors && errors.team
-              span.help.is-danger= errors.team.msg
-        .field.has-text-left
-          label.label Release Notes Name
-          p.control
-            input.input#js-release-notes-handle-input(
-              type='text' value=(form && form.name) name='name'
-              placeholder="Handle of the release notes"
-              class=(errors && errors.name && 'is-danger')
-              required
-              disabled=!user.username
-            )
-            if errors && errors.name
-              span.help.is-danger= errors.name.msg
-            .help Your release notes name (only numbers, letters and dashes)
-              div Your page on release-notes.com/
-                | @
-                span#js-release-notes-team #{teams[0] ? teams[0].name : 'org-name'}
-                | /
-                b#js-release-notes-handle awesome-release-notes
-        .field.has-text-left
-          label.label Release Notes File
-          .control
-            .file.has-name(disabled=!user.username)
-              label.file-label
-                input#js-file-input.file-input(
-                  type="file" class=(errors && errors.file && 'is-danger')
-                  name="release-notes" accept=".yml, .yaml, .json, .md"
-                  disabled=!user.username required
-                )
-                span.file-cta
-                  span.file-icon
-                    i.mdi.mdi-18 !{mdi('upload')}
-                  span.file-label Choose
-                span#js-file-name.file-name ...changelog file
-            if errors && errors.file
-              span.help.is-danger= errors.file.msg
-            .help Some CHANGELOG.md or release-notes.yml file.
-      .card-content
-        .field
-          p.control
-            input.button.is-primary.is-fullwidth(type='submit' value='Publish' disabled=!user.username)
+              if errors && errors.name
+                span.help.is-danger= errors.name.msg
+              .help Your release notes name (only numbers, letters and dashes)
+                div Your page on release-notes.com/
+                  | @
+                  span#js-release-notes-team #{teams[0] ? teams[0].name : 'org-name'}
+                  | /
+                  b#js-release-notes-handle awesome-release-notes
+          .field.has-text-left
+            label.label Release Notes File
+            .control
+              .file.has-name(disabled=!user.username)
+                label.file-label
+                  input#js-file-input.file-input(
+                    type="file" class=(errors && errors.file && 'is-danger')
+                    name="release-notes" accept=".yml, .yaml, .json, .md"
+                    disabled=!user.username required
+                  )
+                  span.file-cta
+                    span.file-icon
+                      i.mdi.mdi-18 !{mdi('upload')}
+                    span.file-label Choose
+                  span#js-file-name.file-name ...changelog file
+              if errors && errors.file
+                span.help.is-danger= errors.file.msg
+              .help Some CHANGELOG.md or release-notes.yml file.
+        .card-content
+          .field
+            p.control
+              input.button.is-primary.is-fullwidth(type='submit' value='Publish' disabled=!user.username)
 
 append scripts
   script.

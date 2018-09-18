@@ -65,10 +65,12 @@ class AuthController extends AbstractController {
 
   async publishClaimUsernameAction(req, res, next) {
     const accountService = this.serviceManager.get('accountService');
+    const teamRepository = this.serviceManager.get('teamRepository');
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return void res.render('release-notes/publish', {
+        teams: await teamRepository.findByMember(req.user._id),
         errors: errors.mapped(),
         form: req.body
       });
@@ -77,9 +79,12 @@ class AuthController extends AbstractController {
     const username = req.body.username;
 
     try {
-      const account = await accountService.getRepository().findOneByUsername(username);
+      const [account, team] = await Promise.all([
+        accountService.getRepository().findOneByUsername(username),
+        teamRepository.findOneByName(username)
+      ]);
 
-      if (account) {
+      if (account || team) {
         return void res.render('release-notes/publish', {
           errors: {
             username: {
@@ -90,7 +95,18 @@ class AuthController extends AbstractController {
         });
       }
 
-      await accountService.getRepository().findByIdAndUpdate(req.user._id, { username });
+      await Promise.all([
+        accountService.getRepository().findByIdAndUpdate(req.user._id, { username }),
+        teamRepository.create({
+          name: username,
+          members: [{
+            accountId: req.user._id,
+            username,
+            joinedAt: new Date(),
+            role: 'owner',
+          }],
+        })
+      ]);
 
       res.redirect('/publish');
     } catch (err) {

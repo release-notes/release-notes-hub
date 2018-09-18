@@ -48,7 +48,7 @@ class ReleaseNotesController extends AbstractController {
     const file = req.file;
 
     if (!file) {
-      return void res.render('release-notes/publish', {
+      return void this.renderPublishView(req, res, {
         errors: {
           file: {
             msg: 'No release-notes.yml file was uploaded.',
@@ -61,7 +61,7 @@ class ReleaseNotesController extends AbstractController {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      return void res.render('release-notes/publish', {
+      return void this.renderPublishView(req, res,{
         errors: errors.mapped(),
         form: req.body,
       });

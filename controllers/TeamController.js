@@ -28,6 +28,19 @@ class TeamController extends AbstractController {
     this.renderTeamListView(req, res, {});
   }
 
+  async displayTeamDetail(req, res, next) {
+    const team = await this.teamRepository.findOneByAccountIdAndName({
+      accountId: req.user._id.toString(),
+      name: req.params.team
+    });
+
+    if (!team) {
+      return next();
+    }
+
+    res.render('teams/detail', { team });
+  }
+
   async renderTeamListView(req, res, params) {
     const teams = await this.teamRepository.findByMember(
       req.user._id
@@ -101,6 +114,7 @@ class TeamController extends AbstractController {
       name,
       members: [{
         accountId: owner._id,
+        username: owner.username,
         joinedAt: new Date(),
         role: 'owner',
       }],
@@ -143,6 +157,13 @@ class TeamController extends AbstractController {
           (req, res, next) => this.claimUsernameAction(req, res, next)
         ]
       }],
+      '/teams/@:team': [{
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          (req, res, next) => this.displayTeamDetail(req, res, next)
+        ]
+      }]
     };
   }
 }
