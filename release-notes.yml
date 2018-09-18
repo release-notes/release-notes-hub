@@ -7,6 +7,7 @@ releases:
 - version: Next
   added:
     - Add support for defining release page title, description and github repo link.
+    - New badge icon with shorter text. ![New Release Notes Badge](/badges/v2.svg)
 - version: 0.6.0
   date: 2018-09-18
   description: |
