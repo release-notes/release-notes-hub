@@ -7,10 +7,14 @@ block content
   .hero.is-primary
     .hero-body
       .container.has-text-centered
-        h2.title.is-3 #{releaseNotes.title}
+        h3.title.is-3 #{releaseNotesModel.page.title || releaseNotes.title}
 
-        if releaseNotes.description
-          h2.subtitle !{marked(releaseNotes.description)}
+        if releaseNotesModel.page.description || releaseNotes.description
+          h4.subtitle !{marked(releaseNotesModel.page.description || releaseNotes.description)}
+        if releaseNotesModel.page.githubRepo
+          p: a.button(href=`https://github.com/${releaseNotesModel.page.githubRepo}` target="_blank")
+            span.icon: i.mdi.mdi-24 !{mdi('github-circle')}
+            span #{releaseNotesModel.page.githubRepo}
 
   .section
     .container.has-text-centered

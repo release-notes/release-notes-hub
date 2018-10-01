@@ -23,7 +23,7 @@ block pageContent
               td
                 a(href=`/@${releaseNotes.scope}/${releaseNotes.name}`)
                   | @#{releaseNotes.scope}/#{releaseNotes.name}
-              td #{releaseNotes.title}
+              td #{releaseNotes.page && releaseNotes.page.title || releaseNotes.title}
               td
                 a.button(href=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}` title='Edit Release Notes')
                   span.icon

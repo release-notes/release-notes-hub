@@ -4,6 +4,9 @@ description: >
   an easy to use, human readable and machine processable schema for release notes.
 
 releases:
+- version: Next
+  added:
+    - Add support for defining release page title, description and github repo link.
 - version: 0.6.0
   date: 2018-09-18
   description: |

@@ -8,37 +8,12 @@ block globalVars
 
 block pageContent
   if releaseNotes
-    .hero
-      .hero-body.has-text-centered
-        if errors && (errors.validation || errors.file)
-          .message
-            .message-body
-              .subtitle.is-5 Release Notes Validation failed.
-              if errors.validation
-                p= errors.validation.msg
-              if errors.file
-                p= errors.file.msg
-        .is-inline-block
-          .subtitle.is-4 Publish New Revision
-          form(method='post' enctype='multipart/form-data' action=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}`)
-            .field.is-grouped
-              .control
-                .file.has-name
-                  label.file-label
-                    input#js-file-input.file-input(type="file" name="release-notes" accept=".yml, .yaml, .json, .md" required)
-                    span.file-cta
-                      span.file-icon
-                        i.mdi.mdi-18 !{mdi('upload')}
-                      span.file-label Choose
-                    span#js-file-name.file-name ...release-notes.yml
-              .control
-                button.button.is-primary(type="submit") Publish
-
     .section
-      table.table
-        tr
-          th Badge
-          td
+      h3.subtitle.is-3 Settings
+      form(method="post" action=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}/settings`)
+        .field.is-horizontal
+          .field-label: label.label Badge
+          .field-body
             a#js-badge-integration
               img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
               | &nbsp;&nbsp;&nbsp;
@@ -47,12 +22,67 @@ block pageContent
             div.control
               textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text(rows=1 readonly).
                 [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
-        tr
-          th Title
-          td= releaseNotesDataModel.title
-        tr
-          th Description
-          td= releaseNotesDataModel.description
+        .field.is-horizontal
+          .field-label: label.label Public Url
+          .field-body
+            .field.has-addons
+              .control: a(href=`/@${releaseNotes.scope}/${releaseNotes.name}` target="_blank")
+                | https://release-notes.com/<b>@#{releaseNotes.scope}/#{releaseNotes.name}</b>
+        .field.is-horizontal
+          .field-label: label.label Title
+          .field-body
+            .field
+              p.control
+                input.input(type='text' name='title' placeholder=releaseNotesDataModel.title value=releaseNotes.page.title)
+        .field.is-horizontal
+          .field-label: label.label Description
+          .field-body
+            .field
+              p.control
+                textarea.textarea(name='description' placeholder=releaseNotesDataModel.description)= releaseNotes.page.description
+        .field.is-horizontal
+          .field-label: label.label Github Repo
+          .field-body
+            .field.has-addons
+              .control: a.button.is-static https://github.com/
+              .control
+                input.input(type='text' name='githubRepo' value=releaseNotes.page.githubRepo)
+
+        .field.is-horizontal
+          .field-label
+          .field-body
+            .field
+              p.control
+                input.button.is-primary(type='submit' value='Update')
+      hr
+      .hero
+        .hero-body.has-text-centered
+          if errors && (errors.validation || errors.file)
+            .message
+              .message-body
+                .subtitle.is-5 Release Notes Validation failed.
+                if errors.validation
+                  p= errors.validation.msg
+                if errors.file
+                  p= errors.file.msg
+          .is-inline-block
+            .subtitle.is-4 Publish New Revision
+            form(method='post' enctype='multipart/form-data' action=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}`)
+              .field.is-grouped
+                .control
+                  .file.has-name
+                    label.file-label
+                      input#js-file-input.file-input(type="file" name="release-notes" accept=".yml, .yaml, .json, .md" required)
+                      span.file-cta
+                        span.file-icon
+                          i.mdi.mdi-18 !{mdi('upload')}
+                        span.file-label Choose
+                      span#js-file-name.file-name ...release-notes.yml
+                .control
+                  button.button.is-primary(type="submit") Publish
+      hr
+      h3.subtitle.is-3 Releases
+      table.table
         each release in releaseNotesDataModel.releases
           tr
             th= release.version

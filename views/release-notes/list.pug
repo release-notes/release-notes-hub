@@ -29,4 +29,4 @@ block content
                     span.has-text-grey
                       - var releaseMoment = moment(releaseNotes.latestReleaseDate)
                       .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
-                  div.is-small #{releaseNotes.title}
+                  div.is-small #{releaseNotes.page && releaseNotes.page.title || releaseNotes.title}

@@ -10,6 +10,12 @@ class ReleaseNotesRepository extends AbstractRepository {
       scope: { type: String, required: true },
       name: { type: String, required: true },
 
+      page: {
+        githubRepo: String,
+        title: String,
+        description: String,
+      },
+
       latestVersion: String,
       latestReleaseDate: Date,
 

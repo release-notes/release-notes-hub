@@ -236,6 +236,38 @@ class ReleaseNotesController extends AbstractController {
     });
   }
 
+  async updateReleaseNotesSettingsAction(req, res, next) {
+    const { team: teamName, name } = req.params;
+    const [releaseNotes, team] = await Promise.all([
+      this.releaseNotesRepository.findOneByScopeAndName(teamName, name),
+      this.teamRepository.findOneByName(teamName)
+    ]);
+
+    if (!releaseNotes) {
+      return void next();
+    }
+
+    if (!userHasPublishRights({ team, user: req.user })) {
+      // @todo display proper error message
+      return void next();
+    }
+
+    const releaseNotesUpdate = {
+      page: {
+        githubRepo: req.body.githubRepo,
+        title: req.body.title,
+        description: req.body.description,
+      }
+    };
+
+    await this.releaseNotesRepository.findByIdAndUpdate(
+      releaseNotes._id,
+      { $set: releaseNotesUpdate}
+    );
+
+    res.redirect(`/release-notes/@${teamName}/${name}`);
+  }
+
   getRoutes() {
     const authService = this.authService;
 
@@ -282,6 +314,19 @@ class ReleaseNotesController extends AbstractController {
           authService.requireUser(),
           uploadHandler.single('release-notes'),
           (req, res, next) => this.updateReleaseNotesAction(req, res, next)
+        ]
+      }],
+      '/release-notes/@:team/:name/settings': [{
+        handler: (req, res) => res.redirect(`/release-notes/@${req.params.team}/${req.params.name}`)
+      }, {
+        method: 'post',
+        handler: [
+          authService.authenticate('session'),
+          authService.requireUser(),
+          check('githubRepo', 'Please provide a valid github repo handle, eg. some-user/repo-name.')
+            .optional()
+            .matches(/^[a-zA-Z0-9\-]+\/[a-zA-Z0-9-]+$/),
+          (req, res, next) => this.updateReleaseNotesSettingsAction(req, res, next)
         ]
       }],
       '/@:team': {
