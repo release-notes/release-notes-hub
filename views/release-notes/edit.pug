@@ -12,16 +12,31 @@ block pageContent
       h3.subtitle.is-3 Settings
       form(method="post" action=`/release-notes/@${releaseNotes.scope}/${releaseNotes.name}/settings`)
         .field.is-horizontal
-          .field-label: label.label Badge
+          .field-label: label.label Badges
           .field-body
-            a#js-badge-integration
-              img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
-              | &nbsp;&nbsp;&nbsp;
-              span.icon(title='Copy markdown')
-                i.mdi.mdi-18 !{mdi('content-paste')}
-            div.control
-              textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text(rows=1 readonly).
-                [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
+            .field
+              p.control.has-text-left
+                a#js-badge-integration-1
+                  img(src='/badges/v1.svg' title='Subscribe for updates on release-notes.com')
+                  | &nbsp;&nbsp;&nbsp;
+                  span.icon(title='Copy markdown')
+                    i.mdi.mdi-18 !{mdi('content-paste')}
+
+                textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text-1(rows=1 readonly).
+                  [![Subscribe to Release Notes](https://release-notes.com/badges/v1.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
+        .field.is-horizontal
+          .field-label: label.label
+          .field-body
+            .field
+              p.control.has-text-left
+                a#js-badge-integration-2
+                  img(src='/badges/v2.svg' title='Release notes on release-notes.com')
+                  | &nbsp;&nbsp;&nbsp;
+                  span.icon(title='Copy markdown')
+                    i.mdi.mdi-18 !{mdi('content-paste')}
+                textarea.textarea.is-small.is-focused.is-hidden#js-badge-integration-text-2(rows=1 readonly).
+                  [![Release Notes](https://release-notes.com/badges/v2.svg)](https://release-notes.com/@#{releaseNotes.scope}/#{releaseNotes.name})
+
         .field.is-horizontal
           .field-label: label.label Public Url
           .field-body
@@ -113,12 +128,14 @@ append scripts
         }
       });
 
-      var badgeIntegrationTrigger = document.getElementById('js-badge-integration');
-      var badgeIntegrationTextElement = document.getElementById('js-badge-integration-text');
+      [1, 2].forEach(function (badge) {
+        var badgeIntegrationTrigger = document.getElementById('js-badge-integration-' + badge);
+        var badgeIntegrationTextElement = document.getElementById('js-badge-integration-text-' + badge);
 
-      badgeIntegrationTrigger.addEventListener('click', function() {
-        badgeIntegrationTextElement.classList.toggle('is-hidden');
-        badgeIntegrationTextElement.focus();
-        badgeIntegrationTextElement.select();
+        badgeIntegrationTrigger.addEventListener('click', function () {
+          badgeIntegrationTextElement.classList.toggle('is-hidden');
+          badgeIntegrationTextElement.focus();
+          badgeIntegrationTextElement.select();
+        });
       });
     });
