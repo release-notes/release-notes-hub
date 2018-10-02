@@ -21,14 +21,14 @@ block content
       if releaseNotes
         .release-notes
           each release in releaseNotes.releases
-            .columns.release
-              .column
+            .columns.is-multiline.release
+              .column.is-half
                 .title.is-3 #{release.version}
 
-                if release.date
+                if release.date && release.date.getTime() > 0
                   - var releaseMoment = moment.utc(release.date)
                   .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
-              .column.has-text-center
+              .column.is-half.is-.has-text-center
                 if release.description
                   .content.has-text-left.is-inline-block-mobile
                     | !{marked(release.description)}
