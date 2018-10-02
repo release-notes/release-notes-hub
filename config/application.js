@@ -103,7 +103,7 @@ module.exports = {
         enabled: process.env.ENABLE_ASSET_REV !== 'false'
       }),
       mdi: svgEmbed({
-        path: `${APP_PATH}/node_modules/mdi-svg/svg/`
+        path: `${APP_PATH}/node_modules/@mdi/svg/svg/`
       }),
       moment: '@require:moment',
       marked: '@require:marked',
