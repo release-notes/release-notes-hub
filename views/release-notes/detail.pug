@@ -26,7 +26,7 @@ block content
                 .title.is-3 #{release.version}
 
                 if release.date
-                  - var releaseMoment = moment(release.date)
+                  - var releaseMoment = moment.utc(release.date)
                   .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
               .column.has-text-center
                 if release.description

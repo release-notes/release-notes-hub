@@ -8,6 +8,8 @@ releases:
   added:
     - Add support for defining release page title, description and github repo link.
     - New badge icon with shorter text. ![New Release Notes Badge](/badges/v2.svg)
+  fixed:
+    - Fix release date display by using UTC. ([#46](https://github.com/release-notes/release-notes-hub/issues/46))
 - version: 0.6.0
   date: 2018-09-18
   description: |

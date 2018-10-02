@@ -27,6 +27,6 @@ block content
                       span &nbsp;(@#{releaseNotes.latestVersion})
                   if releaseNotes.latestReleaseDate
                     span.has-text-grey
-                      - var releaseMoment = moment(releaseNotes.latestReleaseDate)
+                      - var releaseMoment = moment.utc(releaseNotes.latestReleaseDate)
                       .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
                   div.is-small #{releaseNotes.page && releaseNotes.page.title || releaseNotes.title}

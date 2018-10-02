@@ -103,7 +103,7 @@ block pageContent
             th= release.version
             td.content
               if release.date
-                - var releaseMoment = moment(release.date)
+                - var releaseMoment = moment.utc(release.date)
                 .subtitle.is-6(title=releaseMoment.fromNow()) #{releaseMoment.format('LL')}
               each modifications, modificationType in release.getModifications()
                 if modifications && modifications.length
