@@ -14,7 +14,7 @@ class UpdateService extends Service {
       latestRelease = this.calculateLastRelease(releaseNotesModel);
     }
 
-    return this.calculateNewReleases(latestRelease, newReleaseNotes);
+    return this.calculateNewReleases(newReleaseNotes, latestRelease);
   }
 
   applyUpdate(releaseNotesModel, newReleaseNotes) {
@@ -37,33 +37,32 @@ class UpdateService extends Service {
     return ['next', 'upcoming', 'unreleased'].indexOf((release.version || '').toLowerCase()) !== -1;
   }
 
-  calculateNewReleases(lastRelease, releaseNotes) {
-    return (releaseNotes.releases || [])
-      .filter(release => (
-        !UpdateService.isUnreleased(release)
-        && (!lastRelease || lastRelease.date < new Date(release.date))
-      )
-    );
+  calculateNewReleases(releaseNotes, lastRelease) {
+    const releases = [];
+
+    for (const release of (releaseNotes.releases || [])) {
+      if (lastRelease && release.version === lastRelease.version) {
+        break;
+      }
+
+      if (UpdateService.isUnreleased(release)) {
+        continue;
+      }
+
+      releases.push(release);
+    }
+
+    return releases;
   }
 
   calculateLastRelease(releaseNotes) {
-    let latestVersion = null;
-    let latestReleaseDate = null;
-    let latestRelease = null;
-
-    (releaseNotes.releases || []).forEach((release) => {
-      const version = release.version;
-      const releaseDate = release.date;
-      const isUnreleased = UpdateService.isUnreleased(release);
-
-      if (!isUnreleased && (!latestVersion || latestReleaseDate < releaseDate)) {
-        latestVersion = version;
-        latestReleaseDate = releaseDate;
-        latestRelease = release;
+    for (const release of (releaseNotes.releases || [])) {
+      if (UpdateService.isUnreleased(release)) {
+        continue;
       }
-    });
 
-    return latestRelease;
+      return release;
+    }
   }
 
   findReleaseByVersion(releaseNotes, version) {

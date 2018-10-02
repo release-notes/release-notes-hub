@@ -12,6 +12,7 @@ releases:
     - Fix release date display by using UTC. ([#46](https://github.com/release-notes/release-notes-hub/issues/46))
   changed:
     - Upgrade to `@mdi/svg` from deprecated `mdi-svg` module. ([#45](https://github.com/release-notes/release-notes-hub/issues/45))
+    - New releases are calculated based on release position/index, rather then by version and release date.
 - version: 0.6.0
   date: 2018-09-18
   description: |
